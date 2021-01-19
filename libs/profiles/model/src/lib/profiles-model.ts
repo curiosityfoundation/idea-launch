@@ -1,11 +1,23 @@
 import * as M from '@effect-ts/morphic'
 
+const Name_ = M.make((F) => 
+  F.interface({
+    first: F.string(),
+    last: F.string(),
+  }, { name: 'Name' })
+)
+
+export interface Name extends M.AType<typeof Name_> { }
+export interface NameRaw extends M.EType<typeof Name_> { }
+export const Name = M.opaque<NameRaw, Name>()(Name_)
+
 const Profile_ = M.make((F) => 
   F.interface({
     owner: F.uuid(),
-    name: F.string(),
+    name: Name(F),
     avatar: F.string(),
     id: F.uuid(),
+    classCode: F.uuid(),
     created: F.date(),
     modified: F.optional(F.date()),
   }, { name: 'Profile' })
@@ -17,7 +29,7 @@ export const Profile = M.opaque<ProfileRaw, Profile>()(Profile_)
 
 const UpdateProfile_ = M.make((F) => 
   F.interface({
-    name: F.string(),
+    name: Name(F),
     avatar: F.string(),
   }, { name: 'UpdateProfile' })
 )
@@ -29,8 +41,9 @@ export const UpdateProfile = M.opaque<UpdateProfileRaw, UpdateProfile>()(UpdateP
 const CreateProfile_ = M.make((F) => 
   F.interface({
     owner: F.uuid(),
-    name: F.string(),
+    name: Name(F),
     avatar: F.string(),
+    classCode: F.uuid(),
   }, { name: 'CreateProfile' })
 )
 

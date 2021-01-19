@@ -1,11 +1,11 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 
-import ViewProject from './view-project';
+import CreateProfileForm from './create-profile-form';
 
-describe('ViewProject', () => {
+describe('CreateProfileForm', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<ViewProject />);
+    const { baseElement } = render(<CreateProfileForm />);
     expect(baseElement).toBeTruthy();
   });
 });

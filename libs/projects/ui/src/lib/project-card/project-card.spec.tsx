@@ -1,11 +1,11 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 
-import ProjectsUi from './projects-ui';
+import ProjectCard from './project-card';
 
-describe('ProjectsUi', () => {
+describe('ProjectCard', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<ProjectsUi />);
+    const { baseElement } = render(<ProjectCard />);
     expect(baseElement).toBeTruthy();
   });
 });
