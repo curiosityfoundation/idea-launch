@@ -1,7 +1,431 @@
 {
   "version": 2,
-
-  "projects": {},
+  "projects": {
+    "profiles-model": {
+      "root": "libs/profiles/model",
+      "sourceRoot": "libs/profiles/model/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/profiles/model/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/profiles/model"
+          ],
+          "options": {
+            "jestConfig": "libs/profiles/model/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "profiles-ui": {
+      "root": "libs/profiles/ui",
+      "sourceRoot": "libs/profiles/ui/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/profiles/ui/**/*.{ts,tsx,js,jsx}"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/profiles/ui"
+          ],
+          "options": {
+            "jestConfig": "libs/profiles/ui/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "storybook": {
+          "executor": "@nrwl/storybook:storybook",
+          "options": {
+            "uiFramework": "@storybook/react",
+            "port": 4400,
+            "config": {
+              "configFolder": "libs/profiles/ui/.storybook"
+            }
+          },
+          "configurations": {
+            "ci": {
+              "quiet": true
+            }
+          }
+        },
+        "build-storybook": {
+          "executor": "@nrwl/storybook:build",
+          "options": {
+            "uiFramework": "@storybook/react",
+            "outputPath": "dist/storybook/profiles-ui",
+            "config": {
+              "configFolder": "libs/profiles/ui/.storybook"
+            }
+          },
+          "configurations": {
+            "ci": {
+              "quiet": true
+            }
+          }
+        }
+      }
+    },
+    "profiles-ui-e2e": {
+      "root": "apps/profiles-ui-e2e",
+      "sourceRoot": "apps/profiles-ui-e2e/src",
+      "projectType": "application",
+      "targets": {
+        "e2e": {
+          "executor": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/profiles-ui-e2e/cypress.json",
+            "tsConfig": "apps/profiles-ui-e2e/tsconfig.e2e.json",
+            "devServerTarget": "profiles-ui:storybook"
+          },
+          "configurations": {
+            "ci": {
+              "devServerTarget": "profiles-ui:storybook:ci"
+            }
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/profiles-ui-e2e/**/*.{js,ts}"
+            ]
+          }
+        }
+      }
+    },
+    "profiles-persistence": {
+      "root": "libs/profiles/persistence",
+      "sourceRoot": "libs/profiles/persistence/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/profiles/persistence/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/profiles/persistence"
+          ],
+          "options": {
+            "jestConfig": "libs/profiles/persistence/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "projects-model": {
+      "root": "libs/projects/model",
+      "sourceRoot": "libs/projects/model/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/projects/model/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/projects/model"
+          ],
+          "options": {
+            "jestConfig": "libs/projects/model/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "projects-persistence": {
+      "root": "libs/projects/persistence",
+      "sourceRoot": "libs/projects/persistence/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/projects/persistence/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/projects/persistence"
+          ],
+          "options": {
+            "jestConfig": "libs/projects/persistence/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "projects-ui": {
+      "root": "libs/projects/ui",
+      "sourceRoot": "libs/projects/ui/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/projects/ui/**/*.{ts,tsx,js,jsx}"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/projects/ui"
+          ],
+          "options": {
+            "jestConfig": "libs/projects/ui/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "storybook": {
+          "executor": "@nrwl/storybook:storybook",
+          "options": {
+            "uiFramework": "@storybook/react",
+            "port": 4400,
+            "config": {
+              "configFolder": "libs/projects/ui/.storybook"
+            }
+          },
+          "configurations": {
+            "ci": {
+              "quiet": true
+            }
+          }
+        },
+        "build-storybook": {
+          "executor": "@nrwl/storybook:build",
+          "options": {
+            "uiFramework": "@storybook/react",
+            "outputPath": "dist/storybook/projects-ui",
+            "config": {
+              "configFolder": "libs/projects/ui/.storybook"
+            }
+          },
+          "configurations": {
+            "ci": {
+              "quiet": true
+            }
+          }
+        }
+      }
+    },
+    "projects-ui-e2e": {
+      "root": "apps/projects-ui-e2e",
+      "sourceRoot": "apps/projects-ui-e2e/src",
+      "projectType": "application",
+      "targets": {
+        "e2e": {
+          "executor": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/projects-ui-e2e/cypress.json",
+            "tsConfig": "apps/projects-ui-e2e/tsconfig.e2e.json",
+            "devServerTarget": "projects-ui:storybook"
+          },
+          "configurations": {
+            "ci": {
+              "devServerTarget": "projects-ui:storybook:ci"
+            }
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/projects-ui-e2e/**/*.{js,ts}"
+            ]
+          }
+        }
+      }
+    },
+    "resources-model": {
+      "root": "libs/resources/model",
+      "sourceRoot": "libs/resources/model/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/resources/model/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/resources/model"
+          ],
+          "options": {
+            "jestConfig": "libs/resources/model/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "resources-persistence": {
+      "root": "libs/resources/persistence",
+      "sourceRoot": "libs/resources/persistence/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/resources/persistence/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/resources/persistence"
+          ],
+          "options": {
+            "jestConfig": "libs/resources/persistence/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "api": {
+      "root": "libs/api",
+      "sourceRoot": "libs/api/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/api/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/api"
+          ],
+          "options": {
+            "jestConfig": "libs/api/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "resources-ui": {
+      "root": "libs/resources/ui",
+      "sourceRoot": "libs/resources/ui/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/resources/ui/**/*.{ts,tsx,js,jsx}"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/resources/ui"
+          ],
+          "options": {
+            "jestConfig": "libs/resources/ui/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "storybook": {
+          "executor": "@nrwl/storybook:storybook",
+          "options": {
+            "uiFramework": "@storybook/react",
+            "port": 4400,
+            "config": {
+              "configFolder": "libs/resources/ui/.storybook"
+            }
+          },
+          "configurations": {
+            "ci": {
+              "quiet": true
+            }
+          }
+        },
+        "build-storybook": {
+          "executor": "@nrwl/storybook:build",
+          "options": {
+            "uiFramework": "@storybook/react",
+            "outputPath": "dist/storybook/resources-ui",
+            "config": {
+              "configFolder": "libs/resources/ui/.storybook"
+            }
+          },
+          "configurations": {
+            "ci": {
+              "quiet": true
+            }
+          }
+        }
+      }
+    },
+    "resources-ui-e2e": {
+      "root": "apps/resources-ui-e2e",
+      "sourceRoot": "apps/resources-ui-e2e/src",
+      "projectType": "application",
+      "targets": {
+        "e2e": {
+          "executor": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/resources-ui-e2e/cypress.json",
+            "tsConfig": "apps/resources-ui-e2e/tsconfig.e2e.json",
+            "devServerTarget": "resources-ui:storybook"
+          },
+          "configurations": {
+            "ci": {
+              "devServerTarget": "resources-ui:storybook:ci"
+            }
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/resources-ui-e2e/**/*.{js,ts}"
+            ]
+          }
+        }
+      }
+    }
+  },
   "cli": {
     "defaultCollection": "@nrwl/workspace"
   }

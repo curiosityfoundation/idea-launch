@@ -14,7 +14,24 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@idea-launch/profiles/model": ["libs/profiles/model/src/index.ts"],
+      "@idea-launch/profiles/ui": ["libs/profiles/ui/src/index.ts"],
+      "@idea-launch/profiles/persistence": [
+        "libs/profiles/persistence/src/index.ts"
+      ],
+      "@idea-launch/projects/model": ["libs/projects/model/src/index.ts"],
+      "@idea-launch/projects/persistence": [
+        "libs/projects/persistence/src/index.ts"
+      ],
+      "@idea-launch/projects/ui": ["libs/projects/ui/src/index.ts"],
+      "@idea-launch/resources/model": ["libs/resources/model/src/index.ts"],
+      "@idea-launch/resources/persistence": [
+        "libs/resources/persistence/src/index.ts"
+      ],
+      "@idea-launch/api": ["libs/api/src/index.ts"],
+      "@idea-launch/resources/ui": ["libs/resources/ui/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }
