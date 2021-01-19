@@ -1,6 +1,6 @@
 import * as T from '@effect-ts/core/Effect'
 import { tag } from '@effect-ts/core/Has'
-import * as O from '@effect-ts/core/Common/Option'
+import * as O from '@effect-ts/core/Option'
 import { UUID } from '@effect-ts/morphic/Algebra/Primitives'
 
 import { CreateProfile, UpdateProfile, Profile } from '@idea-launch/profiles/model'

@@ -40,6 +40,11 @@
       "tags": [],
       "implicitDependencies": ["resources-ui"]
     },
-    "functions": { "tags": [] }
+    "functions": { "tags": [] },
+    "idea-launch-web": { "tags": [] },
+    "idea-launch-web-e2e": {
+      "tags": [],
+      "implicitDependencies": ["idea-launch-web"]
+    }
   }
 }

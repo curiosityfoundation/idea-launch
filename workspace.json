@@ -431,7 +431,7 @@
       "projectType": "application",
       "prefix": "functions",
       "targets": {
-        "build": {
+        "build-node": {
           "executor": "@nrwl/node:build",
           "outputs": [
             "{options.outputPath}"
@@ -458,10 +458,63 @@
             }
           }
         },
-        "serve": {
-          "executor": "@nrwl/node:execute",
+        "build": {
+          "builder": "@nrwl/workspace:run-commands",
           "options": {
-            "buildTarget": "functions:build"
+            "commands": [
+              {
+                "command": "nx run functions:build-node"
+              },
+              {
+                "command": "ts-node tools/scripts/build-firebase-functions.ts"
+              }
+            ],
+            "parallel": false
+          }
+        },
+        "serve": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              {
+                "command": "nx run functions:build"
+              },
+              {
+                "command": "firebase emulators:start --only auth,firestore,functions --inspect-functions"
+              }
+            ],
+            "parallel": false
+          }
+        },
+        "shell": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              {
+                "command": "nx run functions:build"
+              },
+              {
+                "command": "firebase functions:shell --inspect-functions"
+              }
+            ],
+            "parallel": false
+          }
+        },
+        "deploy": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              {
+                "command": "nx run functions:build-node --c=production"
+              },
+              {
+                "command": "node ./node_modules/ts-node/dist/bin tools/scripts/build-firebase-functions.ts"
+              },
+              {
+                "command": "firebase deploy --only functions"
+              }
+            ],
+            "parallel": false
           }
         },
         "lint": {
@@ -483,10 +536,136 @@
           }
         }
       }
+    },
+    "idea-launch-web": {
+      "root": "apps/idea-launch-web",
+      "sourceRoot": "apps/idea-launch-web/src",
+      "projectType": "application",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/web:build",
+          "outputs": [
+            "{options.outputPath}"
+          ],
+          "options": {
+            "outputPath": "dist/apps/idea-launch-web",
+            "index": "apps/idea-launch-web/src/index.html",
+            "main": "apps/idea-launch-web/src/main.tsx",
+            "polyfills": "apps/idea-launch-web/src/polyfills.ts",
+            "tsConfig": "apps/idea-launch-web/tsconfig.app.json",
+            "assets": [
+              "apps/idea-launch-web/src/favicon.ico",
+              "apps/idea-launch-web/src/assets"
+            ],
+            "styles": [
+              "apps/idea-launch-web/src/styles.css"
+            ],
+            "scripts": [],
+            "webpackConfig": "@nrwl/react/plugins/webpack"
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/idea-launch-web/src/environments/environment.ts",
+                  "with": "apps/idea-launch-web/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/web:dev-server",
+          "options": {
+            "buildTarget": "idea-launch-web:build"
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "idea-launch-web:build:production"
+            }
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/idea-launch-web/**/*.{ts,tsx,js,jsx}"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/apps/idea-launch-web"
+          ],
+          "options": {
+            "jestConfig": "apps/idea-launch-web/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "idea-launch-web-e2e": {
+      "root": "apps/idea-launch-web-e2e",
+      "sourceRoot": "apps/idea-launch-web-e2e/src",
+      "projectType": "application",
+      "targets": {
+        "e2e": {
+          "executor": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/idea-launch-web-e2e/cypress.json",
+            "tsConfig": "apps/idea-launch-web-e2e/tsconfig.e2e.json",
+            "devServerTarget": "idea-launch-web:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "idea-launch-web:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/idea-launch-web-e2e/**/*.{js,ts}"
+            ]
+          }
+        }
+      }
     }
   },
   "cli": {
     "defaultCollection": "@nrwl/node"
   },
-  "defaultProject": "functions"
+  "defaultProject": "functions",
+  "generators": {
+    "@nrwl/react": {
+      "application": {
+        "style": "css",
+        "linter": "eslint",
+        "babel": true
+      },
+      "component": {
+        "style": "css"
+      },
+      "library": {
+        "style": "css",
+        "linter": "eslint"
+      }
+    }
+  }
 }

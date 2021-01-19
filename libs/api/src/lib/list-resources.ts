@@ -1,6 +1,5 @@
 import { pipe } from '@effect-ts/core/Function'
 import * as T from '@effect-ts/core/Effect'
-import { UUID } from '@effect-ts/morphic/Algebra/Primitives'
 import { encode } from '@effect-ts/morphic/Encoder'
 import * as M from '@effect-ts/morphic'
 

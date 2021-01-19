@@ -1,6 +1,5 @@
 import * as T from '@effect-ts/core/Effect'
 import { tag } from '@effect-ts/core/Has'
-import { UUID } from '@effect-ts/morphic/Algebra/Primitives'
 
 import { Resource } from '@idea-launch/resources/model'
 

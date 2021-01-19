@@ -3,7 +3,7 @@ import * as T from '@effect-ts/core/Effect'
 import { UUID } from '@effect-ts/morphic/Algebra/Primitives'
 import { encode } from '@effect-ts/morphic/Encoder'
 import { strictDecoder } from '@effect-ts/morphic/StrictDecoder'
-import * as A from '@effect-ts/core/Common/Array'
+import * as A from '@effect-ts/core/Array'
 import * as M from '@effect-ts/morphic'
 
 import { listProjects } from '@idea-launch/projects/persistence'
