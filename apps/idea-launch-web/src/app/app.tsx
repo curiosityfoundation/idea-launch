@@ -1,47 +1,28 @@
 import React from 'react';
-
-import styles from './app.module.css';
-
 import { Route, Link, Switch } from 'react-router-dom';
+
+import { LandingPage } from './pages/landing'
+import { ResourcesPage } from './pages/resources'
+
+import './app.module.css';
 
 export function App() {
   return (
-    <div className={styles.app}>
-      <header className="flex">
-        <h1>Welcome to idea-launch-web!</h1>
-      </header>
+    <div>
       <main>
-        <div role="navigation">
-          <ul>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/page-2">Page 2</Link>
-            </li>
-          </ul>
-        </div>
-        <Switch>
+        <LandingPage />
+        {/* <Switch>
           <Route
-            path="/"
+            path='/'
             exact
-            render={() => (
-              <div>
-                This is the generated root route.{' '}
-                <Link to="/page-2">Click here for page 2.</Link>
-              </div>
-            )}
+            render={() => <LandingPage />}
           />
           <Route
-            path="/page-2"
+            path='/resources'
             exact
-            render={() => (
-              <div>
-                <Link to="/">Click here to go back to root page.</Link>
-              </div>
-            )}
+            render={() => <ResourcesPage />}
           />
-        </Switch>
+        </Switch> */}
       </main>
     </div>
   );
