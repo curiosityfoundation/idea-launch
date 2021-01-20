@@ -1,4 +1,5 @@
 import React from 'react'
+import * as Yup from 'yup';
 import { makeStyles } from '@material-ui/core/styles';
 import { FormikProps, Form, Field } from 'formik'
 import { TextField } from 'formik-material-ui'
@@ -17,10 +18,13 @@ export interface CommentValues {
   content: string
 }
 
-/* eslint-disable-next-line */
 export interface CommentInputProps {
   form: FormikProps<CommentValues>
 }
+
+export const validationSchema = Yup.object({
+  content: Yup.string().min(6).max(240).required(),
+})
 
 export function CommentInput(props: CommentInputProps) {
 
@@ -31,12 +35,17 @@ export function CommentInput(props: CommentInputProps) {
       <Field
         component={TextField}
         multiline
+        rows={2}
         rowsMax={4}
         name='content'
         type='text'
         fullWidth
         placeholder='write your comment, feedback or praise here'
+        variant='outlined'
+        error={!!props.form.errors.content && props.form.touched.content}
+        helperText={props.form.errors.content || ''}
       />
+      <br />
       <br />
       <Button
         color='primary'

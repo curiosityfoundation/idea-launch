@@ -31,8 +31,6 @@ export function CreateProfileForm(props: CreateProfileFormProps) {
     <Form className={classes.root}>
       <Field
         component={TextField}
-        multiline
-        rowsMax={4}
         name='first'
         type='text'
         label='First Name'
@@ -42,8 +40,6 @@ export function CreateProfileForm(props: CreateProfileFormProps) {
       <br />
       <Field
         component={TextField}
-        multiline
-        rowsMax={4}
         name='last'
         type='text'
         label='Last Name'
@@ -53,8 +49,6 @@ export function CreateProfileForm(props: CreateProfileFormProps) {
       <br />
       <Field
         component={TextField}
-        multiline
-        rowsMax={4}
         name='classcode'
         type='text'
         label='Class Code'

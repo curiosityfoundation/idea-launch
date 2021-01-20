@@ -1,10 +1,10 @@
 import React from 'react';
-import { CommentInput, validationSchema } from './comment-input';
+import { PostProjectForm, validationSchema } from './post-project-form';
 import { Formik } from 'formik'
 
 export default {
-  component: CommentInput,
-  title: 'CommentInput',
+  component: PostProjectForm,
+  title: 'PostProjectForm',
 };
 
 export const primary = () => {
@@ -12,9 +12,11 @@ export const primary = () => {
     onSubmit={console.log}
     validationSchema={validationSchema}
     initialValues={{
-      content: '',
+      title: '',
+      description: '',
+      link: '',
     }}
   >
-    {(form) => <CommentInput form={form} />}
+    {(form) => <PostProjectForm form={form} />}
   </Formik>
 };
