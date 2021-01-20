@@ -1,10 +1,10 @@
-import React from 'react';
-import * as Yup from 'yup';
+import React from 'react'
+import * as Yup from 'yup'
 import { FormikProps, Form, Field } from 'formik'
 import { TextField } from 'formik-material-ui'
-import Button from '@material-ui/core/Button';
+import Button from '@material-ui/core/Button'
 
-import './post-project-form.module.css';
+import './post-project-form.module.css'
 
 export interface PostProjectValues {
   title: string
@@ -77,7 +77,7 @@ export function PostProjectForm(props: PostProjectFormProps) {
         Next
       </Button>
     </Form>
-  );
+  )
 }
 
-export default PostProjectForm;
+export default PostProjectForm

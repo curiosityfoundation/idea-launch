@@ -2,8 +2,15 @@ import React from 'react';
 
 import './edit-profile.module.css';
 
-/* eslint-disable-next-line */
-export interface EditProfileProps { }
+export interface EditProfileProps { 
+  first: string
+  last: string
+  avatar: string
+}
+
+export interface EditProfileProps { 
+  form: FormikProps<PostProjectValues>
+}
 
 export function EditProfile(props: EditProfileProps) {
   return (

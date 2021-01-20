@@ -1,6 +1,6 @@
 import React from 'react';
 import { Formik } from 'formik'
-import { CreateProfileForm, CreateProfileFormProps } from './create-profile-form';
+import { CreateProfileForm, validationSchema } from './create-profile-form';
 
 export default {
   component: CreateProfileForm,
@@ -10,6 +10,7 @@ export default {
 export const primary = () => {
   return <Formik
     onSubmit={console.log}
+    validationSchema={validationSchema}
     initialValues={{
       first: '',
       last: '',

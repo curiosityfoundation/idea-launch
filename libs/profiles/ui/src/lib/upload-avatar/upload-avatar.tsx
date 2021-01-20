@@ -35,6 +35,9 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center'
   },
+  hidden: {
+    display: 'none'
+  }
 }))
 
 export interface InitProps {
@@ -90,14 +93,22 @@ export function UploadAvatar(props: UploadAvatarProps) {
           </Typography>
           <br />
           <br />
-          <IconButton
-            className={classes.avatar}
-            aria-label='upload avatar'
-            color='primary'
-            onClick={props.onUploadClick}
-          >
-            <CloudUploadOutlined className={classes.avatarIcon} />
-          </IconButton>
+          <input
+            accept='image/*'
+            className={classes.hidden}
+            id='icon-button-file'
+            type='file'
+            onChange={console.log}
+          />
+          <label htmlFor='icon-button-file'>
+            <IconButton
+              className={classes.avatar}
+              aria-label='upload avatar'
+              color='primary'
+            >
+              <CloudUploadOutlined className={classes.avatarIcon} />
+            </IconButton>
+          </label>
         </div>
       )
     case 'uploading':
