@@ -1,8 +1,11 @@
 import React from 'react';
-import { Route, Link, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 
 import { LandingPage } from './pages/landing'
 import { ResourcesPage } from './pages/resources'
+import { ContactPage } from './pages/contact'
+import { LoginPage } from './pages/login'
+import { NotFoundPage } from './pages/not-found'
 
 import './app.module.css';
 
@@ -10,8 +13,7 @@ export function App() {
   return (
     <div>
       <main>
-        <LandingPage />
-        {/* <Switch>
+        <Switch>
           <Route
             path='/'
             exact
@@ -22,7 +24,21 @@ export function App() {
             exact
             render={() => <ResourcesPage />}
           />
-        </Switch> */}
+          <Route
+            path='/contact'
+            exact
+            render={() => <ContactPage />}
+          />
+          <Route
+            path='/login'
+            exact
+            render={() => <LoginPage />}
+          />
+          <Route
+            exact
+            render={() => <NotFoundPage />}
+          />
+        </Switch>
       </main>
     </div>
   );

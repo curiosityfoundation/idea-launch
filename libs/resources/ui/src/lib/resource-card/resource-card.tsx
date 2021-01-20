@@ -28,6 +28,7 @@ export interface ResourceCardProps {
   image: string
   title: string
   description: string
+  link: string
 }
 
 export const ResourceCard: FC<ResourceCardProps> = (props) => {
@@ -49,7 +50,13 @@ export const ResourceCard: FC<ResourceCardProps> = (props) => {
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <Button size='small' color='primary'>
+        <Button
+          size='small'
+          color='primary'
+          component='a'
+          href={props.link}
+          target='_blank'
+        >
           Check it out
         </Button>
         <IconButton

@@ -13,8 +13,9 @@ const Resource_ = M.make((F) =>
     id: F.uuid(),
     title: F.string(),
     description: F.string(),
-    url: F.string(),
-    category: F.oneOfLiterals(ResourceCategories)
+    link: F.string(),
+    image: F.string(),
+    category: F.oneOfLiterals(ResourceCategories),
   }, { name: 'Resource' })
 )
 
