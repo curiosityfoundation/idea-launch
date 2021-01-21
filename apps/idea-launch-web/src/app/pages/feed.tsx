@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-export function NotFoundPage() {
+export function FeedPage() {
 
   const classes = useStyles()
 
@@ -39,7 +39,7 @@ export function NotFoundPage() {
               color='textPrimary'
               align='center'
             >
-              Page Not Found
+              Feed
             </Typography>
             <br />
           </div>
