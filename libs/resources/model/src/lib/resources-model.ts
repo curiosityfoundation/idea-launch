@@ -1,14 +1,15 @@
 import * as M from '@effect-ts/morphic'
 
 export const ResourceCategories = [
-  'web-design', 
-  'ideation', 
-  'graphic-design', 
-  'mobile-design', 
-  'marketing', 
+  'web-design',
+  'ideation',
+  'graphic-design',
+  'mobile-design',
+  'marketing',
+  'coding',
 ] as const
 
-const Resource_ = M.make((F) => 
+const Resource_ = M.make((F) =>
   F.interface({
     id: F.uuid(),
     title: F.string(),

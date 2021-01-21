@@ -22,6 +22,9 @@ const useStyles = makeStyles({
   favorite: {
     marginLeft: 'auto',
   },
+  content: {
+    minHeight: 120,
+  }
 })
 
 export interface ResourceCardProps {
@@ -41,7 +44,7 @@ export const ResourceCard: FC<ResourceCardProps> = (props) => {
         image={props.image}
         title={props.title}
       />
-      <CardContent>
+      <CardContent className={classes.content}>
         <Typography gutterBottom variant='h5' component='h2'>
           {props.title}
         </Typography>

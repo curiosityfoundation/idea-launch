@@ -11,36 +11,32 @@ import './app.module.css';
 
 export function App() {
   return (
-    <div>
-      <main>
-        <Switch>
-          <Route
-            path='/'
-            exact
-            render={() => <LandingPage />}
-          />
-          <Route
-            path='/resources'
-            exact
-            render={() => <ResourcesPage />}
-          />
-          <Route
-            path='/contact'
-            exact
-            render={() => <ContactPage />}
-          />
-          <Route
-            path='/login'
-            exact
-            render={() => <LoginPage />}
-          />
-          <Route
-            exact
-            render={() => <NotFoundPage />}
-          />
-        </Switch>
-      </main>
-    </div>
+    <Switch>
+      <Route
+        path='/'
+        exact
+        render={() => <LandingPage />}
+      />
+      <Route
+        path='/resources'
+        exact
+        render={() => <ResourcesPage />}
+      />
+      <Route
+        path='/contact'
+        exact
+        render={() => <ContactPage />}
+      />
+      <Route
+        path='/login'
+        exact
+        render={() => <LoginPage />}
+      />
+      <Route
+        exact
+        render={() => <NotFoundPage />}
+      />
+    </Switch>
   );
 }
 
