@@ -1,3 +1,6 @@
+import { pipe } from '@effect-ts/core/Function'
+import * as A from '@effect-ts/core/Array'
+import * as R from '@effect-ts/core/Record'
 import { UUID } from '@effect-ts/morphic/Algebra/Primitives'
 
 import { Project, Comment } from './projects-model'
@@ -6,7 +9,7 @@ export const mockProjects = [
   Project.build({
     id: '0' as UUID,
     title: 'Lemonada Sales Wireframes',
-    description: 'At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.',
+    description: 'I’m thinking about making an app to take lemonade orders for delivery. I’ll use my bike to deliver the lemonade to the homes every Saturday and Sunday. Let me know what you guys think!',
     created: new Date(),
     link: 'https://www.figma.com/',
     owner: '0' as UUID,
@@ -17,11 +20,17 @@ export const mockProjects = [
     title: 'Pet Pros Business Model',
     description: 'Helps you keep track of what youve done for your pet and what else needs to be done',
     created: new Date(),
-    link: 'https://www.figma.com/',
+    link: 'https://petpros.net/',
     owner: '1' as UUID,
     modified: null,
   }),
 ]
+
+export const mockProjectTable = pipe(
+  mockProjects,
+  A.map((p) => [p.id, p] as const),
+  R.fromArray,
+)
 
 export const mockComments = [
   Comment.build({
@@ -41,3 +50,9 @@ export const mockComments = [
     approved: true,
   })
 ]
+
+export const mockCommentTable = pipe(
+  mockComments,
+  A.map((c) => [c.id, c] as const),
+  R.fromArray,
+)

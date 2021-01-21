@@ -1,7 +1,15 @@
 import React from 'react'
+import { pipe } from '@effect-ts/core/Function'
+import * as A from '@effect-ts/core/Array'
+import * as O from '@effect-ts/core/Option'
+import * as R from '@effect-ts/core/Record'
 import Container from '@material-ui/core/Container'
-import Typography from '@material-ui/core/Typography';
+import Typography from '@material-ui/core/Typography'
 import { makeStyles, Theme } from '@material-ui/core/styles';
+
+import { mockProfileTable } from '@idea-launch/profiles/model'
+import { ProjectCard } from '@idea-launch/projects/ui'
+import { mockProjects, mockCommentTable } from '@idea-launch/projects/model'
 
 import { Navbar } from '../components/navbar'
 
@@ -12,16 +20,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(12),
   },
   row: {
-    display: 'flex',
-    flexDirection: 'row',
-  },
-  textArea: {
     padding: theme.spacing(2),
     display: 'flex',
-    flex: 1,
     flexDirection: 'column',
-    justifyContent: 'center',
-  }
+  },
 }));
 
 export function FeedPage() {
@@ -32,18 +34,33 @@ export function FeedPage() {
     <div className={classes.root}>
       <Container>
         <Navbar />
-        <div className={classes.row}>
-          <div className={classes.textArea}>
-            <Typography
-              variant='h4'
-              color='textPrimary'
-              align='center'
-            >
-              Feed
-            </Typography>
-            <br />
-          </div>
-        </div>
+        <Typography
+          variant='h4'
+          color='textPrimary'
+          align='center'
+        >
+          Ready to share an idea?
+        </Typography>
+        {pipe(
+          mockProjects,
+          A.filterMap((project) => pipe(
+            mockProfileTable,
+            R.lookup(project.id),
+            O.map((profile) => (
+              <div className={classes.row}>
+                <ProjectCard
+                  key={project.id}
+                  username={`${profile.name.first} ${profile.name.last}`}
+                  title={project.title}
+                  description={project.description}
+                  avatar={profile.avatar}
+                  url={project.link}
+                  favoriteCount={13}
+                />
+              </div>
+            ))
+          ))
+        )}
       </Container>
     </div>
   )
