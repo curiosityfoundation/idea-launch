@@ -74,7 +74,7 @@ export function ResourcesPage() {
               color='textPrimary'
               align='center'
             >
-              Catergories
+              Categories
             </Typography>
             <br />
             <div className={classes.chips}>
