@@ -27,9 +27,10 @@
   },
   "private": true,
   "dependencies": {
-    "@effect-ts/core": "^0.12.16",
-    "@effect-ts/monocle": "^0.11.16",
+    "@effect-ts/core": "^0.12.17",
+    "@effect-ts/monocle": "^0.11.17",
     "@effect-ts/morphic": "^0.12.17",
+    "@effect-ts/system": "^0.10.16",
     "@material-ui/core": "^4.11.2",
     "@material-ui/icons": "^4.11.2",
     "@reduxjs/toolkit": "^1.5.0",

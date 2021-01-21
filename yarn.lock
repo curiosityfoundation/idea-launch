@@ -1262,38 +1262,25 @@
     debug "^3.1.0"
     lodash.once "^4.1.1"
 
-"@effect-ts/core@^0.12.16":
-  version "0.12.16"
-  resolved "https://registry.yarnpkg.com/@effect-ts/core/-/core-0.12.16.tgz#1d3be66b224a97936f0c1dc2952ee83c576735b3"
-  integrity sha512-EltQ+9/D3OjbNYWoWeuhOanWCDQpubNDzpBcnP4A5a4fj/aGtvWvVn5To7V91/7VOkE8u/vs7O91ugIOFNwtJw==
-  dependencies:
-    "@effect-ts/system" "^0.10.14"
-    "@effect-ts/tracing-utils" "^0.2.4"
+"@effect-ts/core@^0.12.17":
+  version "0.12.17"
+  resolved "https://registry.yarnpkg.com/@effect-ts/core/-/core-0.12.17.tgz#94781d08fa8e39cf42e1a7a2e3b59c481cd0649e"
+  integrity sha512-qyn83yeadK1dHdQRWOrzDklCNNrEA7+aoHzqiF8vZB6mNzibUIE9NwGcNLTLU9tJzYhRWsbXbKk+G1/Xh6xgbA==
 
-"@effect-ts/monocle@^0.11.16":
-  version "0.11.16"
-  resolved "https://registry.yarnpkg.com/@effect-ts/monocle/-/monocle-0.11.16.tgz#8bafccaa13def758a07aded0b005261d0f08f3cd"
-  integrity sha512-6nWREGXL3kHEuU4B3TIlzwUim+KQRIDuEh0E5OWeebVOQVfc/CKqxkoix/Z+nxfsPG2dTb/6SwL2xDl7rlQyqg==
-  dependencies:
-    "@effect-ts/core" "^0.12.16"
-    "@effect-ts/tracing-utils" "^0.2.4"
+"@effect-ts/monocle@^0.11.17":
+  version "0.11.17"
+  resolved "https://registry.yarnpkg.com/@effect-ts/monocle/-/monocle-0.11.17.tgz#787ad9dd18914d71c006c0570d164c08ec508a6e"
+  integrity sha512-ADXD0XraDWY5UQJDbytLqlNNV6HoCNMz0FPBL0RkqKc8D1XmtXKJs6uChQycdNSD6uQOxV4uujP4gXeCZZR3sQ==
 
 "@effect-ts/morphic@^0.12.17":
   version "0.12.17"
   resolved "https://registry.yarnpkg.com/@effect-ts/morphic/-/morphic-0.12.17.tgz#85ce59b8ddabac5270a9587f269eab55f481ffd0"
   integrity sha512-tFDYa290QvHr1Js+NZ4946aaXscXxZaTP0aMlcnjGKD8P0lwpqyT/5TNB7CxxQJKJjSeWwEFxwk4B8SgKrKmgg==
 
-"@effect-ts/system@^0.10.14":
-  version "0.10.14"
-  resolved "https://registry.yarnpkg.com/@effect-ts/system/-/system-0.10.14.tgz#ef9343030adc57bd4ffc34dfee9a37865ac0c2d4"
-  integrity sha512-PlmLX31eq63fEGevVTmjmqTLvPjB9/YvPTp+y25rYgSMxUyHDi+ZKzZaLFxleaj+jVuwquyv1i8t0TTXhxjhuA==
-  dependencies:
-    "@effect-ts/tracing-utils" "^0.2.4"
-
-"@effect-ts/tracing-utils@^0.2.4":
-  version "0.2.4"
-  resolved "https://registry.yarnpkg.com/@effect-ts/tracing-utils/-/tracing-utils-0.2.4.tgz#e0d70fd7b240799fa4ef534b07ac51833e7e9a6a"
-  integrity sha512-nsxvWYyoBmmVLvVZB3LCtH2hyrMIH+7adwfib1KjMg8mHhc/Zbi3ftNVty1Bem80310tF/sPbR2C5rYDKYHavA==
+"@effect-ts/system@^0.10.16":
+  version "0.10.16"
+  resolved "https://registry.yarnpkg.com/@effect-ts/system/-/system-0.10.16.tgz#b98071e329293678e44f4ee62ec6c72c913a497b"
+  integrity sha512-TGTkr9TnCmyQIwq8ljIfFa/QEWGfSTjSfh262rrFJN5L79WmeF82ErYFiPMg4byCh4WLSLIoFhmhpmxdlLvdEQ==
 
 "@emotion/cache@^10.0.27", "@emotion/cache@^10.0.9":
   version "10.0.29"
