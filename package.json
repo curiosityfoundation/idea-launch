@@ -47,6 +47,9 @@
     "react-redux": "^7.2.2",
     "react-router-dom": "5.2.0",
     "react-tiny-link": "^3.6.0",
+    "redux": "^4.0.5",
+    "redux-observable": "^1.2.0",
+    "rxjs": "^6.6.3",
     "tslib": "^2.0.0",
     "yup": "^0.32.8"
   },

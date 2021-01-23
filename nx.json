@@ -45,6 +45,7 @@
     "idea-launch-web-e2e": {
       "tags": [],
       "implicitDependencies": ["idea-launch-web"]
-    }
+    },
+    "redux-effect": { "tags": [] }
   }
 }

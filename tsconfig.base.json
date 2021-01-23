@@ -30,7 +30,8 @@
         "libs/resources/persistence/src/index.ts"
       ],
       "@idea-launch/api": ["libs/api/src/index.ts"],
-      "@idea-launch/resources/ui": ["libs/resources/ui/src/index.ts"]
+      "@idea-launch/resources/ui": ["libs/resources/ui/src/index.ts"],
+      "@idea-launch/redux-effect": ["libs/redux-effect/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

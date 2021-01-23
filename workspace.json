@@ -459,7 +459,7 @@
           }
         },
         "build": {
-          "builder": "@nrwl/workspace:run-commands",
+          "executor": "@nrwl/workspace:run-commands",
           "options": {
             "commands": [
               {
@@ -473,7 +473,7 @@
           }
         },
         "serve": {
-          "builder": "@nrwl/workspace:run-commands",
+          "executor": "@nrwl/workspace:run-commands",
           "options": {
             "commands": [
               {
@@ -487,7 +487,7 @@
           }
         },
         "shell": {
-          "builder": "@nrwl/workspace:run-commands",
+          "executor": "@nrwl/workspace:run-commands",
           "options": {
             "commands": [
               {
@@ -501,7 +501,7 @@
           }
         },
         "deploy": {
-          "builder": "@nrwl/workspace:run-commands",
+          "executor": "@nrwl/workspace:run-commands",
           "options": {
             "commands": [
               {
@@ -643,6 +643,31 @@
             "lintFilePatterns": [
               "apps/idea-launch-web-e2e/**/*.{js,ts}"
             ]
+          }
+        }
+      }
+    },
+    "redux-effect": {
+      "root": "libs/redux-effect",
+      "sourceRoot": "libs/redux-effect/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/redux-effect/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/redux-effect"
+          ],
+          "options": {
+            "jestConfig": "libs/redux-effect/jest.config.js",
+            "passWithNoTests": true
           }
         }
       }
