@@ -671,6 +671,56 @@
           }
         }
       }
+    },
+    "accounts-ui": {
+      "root": "libs/accounts/ui",
+      "sourceRoot": "libs/accounts/ui/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/accounts/ui/**/*.{ts,tsx,js,jsx}"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/accounts/ui"
+          ],
+          "options": {
+            "jestConfig": "libs/accounts/ui/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "accounts-model": {
+      "root": "libs/accounts/model",
+      "sourceRoot": "libs/accounts/model/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/accounts/model/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/accounts/model"
+          ],
+          "options": {
+            "jestConfig": "libs/accounts/model/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   },
   "cli": {

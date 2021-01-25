@@ -2,9 +2,12 @@ import React from 'react'
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import GoogleSignInButton from 'react-google-button';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
+import { Action, State } from '../constants'
 import logo from '../../assets/logo.svg';
+import { AccountState } from '@idea-launch/accounts/ui';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -32,6 +35,24 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
+function SignInButton() {
+
+  const accountState = useSelector((s: State) => s.account)
+  const dispatch = useDispatch()
+
+  const onLoginClick = () => dispatch(Action.of.LoginStarted({}))
+
+  const render = AccountState.matchStrict({
+    LoggedIn: () => <Redirect to='/feed' />,
+    LoggedOut: () => <GoogleSignInButton onClick={onLoginClick} />,
+    LoggingIn: () => <GoogleSignInButton disabled />,
+    LoggingOut: () => <GoogleSignInButton disabled />,
+  })
+
+  return render(accountState)
+
+}
+
 export function LoginPage() {
 
   const classes = useStyles()
@@ -52,9 +73,7 @@ export function LoginPage() {
           className={classes.logo}
         />
         <br />
-        <Link to='/feed'>
-          <GoogleSignInButton />
-        </Link>
+        <SignInButton />
         <br />
         <div className={classes.links}>
           <Typography

@@ -9,15 +9,14 @@ export interface RxJsEpic<A, S, O = A> {
   (action$: Observable<A>, state$: Observable<S>): Observable<O>
 }
 
-export interface Epic<R, A, S, O = A> {
+export interface Epic<R, A, S> {
   _R: R
   _A: A
   _S: S
-  _O: O
-  (action: S.UIO<A>, state: S.UIO<S>): S.RIO<R, O>
+  (action: S.UIO<A>, state: S.UIO<S>): S.RIO<R, A>
 }
 
-type AnyEpic = Epic<any, any, any, any> | Epic<never, any, any, any>
+type AnyEpic<S> = Epic<any, any, S> | Epic<never, any, S>
 
 type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
   k: infer I
@@ -25,32 +24,26 @@ type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
   ? I
   : never;
 
-type CombinedEnv<Epics extends NEA.NonEmptyArray<AnyEpic>> =
+type CombinedEnv<S, Epics extends NEA.NonEmptyArray<AnyEpic<S>>> =
   UnionToIntersection<Epics[number]['_R']>
 
-type CombinedActions<Epics extends NEA.NonEmptyArray<AnyEpic>> =
+type CombinedActions<S, Epics extends NEA.NonEmptyArray<AnyEpic<S>>> =
   Epics[number]['_A']
-
-type CombinedState<Epics extends NEA.NonEmptyArray<AnyEpic>> =
-  UnionToIntersection<Epics[number]['_S']>
-
-type CombinedOutputs<Epics extends NEA.NonEmptyArray<AnyEpic>> =
-  Epics[number]['_O']
 
 function toNever(_: any): never {
   return undefined as never;
 };
 
-export function embed<Epics extends NEA.NonEmptyArray<AnyEpic>>(
+export function embed<S, Epics extends NEA.NonEmptyArray<AnyEpic<S>>>(
   ...epics: Epics
 ): (
     provider: (
-      _: T.Effect<CombinedEnv<Epics>, never, unknown>
+      _: T.Effect<CombinedEnv<S, Epics>, never, unknown>
     ) => T.Effect<T.DefaultEnv, never, unknown>
   ) => NEA.NonEmptyArray<RxJsEpic<
-    CombinedActions<Epics>,
-    CombinedState<Epics>,
-    CombinedOutputs<Epics>
+    CombinedActions<S, Epics>,
+    S,
+    CombinedActions<S, Epics>
   >> {
   return (provider) => pipe(
     epics,
@@ -69,8 +62,8 @@ export function embed<Epics extends NEA.NonEmptyArray<AnyEpic>>(
   )
 }
 
-export function epic<A, S, O = A>(): <R>(
-  fn: (action: S.UIO<A>, state: S.UIO<S>) => S.RIO<R, O>
-) => Epic<R, A, S, O> {
+export function epic<A, S>(): <R>(
+  fn: (action: S.UIO<A>, state: S.UIO<S>) => S.RIO<R, A>
+) => Epic<R, A, S> {
   return (fn) => fn as any
 }

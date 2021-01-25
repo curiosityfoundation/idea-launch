@@ -37,6 +37,7 @@
     "@reduxjs/toolkit": "^1.5.0",
     "core-js": "^3.6.5",
     "document-register-element": "1.13.1",
+    "firebase": "^8.2.4",
     "firebase-admin": "^9.4.2",
     "firebase-functions": "^3.13.1",
     "formik": "^2.2.6",

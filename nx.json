@@ -46,6 +46,8 @@
       "tags": [],
       "implicitDependencies": ["idea-launch-web"]
     },
-    "redux-effect": { "tags": [] }
+    "redux-effect": { "tags": [] },
+    "accounts-ui": { "tags": [] },
+    "accounts-model": { "tags": [] }
   }
 }
