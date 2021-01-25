@@ -32,6 +32,7 @@ export interface ProjectCardProps {
   avatar: string
   url: string
   favoriteCount: number
+  key: string
 }
 
 export const ProjectCard: FC<ProjectCardProps> = (props) => {
@@ -39,7 +40,7 @@ export const ProjectCard: FC<ProjectCardProps> = (props) => {
   const classes = useStyles();
 
   return (
-    <Card className={classes.root}>
+    <Card className={classes.root} key={props.key}>
       <CardHeader
         avatar={
           <Avatar

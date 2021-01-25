@@ -1,14 +1,16 @@
 import * as T from '@effect-ts/core/Effect'
-import * as S from '@effect-ts/core/Effect/Stream'
+import * as L from '@effect-ts/core/Effect/Layer'
 import { pipe } from '@effect-ts/core/Function'
 import { configureStore } from '@reduxjs/toolkit'
 import { createEpicMiddleware, combineEpics } from 'redux-observable'
 import firebase from 'firebase'
 
 import { embed } from '@idea-launch/redux-effect'
-import { State, Action, reducer } from '../constants'
 
+import { State, Action, reducer } from '../constants'
 import { LoginEpic, FirebaseAuthLive } from './auth'
+import { ConfigLive } from './config'
+import { FetchClientLive } from './http-client'
 import { FetchResourcesEpic } from './resources'
 
 export const createStore = () => {
@@ -37,11 +39,16 @@ export const createStore = () => {
     ? firebase.app()
     : firebase.initializeApp(fbConfig);
 
-  const provideEnv = T.provideLayer(
-    FirebaseAuthLive(
-      fbApp.auth(),
-      new firebase.auth.GoogleAuthProvider()
-    )
+  const provideEnv = pipe(
+    L.all(
+      FirebaseAuthLive(
+        fbApp.auth(),
+        new firebase.auth.GoogleAuthProvider()
+      ),
+      FetchClientLive(fetch),
+      ConfigLive(process.env.NX_FUNCTIONS_URL)
+    ),
+    T.provideLayer,
   )
 
   const embeddedEpics = embed(

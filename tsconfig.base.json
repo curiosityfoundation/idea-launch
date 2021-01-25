@@ -33,7 +33,8 @@
       "@idea-launch/resources/ui": ["libs/resources/ui/src/index.ts"],
       "@idea-launch/redux-effect": ["libs/redux-effect/src/index.ts"],
       "@idea-launch/accounts/ui": ["libs/accounts/ui/src/index.ts"],
-      "@idea-launch/accounts/model": ["libs/accounts/model/src/index.ts"]
+      "@idea-launch/accounts/model": ["libs/accounts/model/src/index.ts"],
+      "@idea-launch/http-client": ["libs/http-client/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

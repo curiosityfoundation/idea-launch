@@ -33,7 +33,6 @@ export function App() {
       />
       <Route
         path='/resources'
-        exact
         render={() => <ResourcesPage />}
       />
       <Route

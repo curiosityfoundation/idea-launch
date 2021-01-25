@@ -48,6 +48,7 @@
     },
     "redux-effect": { "tags": [] },
     "accounts-ui": { "tags": [] },
-    "accounts-model": { "tags": [] }
+    "accounts-model": { "tags": [] },
+    "http-client": { "tags": [] }
   }
 }

@@ -7,6 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import React from 'react'
+import { Link, useLocation } from 'react-router-dom';
 
 import { ResourceCategories, mockResources } from '@idea-launch/resources/model'
 import { ResourceCard } from '@idea-launch/resources/ui'
@@ -24,6 +25,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   row: {
     display: 'flex',
     flexDirection: 'row',
+  },
+  center: {
+    textAlign: 'center',
   },
   textArea: {
     padding: theme.spacing(2),
@@ -46,6 +50,7 @@ function ResourceCards() {
 
   const state = useSelector((s) => s.resources)
   const dispatch = useDispatch()
+  const classes = useStyles()
 
   const fetchResources = () => dispatch(
     Action.of.ResourcesRequested({})
@@ -53,7 +58,7 @@ function ResourceCards() {
 
   const render = State.resources.matchStrict({
     Init: () => (
-      <Container>
+      <Container className={classes.center}>
         <Typography
           variant='h5'
           color='textSecondary'
@@ -61,7 +66,10 @@ function ResourceCards() {
         >
           Resources haven't been loaded for some reason...
         </Typography>
-        <Button onClick={fetchResources}>
+        <Button
+          onClick={fetchResources}
+          variant='contained'
+        >
           Load Resources
         </Button>
       </Container>
@@ -74,7 +82,7 @@ function ResourceCards() {
           align='center'
         >
           Loading...
-      </Typography>
+        </Typography>
       </Container>
     ),
     Loaded: (s) => R.isEmpty(s.data)
@@ -121,9 +129,14 @@ function ResourceCards() {
 
 }
 
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
+
 export function ResourcesPage() {
 
   const classes = useStyles()
+  const query = useQuery()
 
   return (
     <div className={classes.root}>
@@ -161,9 +174,15 @@ export function ResourcesPage() {
             <br />
             <div className={classes.chips}>
               {ResourceCategories
-                .map((cat) => cat.split('-').join(' '))
-                .map((label) => (
-                  <Chip key={label} label={label} />
+                .map((cat) => [cat, cat.split('-').join(' ')])
+                .map(([id, label]) => (
+                  <Chip
+                    color={id === query.get('selected') ? 'primary' : 'default'}
+                    component={Link}
+                    to={`/resources?selected=${id}`}
+                    key={label}
+                    label={label}
+                  />
                 ))}
             </div>
             <br />
