@@ -3,11 +3,9 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import GoogleSignInButton from 'react-google-button';
 import { Link, Redirect } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
 
-import { Action, State } from '../constants'
+import { Action, State, useDispatch, useSelector } from '../constants'
 import logo from '../../assets/logo.svg';
-import { AccountState } from '@idea-launch/accounts/ui';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -42,7 +40,7 @@ function SignInButton() {
 
   const onLoginClick = () => dispatch(Action.of.LoginStarted({}))
 
-  const render = AccountState.matchStrict({
+  const render = State.account.matchStrict({
     LoggedIn: () => <Redirect to='/feed' />,
     LoggedOut: () => <GoogleSignInButton onClick={onLoginClick} />,
     LoggingIn: () => <GoogleSignInButton disabled />,

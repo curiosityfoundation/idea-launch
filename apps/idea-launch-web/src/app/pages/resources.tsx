@@ -1,16 +1,19 @@
-import React from 'react'
+import { pipe } from '@effect-ts/core/Function';
+import * as R from '@effect-ts/core/Record';
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
 import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
 import { makeStyles, Theme } from '@material-ui/core/styles';
+import React from 'react'
 
 import { ResourceCategories, mockResources } from '@idea-launch/resources/model'
 import { ResourceCard } from '@idea-launch/resources/ui'
 
-import { Navbar } from '../components/navbar'
-
 import ecommerce from '../../assets/illustrations/ecommerce.svg';
+import { Action, State, useDispatch, useSelector } from '../constants';
+import { Navbar } from '../components/navbar'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -38,6 +41,85 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
 }));
+
+function ResourceCards() {
+
+  const state = useSelector((s) => s.resources)
+  const dispatch = useDispatch()
+
+  const fetchResources = () => dispatch(
+    Action.of.ResourcesRequested({})
+  )
+
+  const render = State.resources.matchStrict({
+    Init: () => (
+      <Container>
+        <Typography
+          variant='h5'
+          color='textSecondary'
+          align='center'
+        >
+          Resources haven't been loaded for some reason...
+        </Typography>
+        <Button onClick={fetchResources}>
+          Load Resources
+        </Button>
+      </Container>
+    ),
+    Pending: () => (
+      <Container>
+        <Typography
+          variant='h5'
+          color='textSecondary'
+          align='center'
+        >
+          Loading...
+      </Typography>
+      </Container>
+    ),
+    Loaded: (s) => R.isEmpty(s.data)
+      ? (
+        <Container>
+          <Typography
+            variant='h5'
+            color='textSecondary'
+            align='center'
+          >
+            None to show
+          </Typography>
+        </Container>
+      )
+      : (
+        <Grid container justify='center' spacing={4}>
+          {Object.values(s.data).map((r) => (
+            <Grid key={r.id} item>
+              <ResourceCard
+                image={r.image}
+                title={r.title}
+                description={r.description}
+                link={r.link}
+              />
+            </Grid>
+          ))
+          }
+        </Grid >
+      ),
+    Failure: () => (
+      <Container>
+        <Typography
+          variant='h5'
+          color='textSecondary'
+          align='center'
+        >
+          Something went wrong, check back later
+        </Typography>
+      </Container>
+    ),
+  })
+
+  return render(state)
+
+}
 
 export function ResourcesPage() {
 
@@ -88,23 +170,8 @@ export function ResourcesPage() {
             <br />
           </div>
         </div>
-        <Grid container className={classes.root} spacing={2}>
-          <Grid item xs={12}>
-            <Grid container justify='center' spacing={4}>
-              {mockResources.map((r) => (
-                <Grid key={r.id} item>
-                  <ResourceCard
-                    image={r.image}
-                    title={r.title}
-                    description={r.description}
-                    link={r.link}
-                  />
-                </Grid>
-              ))}
-            </Grid>
-          </Grid>
-        </Grid>
       </Container>
+      <ResourceCards />
     </div>
   )
 }

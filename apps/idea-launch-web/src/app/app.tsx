@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Route, Switch } from 'react-router-dom';
 
+import { Action, useDispatch } from './constants';
 import { LandingPage } from './pages/landing'
 import { ResourcesPage } from './pages/resources'
 import { ContactPage } from './pages/contact'
@@ -11,6 +12,18 @@ import { NotFoundPage } from './pages/not-found'
 import './app.module.css';
 
 export function App() {
+
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    setTimeout(() =>
+      dispatch(
+        Action.of.ResourcesRequested({})
+      ),
+      1000,
+    )
+  })
+
   return (
     <Switch>
       <Route

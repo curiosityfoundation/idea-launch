@@ -6,9 +6,10 @@ import { createEpicMiddleware, combineEpics } from 'redux-observable'
 import firebase from 'firebase'
 
 import { embed } from '@idea-launch/redux-effect'
-import { State, Action, reducer } from './constants'
+import { State, Action, reducer } from '../constants'
 
 import { LoginEpic, FirebaseAuthLive } from './auth'
+import { FetchResourcesEpic } from './resources'
 
 export const createStore = () => {
 
@@ -45,6 +46,7 @@ export const createStore = () => {
 
   const embeddedEpics = embed(
     LoginEpic,
+    FetchResourcesEpic,
   )(provideEnv)
 
   const rootEpic = combineEpics(...embeddedEpics)

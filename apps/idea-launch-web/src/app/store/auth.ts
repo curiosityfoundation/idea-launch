@@ -5,10 +5,10 @@ import { pipe } from '@effect-ts/core/Function';
 import { UUID } from '@effect-ts/morphic/Algebra/Primitives'
 import firebase from 'firebase';
 
-import { AccountAction, Auth, AuthError, logInWithGoogle } from '@idea-launch/accounts/ui'
+import { Auth, AuthError, logInWithGoogle } from '@idea-launch/accounts/ui'
 import { Authorized } from '@idea-launch/accounts/model'
 
-import { epic } from './constants';
+import { epic, Action } from '../constants';
 
 export function FirebaseAuthLive(
   auth: firebase.auth.Auth,
@@ -38,18 +38,18 @@ export function FirebaseAuthLive(
 export const LoginEpic = epic(
   (actions) => pipe(
     actions,
-    S.filter(AccountAction.is.LoginStarted),
+    S.filter(Action.is.LoginStarted),
     S.mapM((a) =>
       pipe(
         logInWithGoogle,
         T.map((payload) =>
-          AccountAction.of.LoginSuccess({
+        Action.of.LoginSuccess({
             payload
           })
         ),
         T.catchAll((err) =>
           T.succeed(
-            AccountAction.of.LoginFailure({
+            Action.of.LoginFailure({
               payload: err.reason
             })
           )
