@@ -1,16 +1,18 @@
 import { unionADT, ADTType } from '@effect-ts/morphic/Adt'
 import { combineReducers } from 'redux'
 import { Dispatch } from 'react';
-import { 
-  useDispatch as useDispatch_, 
-  useSelector as useSelector_, 
-  useStore as useStore_ 
+import {
+  useDispatch as useDispatch_,
+  useSelector as useSelector_,
+  useStore as useStore_,
 } from 'react-redux'
 
 import { epic as epic_ } from '@idea-launch/redux-effect';
 
 import { AccountState, AccountAction, accountReducer, initAccountState } from '@idea-launch/accounts/ui'
 import { ResourcesState, ResourcesAction, resourcesReducer, initResourcesState } from '@idea-launch/resources/ui'
+
+import { RouteState, RouteAction, routeReducer, initRouteState } from './router'
 
 export const State = {
   account: AccountState,
@@ -20,21 +22,25 @@ export const State = {
 export interface State {
   account: AccountState
   resources: ResourcesState
+  route: RouteState
 }
 
-export const reducer = combineReducers<State>({
+export const rootReducer = combineReducers<State>({
   account: accountReducer,
   resources: resourcesReducer,
+  route: routeReducer,
 })
 
 export const initState: State = {
   account: initAccountState,
   resources: initResourcesState,
+  route: initRouteState,
 }
 
 export const Action = unionADT([
   AccountAction,
   ResourcesAction,
+  RouteAction,
 ])
 
 export type Action = ADTType<typeof Action>

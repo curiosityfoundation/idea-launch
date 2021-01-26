@@ -7,18 +7,19 @@ import firebase from 'firebase'
 
 import { embed } from '@idea-launch/redux-effect'
 
-import { State, Action, reducer } from '../constants'
+import { State, Action, rootReducer } from '../constants'
 import { LoginEpic, FirebaseAuthLive } from './auth'
 import { ConfigLive } from './config'
 import { FetchClientLive } from './http-client'
 import { FetchResourcesEpic } from './resources'
 
-export const createStore = () => {
+export const initStore = () => {
 
   const epicMiddleware = createEpicMiddleware<Action, Action, State, State>()
 
+
   const store = configureStore({
-    reducer,
+    reducer: rootReducer,
     devTools: true,
     middleware: [
       epicMiddleware,

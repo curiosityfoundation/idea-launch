@@ -7,7 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import React from 'react'
-import { Link, useLocation } from 'react-router-dom';
+// import { Link, useLocation } from 'react-router-dom';
 
 import { ResourceCategories, mockResources } from '@idea-launch/resources/model'
 import { ResourceCard } from '@idea-launch/resources/ui'
@@ -129,14 +129,9 @@ function ResourceCards() {
 
 }
 
-function useQuery() {
-  return new URLSearchParams(useLocation().search);
-}
-
 export function ResourcesPage() {
 
   const classes = useStyles()
-  const query = useQuery()
 
   return (
     <div className={classes.root}>
@@ -177,9 +172,9 @@ export function ResourcesPage() {
                 .map((cat) => [cat, cat.split('-').join(' ')])
                 .map(([id, label]) => (
                   <Chip
-                    color={id === query.get('selected') ? 'primary' : 'default'}
-                    component={Link}
-                    to={`/resources?selected=${id}`}
+                    // color={id === query.get('selected') ? 'primary' : 'default'}
+                    // component={Link}
+                    // to={`/resources?selected=${id}`}
                     key={label}
                     label={label}
                   />

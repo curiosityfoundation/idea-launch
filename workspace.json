@@ -746,6 +746,42 @@
           }
         }
       }
+    },
+    "routing-adt": {
+      "root": "libs/routing-adt",
+      "sourceRoot": "libs/routing-adt/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/routing-adt/**/*.ts"
+            ]
+          }
+        },
+        "build": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              {
+                "command": "ts-node tools/scripts/build-routing-adt.ts"
+              }
+            ],
+            "parallel": false
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/routing-adt"
+          ],
+          "options": {
+            "jestConfig": "libs/routing-adt/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   },
   "cli": {
