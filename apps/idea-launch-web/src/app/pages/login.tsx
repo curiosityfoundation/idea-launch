@@ -2,12 +2,11 @@ import React from 'react'
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import GoogleSignInButton from 'react-google-button';
-// import { Link, Redirect } from 'react-router-dom';
 
 import { Action, State, useDispatch, useSelector } from '../constants'
+import { Route, Redirect } from '../router'
+
 import logo from '../../assets/logo.svg';
-import { Redirect } from '../components/redirect';
-import { Route } from '../router';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

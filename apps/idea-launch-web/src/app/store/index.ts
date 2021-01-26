@@ -6,14 +6,14 @@ import { createEpicMiddleware, combineEpics } from 'redux-observable'
 import firebase from 'firebase'
 
 import { embed } from '@idea-launch/redux-effect'
+import { BrowserWindowLive } from '@idea-launch/browser-window'
 
 import { State, Action, rootReducer } from '../constants'
-import { BrowserWindowLive } from '../router'
+import { RouteEpic } from '../router'
 import { LoginEpic, FirebaseAuthLive } from './auth'
 import { ConfigLive } from './config'
 import { FetchClientLive } from './http-client'
 import { FetchResourcesEpic } from './resources'
-import { PushLocationEpic } from './router'
 
 export const initStore = () => {
 
@@ -57,7 +57,7 @@ export const initStore = () => {
   const embeddedEpics = embed(
     LoginEpic,
     FetchResourcesEpic,
-    PushLocationEpic,
+    RouteEpic,
   )(provideEnv)
 
   const rootEpic = combineEpics(...embeddedEpics)

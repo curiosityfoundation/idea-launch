@@ -6,10 +6,9 @@ import { ContactPage } from './pages/contact'
 import { LoginPage } from './pages/login'
 import { FeedPage } from './pages/feed'
 import { NotFoundPage } from './pages/not-found'
-import { Router } from './components/router';
 
 import { Action, useDispatch, useSelector } from './constants';
-import { Route } from './router'
+import { Route, Router } from './router'
 import './app.module.css';
 
 export function App() {

@@ -782,6 +782,56 @@
           }
         }
       }
+    },
+    "morphic-router": {
+      "root": "libs/morphic-router",
+      "sourceRoot": "libs/morphic-router/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/morphic-router/**/*.{ts,tsx,js,jsx}"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/morphic-router"
+          ],
+          "options": {
+            "jestConfig": "libs/morphic-router/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "browser-window": {
+      "root": "libs/browser-window",
+      "sourceRoot": "libs/browser-window/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/browser-window/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/browser-window"
+          ],
+          "options": {
+            "jestConfig": "libs/browser-window/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   },
   "cli": {

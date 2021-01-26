@@ -2,8 +2,7 @@ import React from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 
-import { Link } from './link';
-import { Route } from '../router';
+import { Link, Route } from '../router';
 
 import logo from '../../assets/logo.svg';
 

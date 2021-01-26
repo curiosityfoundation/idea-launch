@@ -2,6 +2,7 @@ import * as R from 'fp-ts-routing'
 import { ADTType } from '@effect-ts/morphic/Adt'
 
 import { routingFromMatches5 } from '@idea-launch/routing-adt'
+import { makeRouteState, RouteState as RouteState_ } from '@idea-launch/morphic-router'
 
 const landing = R.end
 const login = R.lit('login').then(R.end)
@@ -22,3 +23,25 @@ export const {
 )
 
 export type Route = ADTType<typeof Route>
+
+export type RouteState = RouteState_<Route>
+
+export const initRouteState: RouteState = {
+  current: Route.of.Landing({})
+}
+
+export const {
+  RouteAction,
+  routeReducer,
+  Redirect,
+  RouteEpic,
+  Router,
+  Link
+} = makeRouteState<Route>(
+  initRouteState,
+  encodeRoute,
+  decodeRoute,
+)
+
+export type RouteAction = ADTType<typeof RouteAction>
+

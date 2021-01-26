@@ -1,14 +1,9 @@
 {
   "npmScope": "idea-launch",
-  "affected": {
-    "defaultBase": "master"
-  },
+  "affected": { "defaultBase": "master" },
   "implicitDependencies": {
     "workspace.json": "*",
-    "package.json": {
-      "dependencies": "*",
-      "devDependencies": "*"
-    },
+    "package.json": { "dependencies": "*", "devDependencies": "*" },
     "tsconfig.base.json": "*",
     "tslint.json": "*",
     ".eslintrc.json": "*",
@@ -29,72 +24,34 @@
     }
   },
   "projects": {
-    "profiles-model": {
-      "tags": []
-    },
-    "profiles-ui": {
-      "tags": []
-    },
-    "profiles-ui-e2e": {
-      "tags": [],
-      "implicitDependencies": ["profiles-ui"]
-    },
-    "profiles-persistence": {
-      "tags": []
-    },
-    "projects-model": {
-      "tags": []
-    },
-    "projects-persistence": {
-      "tags": []
-    },
-    "projects-ui": {
-      "tags": []
-    },
-    "projects-ui-e2e": {
-      "tags": [],
-      "implicitDependencies": ["projects-ui"]
-    },
-    "resources-model": {
-      "tags": []
-    },
-    "resources-persistence": {
-      "tags": []
-    },
-    "api": {
-      "tags": []
-    },
-    "resources-ui": {
-      "tags": []
-    },
+    "profiles-model": { "tags": [] },
+    "profiles-ui": { "tags": [] },
+    "profiles-ui-e2e": { "tags": [], "implicitDependencies": ["profiles-ui"] },
+    "profiles-persistence": { "tags": [] },
+    "projects-model": { "tags": [] },
+    "projects-persistence": { "tags": [] },
+    "projects-ui": { "tags": [] },
+    "projects-ui-e2e": { "tags": [], "implicitDependencies": ["projects-ui"] },
+    "resources-model": { "tags": [] },
+    "resources-persistence": { "tags": [] },
+    "api": { "tags": [] },
+    "resources-ui": { "tags": [] },
     "resources-ui-e2e": {
       "tags": [],
       "implicitDependencies": ["resources-ui"]
     },
-    "functions": {
-      "tags": []
-    },
-    "idea-launch-web": {
-      "tags": []
-    },
+    "functions": { "tags": [] },
+    "idea-launch-web": { "tags": [] },
     "idea-launch-web-e2e": {
       "tags": [],
       "implicitDependencies": ["idea-launch-web"]
     },
-    "redux-effect": {
-      "tags": []
-    },
-    "accounts-ui": {
-      "tags": []
-    },
-    "accounts-model": {
-      "tags": []
-    },
-    "http-client": {
-      "tags": []
-    },
-    "routing-adt": {
-      "tags": []
-    }
+    "redux-effect": { "tags": [] },
+    "accounts-ui": { "tags": [] },
+    "accounts-model": { "tags": [] },
+    "http-client": { "tags": [] },
+    "routing-adt": { "tags": [] },
+    "morphic-router": { "tags": [] },
+    "browser-window": { "tags": [] }
   }
 }
