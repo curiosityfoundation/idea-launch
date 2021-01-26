@@ -8,15 +8,16 @@ import firebase from 'firebase'
 import { embed } from '@idea-launch/redux-effect'
 
 import { State, Action, rootReducer } from '../constants'
+import { BrowserWindowLive } from '../router'
 import { LoginEpic, FirebaseAuthLive } from './auth'
 import { ConfigLive } from './config'
 import { FetchClientLive } from './http-client'
 import { FetchResourcesEpic } from './resources'
+import { PushLocationEpic } from './router'
 
 export const initStore = () => {
 
   const epicMiddleware = createEpicMiddleware<Action, Action, State, State>()
-
 
   const store = configureStore({
     reducer: rootReducer,
@@ -47,7 +48,8 @@ export const initStore = () => {
         new firebase.auth.GoogleAuthProvider()
       ),
       FetchClientLive(fetch),
-      ConfigLive(process.env.NX_FUNCTIONS_URL)
+      ConfigLive(process.env.NX_FUNCTIONS_URL),
+      BrowserWindowLive(window)
     ),
     T.provideLayer,
   )
@@ -55,6 +57,7 @@ export const initStore = () => {
   const embeddedEpics = embed(
     LoginEpic,
     FetchResourcesEpic,
+    PushLocationEpic,
   )(provideEnv)
 
   const rootEpic = combineEpics(...embeddedEpics)

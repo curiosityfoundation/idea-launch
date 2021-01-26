@@ -15,14 +15,11 @@ const withRedux = connect(
   }),
   (dispatch, props) => ({
     onClick: (ev) => {
-      window.history.pushState(
-        null,
-        '',
-        encodeRoute(props.to)
+      dispatch(
+        Action.of.PushLocation({
+          payload: props.to
+        })
       )
-      dispatch(Action.of.LocationChanged({
-        payload: props.to
-      }))
       ev.preventDefault()
     }
   }),

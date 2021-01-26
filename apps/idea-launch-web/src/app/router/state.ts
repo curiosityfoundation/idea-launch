@@ -2,13 +2,25 @@ import { makeADT, ofType, ADTType } from '@effect-ts/morphic/Adt'
 
 import { Route } from './route'
 
+interface PushLocation {
+  type: 'PushLocation'
+  payload: Route
+}
+
+interface PopLocation {
+  type: 'PopLocation'
+  payload: Route
+}
+
 interface LocationChanged {
   type: 'LocationChanged'
   payload: Route
 }
 
 export const RouteAction = makeADT('type')({
-  LocationChanged: ofType<LocationChanged>()
+  PopLocation: ofType<PopLocation>(),
+  PushLocation: ofType<PushLocation>(),
+  LocationChanged: ofType<LocationChanged>(),
 })
 
 export type RouteAction = ADTType<typeof RouteAction>
@@ -22,7 +34,9 @@ export const initRouteState: RouteState = {
 }
 
 export const routeReducer = RouteAction.createReducer(initRouteState)({
+  PushLocation: () => (s) => s,
+  PopLocation: () => (s) => s,
   LocationChanged: (a) => () => ({
     current: a.payload
-  })
+  }),
 })
