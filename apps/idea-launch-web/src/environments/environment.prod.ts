@@ -20,6 +20,8 @@ import {
   EpicMiddlewareLive 
 } from '../app/store'
 
+console.log('production env');
+
 const AuthLayer =
   FirebaseAuthLive
   ['<<<'](FirebaseLoginProviderLive)
