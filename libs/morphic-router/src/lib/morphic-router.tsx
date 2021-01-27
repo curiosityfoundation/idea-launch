@@ -127,7 +127,7 @@ export function makeRouteState<Route>(
     useEffect(() => {
       dispatch(
         RouteAction.of.LocationChanged({
-          payload: decodeRoute(window.location.pathname)
+          payload: decodeRoute(window.location.pathname + window.location.search)
         })
       )
     }, [])

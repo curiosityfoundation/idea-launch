@@ -30,7 +30,7 @@ export function Pages() {
     NotFound: () => (<NotFoundPage />),
     Feed: () => (<FeedPage />),
     Contact: () => (<ContactPage />),
-    Resources: () => (<ResourcesPage />),
+    Resources: (r) => (<ResourcesPage {...r}/>),
   })
 
   return (

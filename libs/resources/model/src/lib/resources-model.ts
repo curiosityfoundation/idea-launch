@@ -11,7 +11,7 @@ export const ResourceCategories = [
 
 const Resource_ = M.make((F) =>
   F.interface({
-    id: F.uuid(),
+    id: F.string(),
     title: F.string(),
     description: F.string(),
     link: F.string(),

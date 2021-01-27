@@ -9,7 +9,4 @@ T.runPromise(
     RenderApp,
     T.provideLayer(AppLayer)
   )
-).then(
-  console.warn,
-  console.warn
-)
+).catch(console.warn)

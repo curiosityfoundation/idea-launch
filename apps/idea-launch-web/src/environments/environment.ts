@@ -6,9 +6,10 @@ import {
 import { BrowserWindowLive } from '@idea-launch/browser-window'
 
 import { AppConfigLive } from '../app/config'
+import { ConsoleLoggerLive } from '../app/logger'
 import {
   FirebaseAppLive,
-  FirebaseAuthClientLive,
+  FirebaseAuthClientEmulator,
   FirebaseAuthLive,
   FirebaseConfigLive,
   FirebaseLoginProviderLive
@@ -22,7 +23,7 @@ import {
 const AuthLayer =
   FirebaseAuthLive
   ['<<<'](FirebaseLoginProviderLive)
-  ['<<<'](FirebaseAuthClientLive)
+  ['<<<'](FirebaseAuthClientEmulator(process.env.NX_EMULATOR_URL))
 
 const FirebaseAppLayer =
   FirebaseAppLive
@@ -50,6 +51,7 @@ const MiddlewareLayer =
   ['<<<'](HTTPMiddlewareStackLive([]))
   ['<<<'](AppConfigLive(process.env.NX_FUNCTIONS_URL))
   ['<<<'](BrowserWindowLive(window))
+  ['<<<'](ConsoleLoggerLive)
 
 export const AppLayer =
   ReduxStoreLive({

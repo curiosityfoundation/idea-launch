@@ -6,8 +6,10 @@ import { decoder } from '@effect-ts/morphic/Decoder';
 
 import { request } from '@idea-launch/http-client'
 import { Resource } from '@idea-launch/resources/model';
+import { Success } from '@idea-launch/api';
 
 import { accessAppConfigM } from '../../config';
+import { log } from '../../logger';
 import { Action, epic } from '../constants';
 
 export const FetchResourcesEpic = epic(
@@ -30,14 +32,15 @@ export const FetchResourcesEpic = epic(
               ),
               (body) => pipe(
                 body,
-                decoder(Resource).decode,
-                T.map((r) =>
+                decoder(Success).decode,
+                T.map((success) =>
                   Action.of.ResourcesRequestSuccess({
-                    payload: [r]
+                    payload: success.resources
                   })
                 ),
               )
-            )
+            ),
+            T.tap(log),
           )
         ),
         T.catchAll(() =>

@@ -6,7 +6,7 @@ import Chip from '@material-ui/core/Chip';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import React from 'react'
+import React, { FC } from 'react'
 
 import { ResourceCategories, mockResources } from '@idea-launch/resources/model'
 import { ResourceCard } from '@idea-launch/resources/ui'
@@ -14,6 +14,8 @@ import { ResourceCard } from '@idea-launch/resources/ui'
 import ecommerce from '../../assets/illustrations/ecommerce.svg';
 import { Navbar } from '../components/navbar'
 import { Action, State, useDispatch, useSelector } from '../store';
+import { Route, Link } from '../router';
+import { ADTType } from '@effect-ts/morphic/Adt';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -128,9 +130,12 @@ function ResourceCards() {
 
 }
 
-export function ResourcesPage() {
+const OnlyResources = Route.select(['Resources'])
+
+export const ResourcesPage: FC<ADTType<typeof OnlyResources>> = (props) => {
 
   const classes = useStyles()
+  const route = useSelector((s) => s.route)
 
   return (
     <div className={classes.root}>
@@ -171,9 +176,13 @@ export function ResourcesPage() {
                 .map((cat) => [cat, cat.split('-').join(' ')])
                 .map(([id, label]) => (
                   <Chip
-                    // color={id === query.get('selected') ? 'primary' : 'default'}
-                    // component={Link}
-                    // to={`/resources?selected=${id}`}
+                    color={props.query && id === props.query.category ? 'primary' : 'default'}
+                    component={Link}
+                    to={Route.of.Resources({
+                      query: {
+                        category: id,
+                      }
+                    })}
                     key={label}
                     label={label}
                   />
