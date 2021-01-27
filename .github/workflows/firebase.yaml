@@ -15,9 +15,9 @@ jobs:
       - name: Install Dependencies
         run: npm install
       - name: Build functions
-        run: npm run build functions
+        run: yarn build functions
       - name: Build web app
-        run: npm run build idea-launch-web --production --configuration=production
+        run: yarn build idea-launch-web --production --configuration=production
         env:
           NX_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
           NX_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
