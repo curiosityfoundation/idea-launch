@@ -599,6 +599,17 @@
             }
           }
         },
+        "build-prod": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "commands": [
+              {
+                "command": "nx run idea-launch-web:build:production"
+              }
+            ],
+            "parallel": false
+          }
+        },
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
