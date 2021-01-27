@@ -17,7 +17,7 @@ jobs:
       - name: Build functions
         run: yarn build functions
       - name: Build web app
-        run: nx run idea-launch-web:build --c=production
+        run: yarn build-prod idea-launch-web
         env:
           NX_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
           NX_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
