@@ -27,6 +27,8 @@ export const initStore = () => {
     ]
   })
 
+  console.log(process.env)
+
   const fbConfig = {
     apiKey: process.env.NX_API_KEY,
     authDomain: process.env.NX_AUTH_DOMAIN,
