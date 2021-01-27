@@ -4,7 +4,7 @@ import * as T from '@effect-ts/core/Effect'
 import * as L from '@effect-ts/core/Effect/Layer'
 import * as O from '@effect-ts/core/Option'
 
-import * as H from '@idea-launch/http-client';
+import * as H from './http-client';
 
 function getContentType(requestType: H.RequestType): string {
   return H.foldRequestType(
@@ -133,3 +133,4 @@ export const FetchClientLive = (fetchApi: typeof fetch) =>
       }
     }
   })
+  

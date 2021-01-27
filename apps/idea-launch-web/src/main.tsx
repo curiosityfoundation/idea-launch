@@ -1,15 +1,15 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
+import * as T from '@effect-ts/core/Effect'
+import { pipe } from '@effect-ts/core/Function'
 
-import { App } from './app/app';
-import { initStore } from './app/store';
+import { AppLayer } from './environments/environment'
+import { RenderApp } from './app/app'
 
-ReactDOM.render(
-  <React.StrictMode>
-    <Provider store={initStore()}>
-      <App />
-    </Provider>
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+T.runPromise(
+  pipe(
+    RenderApp,
+    T.provideLayer(AppLayer)
+  )
+).then(
+  console.warn,
+  console.warn
+)

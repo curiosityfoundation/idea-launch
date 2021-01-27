@@ -7,8 +7,8 @@ import { decoder } from '@effect-ts/morphic/Decoder';
 import { request } from '@idea-launch/http-client'
 import { Resource } from '@idea-launch/resources/model';
 
+import { accessAppConfigM } from '../../config';
 import { Action, epic } from '../constants';
-import { accessConfigM } from './config';
 
 export const FetchResourcesEpic = epic(
   (actions) => pipe(
@@ -16,7 +16,7 @@ export const FetchResourcesEpic = epic(
     S.filter(Action.is.ResourcesRequested),
     S.mapM(() =>
       pipe(
-        accessConfigM((config) =>
+        accessAppConfigM((config) =>
           request('GET', 'JSON', 'JSON')(
             `${config.functionsUrl}/ListResources`
           ),

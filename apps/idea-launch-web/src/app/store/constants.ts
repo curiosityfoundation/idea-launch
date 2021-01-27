@@ -7,12 +7,26 @@ import {
   useStore as useStore_,
 } from 'react-redux'
 
+import { 
+  AccountState, 
+  AccountAction, 
+  accountReducer, 
+  initAccountState 
+} from '@idea-launch/accounts/ui'
+import { 
+  ResourcesState, 
+  ResourcesAction, 
+  resourcesReducer, 
+  initResourcesState 
+} from '@idea-launch/resources/ui'
 import { epic as epic_ } from '@idea-launch/redux-effect';
 
-import { AccountState, AccountAction, accountReducer, initAccountState } from '@idea-launch/accounts/ui'
-import { ResourcesState, ResourcesAction, resourcesReducer, initResourcesState } from '@idea-launch/resources/ui'
-
-import { RouteState, RouteAction, routeReducer, initRouteState } from './router'
+import { 
+  RouteState, 
+  RouteAction, 
+  routeReducer, 
+  initRouteState 
+} from '../router'
 
 export const State = {
   account: AccountState,

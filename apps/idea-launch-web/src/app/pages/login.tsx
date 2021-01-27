@@ -3,7 +3,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import GoogleSignInButton from 'react-google-button';
 
-import { Action, State, useDispatch, useSelector } from '../constants'
+import { Action, State, useDispatch, useSelector } from '../store'
 import { Route, Redirect } from '../router'
 
 import logo from '../../assets/logo.svg';

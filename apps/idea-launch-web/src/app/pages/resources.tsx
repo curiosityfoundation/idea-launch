@@ -7,14 +7,13 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import React from 'react'
-// import { Link, useLocation } from 'react-router-dom';
 
 import { ResourceCategories, mockResources } from '@idea-launch/resources/model'
 import { ResourceCard } from '@idea-launch/resources/ui'
 
 import ecommerce from '../../assets/illustrations/ecommerce.svg';
-import { Action, State, useDispatch, useSelector } from '../constants';
 import { Navbar } from '../components/navbar'
+import { Action, State, useDispatch, useSelector } from '../store';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
