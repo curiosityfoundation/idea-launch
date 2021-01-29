@@ -15,7 +15,7 @@ jobs:
       - name: Install Dependencies
         run: npm install
       - name: Build functions
-        run: npm run build functions
+        run: yarn build functions
       - name: Build web app
         run: yarn build-prod idea-launch-web
         env:
