@@ -843,6 +843,31 @@
           }
         }
       }
+    },
+    "firebase-web": {
+      "root": "libs/firebase-web",
+      "sourceRoot": "libs/firebase-web/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/firebase-web/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/firebase-web"
+          ],
+          "options": {
+            "jestConfig": "libs/firebase-web/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   },
   "cli": {

@@ -1,12 +1,13 @@
 import { pipe } from '@effect-ts/core/Function'
 import * as T from '@effect-ts/core/Effect'
-import { UUID } from '@effect-ts/morphic/Algebra/Primitives'
 import { encode } from '@effect-ts/morphic/Encoder'
 import * as O from '@effect-ts/core/Option'
 import * as M from '@effect-ts/morphic'
 
 import { findByOwner } from '@idea-launch/profiles/persistence'
 import { Profile } from '@idea-launch/profiles/model'
+
+import { endpoint, NoArgs } from './api'
 
 const Failure_ = M.make((F) =>
   F.interface({
@@ -46,8 +47,13 @@ export const Result = M.makeADT('tag')({
   NotFound,
 })
 
-export const FindProfile =
-  (data: unknown, uid: UUID) =>
+export type Result = M.AType<typeof Result>
+
+export const FindProfile = endpoint({
+  name: 'FindProfile',
+  result: Result,
+  args: NoArgs,
+  handler: (data, uid) =>
     pipe(
       findByOwner(uid),
       T.chain(
@@ -71,3 +77,4 @@ export const FindProfile =
       ),
       T.chain(encode(Result)),
     )
+  })

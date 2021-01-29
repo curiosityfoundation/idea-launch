@@ -1,29 +1,30 @@
-import { 
-  FetchClientLive, 
-  HTTPHeadersLive, 
-  HTTPMiddlewareStackLive 
+import {
+  FetchClientLive,
+  HTTPHeadersLive,
+  HTTPMiddlewareStackLive
 } from '@idea-launch/http-client'
 import { BrowserWindowLive } from '@idea-launch/browser-window'
-
-import { AppConfigLive } from '../app/config'
-import { ConsoleLoggerLive } from '../app/logger'
 import {
   FirebaseAppLive,
   FirebaseAuthClientEmulator,
   FirebaseAuthLive,
   FirebaseConfigLive,
-  FirebaseLoginProviderLive
-} from '../app/firebase'
-import { 
-  ReduxStoreLive, 
-  rootReducer, 
-  EpicMiddlewareLive 
+  FirebaseLoginProviderLive,
+  FirebaseAuthStateLive
+} from '@idea-launch/firebase-web'
+
+import { AppConfigLive } from '../app/config'
+import { ConsoleLoggerLive } from '../app/logger'
+import {
+  ReduxStoreLive,
+  rootReducer,
+  EpicMiddlewareLive
 } from '../app/store'
 
 const AuthLayer =
   FirebaseAuthLive
   ['<<<'](FirebaseLoginProviderLive)
-  ['<<<'](FirebaseAuthClientEmulator(process.env.NX_EMULATOR_URL))
+  ['<+<'](FirebaseAuthClientEmulator(process.env.NX_EMULATOR_URL))
 
 const FirebaseAppLayer =
   FirebaseAppLive
@@ -39,7 +40,8 @@ const FirebaseAppLayer =
 
 const MiddlewareLayer =
   EpicMiddlewareLive
-  ['<<<'](AuthLayer)
+  ['<+<'](FirebaseAuthStateLive)
+  ['<+<'](AuthLayer)
   ['<<<'](FirebaseAppLayer)
   ['<<<'](FetchClientLive(fetch))
   ['<<<'](HTTPHeadersLive({
@@ -59,3 +61,4 @@ export const AppLayer =
     devTools: true,
   })
   ['<+<'](MiddlewareLayer)
+  ['<+<'](FirebaseAppLayer)

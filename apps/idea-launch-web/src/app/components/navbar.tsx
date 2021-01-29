@@ -5,6 +5,7 @@ import Button from '@material-ui/core/Button';
 import { Link, Route } from '../router';
 
 import logo from '../../assets/logo.svg';
+import { State, useSelector, useDispatch, Action } from '../store';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -24,6 +25,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 export function Navbar() {
 
   const classes = useStyles()
+  const account = useSelector((s) => s.account)
+  const dispatch = useDispatch()
 
   return (
     <div className={classes.root}>
@@ -40,7 +43,7 @@ export function Navbar() {
           size='large'
         >
           Resources
-      </Button>
+        </Button>
         <Button
           className={classes.menuButton}
           component={Link}
@@ -50,17 +53,56 @@ export function Navbar() {
           size='large'
         >
           Contact Us
-      </Button>
-        <Button
-          className={classes.menuButton}
-          component={Link}
-          to={Route.of.Login({})}
-          color='primary'
-          variant='contained'
-          size='large'
-        >
-          Log In
-      </Button>
+        </Button>
+        {State.account.matchStrict({
+          LoggedIn: () => (
+            <Button
+              className={classes.menuButton}
+              color='primary'
+              variant='contained'
+              size='large'
+              onClick={() => dispatch(
+                Action.of.LogoutStarted({})
+              )}
+            >
+              Log Out
+            </Button>
+          ),
+          LoggingIn: () => (
+            <Button
+              className={classes.menuButton}
+              color='primary'
+              variant='contained'
+              size='large'
+              disabled
+            >
+              Log In
+            </Button>
+          ),
+          LoggedOut: () => (
+            <Button
+              className={classes.menuButton}
+              component={Link}
+              to={Route.of.Login({})}
+              color='primary'
+              variant='contained'
+              size='large'
+            >
+              Log In
+            </Button>
+          ),
+          LoggingOut: () => (
+            <Button
+              className={classes.menuButton}
+              color='primary'
+              variant='contained'
+              size='large'
+              disabled
+            >
+              Log Out
+            </Button>
+          ),
+        })(account)}
       </div>
     </div>
   )

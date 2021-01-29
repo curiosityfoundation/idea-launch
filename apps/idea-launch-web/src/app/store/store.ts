@@ -1,3 +1,4 @@
+import * as T from '@effect-ts/core/Effect'
 import * as L from '@effect-ts/core/Effect/Layer'
 import { tag } from '@effect-ts/core/Has'
 import { configureStore, Store, ConfigureStoreOptions } from '@reduxjs/toolkit'
@@ -19,6 +20,9 @@ const makeReduxStore = (options: Omit<ConfigureStoreOptions, 'middleware'>) =>
       })
     })
   )
+
+export const accessReduxStore = T.accessService(ReduxStore)
+export const accessReduxStoreM = T.accessServiceM(ReduxStore)
 
 export function ReduxStoreLive(
   options: Omit<ConfigureStoreOptions, 'middleware'>

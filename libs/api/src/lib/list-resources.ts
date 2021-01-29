@@ -6,6 +6,8 @@ import * as M from '@effect-ts/morphic'
 import { listResources } from '@idea-launch/resources/persistence'
 import { Resource } from '@idea-launch/resources/model'
 
+import { endpoint, NoArgs } from './api'
+
 const Failure_ = M.make((F) =>
   F.interface({
     tag: F.stringLiteral('Failure'),
@@ -33,20 +35,25 @@ export const Result = M.makeADT('tag')({
   Success,
 })
 
-export const ListResources =
-  pipe(
-    listResources,
-    T.map((resources) =>
-      Result.of.Success({
-        resources,
-      })
-    ),
-    T.catchAll((err) =>
-      T.succeed(
-        Result.of.Failure({
-          reason: err.reason,
+export const ListResources = endpoint({
+  name: 'ListResources',
+  result: Result,
+  args: NoArgs,
+  handler: () =>
+    pipe(
+      listResources,
+      T.map((resources) =>
+        Result.of.Success({
+          resources,
         })
-      )
-    ),
-    T.chain(encode(Result)),
-  )
+      ),
+      T.catchAll((err) =>
+        T.succeed(
+          Result.of.Failure({
+            reason: err.reason,
+          })
+        )
+      ),
+      T.chain(encode(Result)),
+    )
+})

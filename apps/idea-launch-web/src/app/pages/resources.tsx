@@ -14,8 +14,7 @@ import { ResourceCard } from '@idea-launch/resources/ui'
 import ecommerce from '../../assets/illustrations/ecommerce.svg';
 import { Navbar } from '../components/navbar'
 import { Action, State, useDispatch, useSelector } from '../store';
-import { Route, Link } from '../router';
-import { ADTType } from '@effect-ts/morphic/Adt';
+import { Route, Link, RouteProps } from '../router';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -130,9 +129,7 @@ function ResourceCards() {
 
 }
 
-const OnlyResources = Route.select(['Resources'])
-
-export const ResourcesPage: FC<ADTType<typeof OnlyResources>> = (props) => {
+export const ResourcesPage: FC<RouteProps<'Resources'>> = (props) => {
 
   const classes = useStyles()
   const route = useSelector((s) => s.route)

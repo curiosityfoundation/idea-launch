@@ -37,7 +37,8 @@
       "@idea-launch/http-client": ["libs/http-client/src/index.ts"],
       "@idea-launch/routing-adt": ["libs/routing-adt/src/index.ts"],
       "@idea-launch/morphic-router": ["libs/morphic-router/src/index.ts"],
-      "@idea-launch/browser-window": ["libs/browser-window/src/index.ts"]
+      "@idea-launch/browser-window": ["libs/browser-window/src/index.ts"],
+      "@idea-launch/firebase-web": ["libs/firebase-web/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

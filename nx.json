@@ -52,6 +52,7 @@
     "http-client": { "tags": [] },
     "routing-adt": { "tags": [] },
     "morphic-router": { "tags": [] },
-    "browser-window": { "tags": [] }
+    "browser-window": { "tags": [] },
+    "firebase-web": { "tags": [] }
   }
 }

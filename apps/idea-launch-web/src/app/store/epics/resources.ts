@@ -5,8 +5,7 @@ import * as O from '@effect-ts/core/Option'
 import { decoder } from '@effect-ts/morphic/Decoder';
 
 import { request } from '@idea-launch/http-client'
-import { Resource } from '@idea-launch/resources/model';
-import { Success } from '@idea-launch/api';
+import { ListResources } from '@idea-launch/api';
 
 import { accessAppConfigM } from '../../config';
 import { log } from '../../logger';
@@ -20,7 +19,7 @@ export const FetchResourcesEpic = epic(
       pipe(
         accessAppConfigM((config) =>
           request('GET', 'JSON', 'JSON')(
-            `${config.functionsUrl}/ListResources`
+            `${config.functionsUrl}/${ListResources.name}`
           ),
         ),
         T.chain((resp) =>
@@ -32,10 +31,15 @@ export const FetchResourcesEpic = epic(
               ),
               (body) => pipe(
                 body,
-                decoder(Success).decode,
-                T.map((success) =>
-                  Action.of.ResourcesRequestSuccess({
-                    payload: success.resources
+                decoder(ListResources.result).decode,
+                T.map(
+                  ListResources.result.matchStrict({
+                    Success: (success) =>
+                      Action.of.ResourcesRequestSuccess({
+                        payload: success.resources
+                      }),
+                    Failure: () => 
+                      Action.of.ResourcesRequestFailed({}),
                   })
                 ),
               )

@@ -55,7 +55,7 @@ export interface EditProfileFormProps {
   avatar: string
 }
 
-export const validationSchema = Yup.object({
+export const EditProfileFormSchema = Yup.object({
   first: Yup.string().min(2).max(40).required(),
   last: Yup.string().min(2).max(40).required(),
 })
