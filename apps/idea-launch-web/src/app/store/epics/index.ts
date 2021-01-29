@@ -5,7 +5,7 @@ import { makeEpicMiddleware, makeMiddleware } from '@idea-launch/redux-effect'
 
 import { RouteEpic } from '../../router'
 import { Action, State } from '../constants'
-import { LoginEpic } from './auth'
+import { LoginEpic, LogoutEpic } from './auth'
 import { FetchResourcesEpic } from './resources'
 import { FetchProfileEpic } from './profile'
 
@@ -17,6 +17,7 @@ export const accessEpicMiddlewareM = T.accessServiceM(EpicMiddleware)
 export const EpicMiddlewareLive = L.fromEffect(EpicMiddleware)(
   makeMiddleware([
     LoginEpic,
+    LogoutEpic,
     RouteEpic,
     FetchResourcesEpic,
     FetchProfileEpic,

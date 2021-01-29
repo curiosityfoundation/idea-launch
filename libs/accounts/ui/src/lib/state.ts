@@ -138,6 +138,9 @@ export const accountReducer = AccountAction.createReducer(initAccountState)({
     })
   }),
   LogoutSuccess: (a) => AccountState.transform({
+    LoggingOut: () => AccountState.of.LoggedOut({
+      reason: O.none
+    }),
     LoggedIn: () => AccountState.of.LoggedOut({
       reason: O.none
     })
