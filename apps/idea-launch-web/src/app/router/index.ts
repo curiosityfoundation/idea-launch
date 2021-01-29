@@ -18,10 +18,7 @@ const resources =
   R.lit('resources')
     .then(
       query(
-        t.union([
-          t.strict({ category: t.string }),
-          t.undefined,
-        ])
+        t.strict({ category: t.string }),
       )
     )
     .then(R.end)

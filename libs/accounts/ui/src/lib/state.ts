@@ -128,7 +128,9 @@ export const accountReducer = AccountAction.createReducer(initAccountState)({
     LoggedIn: () => AccountState.of.LoggingOut({}),
   }),
   LoginSuccess: (a) => AccountState.transform({
+    LoggedOut: () => AccountState.of.LoggedIn(a.payload),
     LoggingIn: () => AccountState.of.LoggedIn(a.payload),
+    LoggedIn: () => AccountState.of.LoggedIn(a.payload),
   }),
   LoginFailure: (a) => AccountState.transform({
     LoggingIn: () => AccountState.of.LoggedOut({
