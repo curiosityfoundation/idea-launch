@@ -9,7 +9,7 @@ export interface EditProfileProps {
 }
 
 export interface EditProfileProps { 
-  form: FormikProps<PostProjectValues>
+  form: any
 }
 
 export function EditProfile(props: EditProfileProps) {

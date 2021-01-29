@@ -34,6 +34,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 export const GetStarted: FC<RouteProps<'GetStarted'>> = (props) => {
 
   const classes = useStyles()
+  const dispatch = useDispatch()
 
   const initialValues: CreateProfileFormValues = {
     first: '',
@@ -61,9 +62,15 @@ export const GetStarted: FC<RouteProps<'GetStarted'>> = (props) => {
             </Typography>
             <br />
             <Formik
-              validationSchema={CreateProfileFormSchema}
+              // validationSchema={CreateProfileFormSchema}
               initialValues={initialValues}
-              onSubmit={console.log}
+              onSubmit={() => dispatch(
+                Action.of.PushLocation({
+                  payload: Route.of.GetStarted({
+                    step: '2'
+                  })
+                })
+              )}
             >
               {(form) => (<CreateProfileForm form={form} />)}
             </Formik>
