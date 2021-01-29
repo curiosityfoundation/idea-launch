@@ -4,9 +4,6 @@ import {
   HTTPMiddlewareStackLive
 } from '@idea-launch/http-client'
 import { BrowserWindowLive } from '@idea-launch/browser-window'
-
-import { AppConfigLive } from '../app/config'
-import { ConsoleLoggerLive } from '../app/logger'
 import {
   FirebaseAppLive,
   FirebaseAuthClientEmulator,
@@ -14,7 +11,10 @@ import {
   FirebaseConfigLive,
   FirebaseLoginProviderLive,
   FirebaseAuthStateLive
-} from '../app/firebase'
+} from '@idea-launch/firebase-web'
+
+import { AppConfigLive } from '../app/config'
+import { ConsoleLoggerLive } from '../app/logger'
 import {
   ReduxStoreLive,
   rootReducer,

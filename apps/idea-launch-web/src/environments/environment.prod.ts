@@ -4,9 +4,6 @@ import {
   HTTPMiddlewareStackLive
 } from '@idea-launch/http-client'
 import { BrowserWindowLive } from '@idea-launch/browser-window'
-
-import { AppConfigLive } from '../app/config'
-import { SilentLoggerLive } from '../app/logger'
 import {
   FirebaseAppLive,
   FirebaseAuthClientLive,
@@ -14,14 +11,15 @@ import {
   FirebaseConfigLive,
   FirebaseLoginProviderLive,
   FirebaseAuthStateLive
-} from '../app/firebase'
+} from '@idea-launch/firebase-web'
+
+import { AppConfigLive } from '../app/config'
+import { SilentLoggerLive } from '../app/logger'
 import {
   ReduxStoreLive,
   rootReducer,
   EpicMiddlewareLive
 } from '../app/store'
-
-console.log('production env');
 
 const AuthLayer =
   FirebaseAuthLive
