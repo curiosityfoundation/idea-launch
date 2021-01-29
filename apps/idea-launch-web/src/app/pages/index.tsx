@@ -16,12 +16,14 @@ export function Pages() {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    setTimeout(() =>
+    setTimeout(() => {
+      dispatch(
+        Action.of.ProfileRequested({})
+      )
       dispatch(
         Action.of.ResourcesRequested({})
-      ),
-      1000,
-    )
+      )
+    }, 1000)
   }, [])
 
   const render = Route.matchStrict({
@@ -30,7 +32,7 @@ export function Pages() {
     NotFound: () => (<NotFoundPage />),
     Feed: () => (<FeedPage />),
     Contact: () => (<ContactPage />),
-    Resources: (r) => (<ResourcesPage {...r}/>),
+    Resources: (r) => (<ResourcesPage {...r} />),
   })
 
   return (

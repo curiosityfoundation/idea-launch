@@ -1,5 +1,6 @@
 export * from './firebase-app'
 export * from './firebase-auth'
 export * from './firebase-auth-client'
+export * from './firebase-auth-state'
 export * from './firebase-config'
 export * from './firebase-login-provider'

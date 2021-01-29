@@ -9,7 +9,7 @@ export class AuthError {
 }
 
 export interface Auth {
-  logInWithGoogle: T.IO<AuthError, Authorized>
+  logInWithGoogle: T.IO<AuthError, void>
   logOut: T.UIO<void>
 }
 

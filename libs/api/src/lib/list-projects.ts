@@ -1,6 +1,5 @@
 import { pipe } from '@effect-ts/core/Function'
 import * as T from '@effect-ts/core/Effect'
-import { UUID } from '@effect-ts/morphic/Algebra/Primitives'
 import { encode } from '@effect-ts/morphic/Encoder'
 import { strictDecoder } from '@effect-ts/morphic/StrictDecoder'
 import * as A from '@effect-ts/core/Array'
@@ -9,15 +8,17 @@ import * as M from '@effect-ts/morphic'
 import { listProjects } from '@idea-launch/projects/persistence'
 import { Project, Comment } from '@idea-launch/projects/model'
 
-const Opts_ = M.make((F) =>
+import { endpoint } from './api'
+
+const Args_ = M.make((F) => 
   F.interface({
     page: F.number(),
-  }, { name: 'Opts' })
+  }, { name: 'Args' })
 )
 
-export interface Opts extends M.AType<typeof Opts_> { }
-export interface OptsRaw extends M.EType<typeof Opts_> { }
-export const Opts = M.opaque<OptsRaw, Opts>()(Opts_)
+export interface Args extends M.AType<typeof Args_> { }
+export interface ArgsRaw extends M.EType<typeof Args_> { }
+export const Args = M.opaque<ArgsRaw, Args>()(Args_)
 
 const Failure_ = M.make((F) =>
   F.interface({
@@ -61,11 +62,14 @@ export const Result = M.makeADT('tag')({
   Success,
 })
 
-export const ListProjects =
-  (data: unknown, uid: UUID) =>
+export const ListProjects = endpoint({
+  name: 'ListProjects',
+  result: Result,
+  args: Args,
+  handler: (data) =>
     pipe(
       data,
-      strictDecoder(Opts).decode,
+      strictDecoder(Args).decode,
       T.chain((opts) =>
         pipe(
           listProjects(opts.page),
@@ -100,3 +104,4 @@ export const ListProjects =
       ),
       T.chain(encode(Result)),
     )
+})

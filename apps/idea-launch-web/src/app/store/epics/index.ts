@@ -7,6 +7,7 @@ import { RouteEpic } from '../../router'
 import { Action, State } from '../constants'
 import { LoginEpic } from './auth'
 import { FetchResourcesEpic } from './resources'
+import { FetchProfileEpic } from './profile'
 
 export const EpicMiddleware = makeEpicMiddleware<Action, State>()
 
@@ -18,5 +19,6 @@ export const EpicMiddlewareLive = L.fromEffect(EpicMiddleware)(
     LoginEpic,
     RouteEpic,
     FetchResourcesEpic,
+    FetchProfileEpic,
   ])
 )

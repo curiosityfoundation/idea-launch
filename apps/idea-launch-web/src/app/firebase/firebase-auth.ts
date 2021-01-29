@@ -25,19 +25,6 @@ const makeFirebaseAuthLive =
       failWithFirebaseError(() =>
         client.auth.signInWithPopup(provider.google)
       ),
-      T.chain((result) =>
-        pipe(
-          failWithFirebaseError(() =>
-            result.user.getIdToken()
-          ),
-          T.map((token) =>
-            Authorized.build({
-              idToken: token,
-              userId: result.user.uid as UUID,
-            })
-          ),
-        )
-      ),
     )
   }))
 

@@ -8,6 +8,12 @@ import {
 } from 'react-redux'
 
 import { 
+  findProfileReducer, 
+  FindProfileAction, 
+  FindProfileState, 
+  initFindProfileState 
+} from '@idea-launch/api'
+import { 
   AccountState, 
   AccountAction, 
   accountReducer, 
@@ -31,30 +37,35 @@ import {
 export const State = {
   account: AccountState,
   resources: ResourcesState,
+  profile: FindProfileState,
 }
 
 export interface State {
   account: AccountState
   resources: ResourcesState
   route: RouteState
+  profile: FindProfileState,
 }
 
 export const rootReducer = combineReducers<State>({
   account: accountReducer,
   resources: resourcesReducer,
   route: routeReducer,
+  profile: findProfileReducer,
 })
 
 export const initState: State = {
   account: initAccountState,
   resources: initResourcesState,
   route: initRouteState,
+  profile: initFindProfileState,
 }
 
 export const Action = unionADT([
   AccountAction,
   ResourcesAction,
   RouteAction,
+  FindProfileAction,
 ])
 
 export type Action = ADTType<typeof Action>

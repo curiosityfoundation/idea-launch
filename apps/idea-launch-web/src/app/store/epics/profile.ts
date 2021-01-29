@@ -5,21 +5,21 @@ import * as O from '@effect-ts/core/Option'
 import { decoder } from '@effect-ts/morphic/Decoder';
 
 import { request } from '@idea-launch/http-client'
-import { ListResources } from '@idea-launch/api';
+import { FindProfile } from '@idea-launch/api';
 
 import { accessAppConfigM } from '../../config';
 import { log } from '../../logger';
 import { Action, epic } from '../constants';
 
-export const FetchResourcesEpic = epic(
+export const FetchProfileEpic = epic(
   (actions) => pipe(
     actions,
-    S.filter(Action.is.ResourcesRequested),
+    S.filter(Action.is.ProfileRequested),
     S.mapM(() =>
       pipe(
         accessAppConfigM((config) =>
           request('GET', 'JSON', 'JSON')(
-            `${config.functionsUrl}/${ListResources.name}`
+            `${config.functionsUrl}/${FindProfile.name}`
           ),
         ),
         T.chain((resp) =>
@@ -27,20 +27,17 @@ export const FetchResourcesEpic = epic(
             resp.body,
             O.fold(
               () => T.succeed(
-                Action.of.ResourcesRequestFailed({})
+                Action.of.ProfileRequestFailed({
+                  payload: 'no body present on response'
+                })
               ),
               (body) => pipe(
                 body,
-                decoder(ListResources.result).decode,
-                T.map(
-                  ListResources.result.matchStrict({
-                    Success: (success) =>
-                      Action.of.ResourcesRequestSuccess({
-                        payload: success.resources
-                      }),
-                    Failure: () => 
-                      Action.of.ResourcesRequestFailed({}),
-                  })
+                decoder(FindProfile.result).decode,
+                T.map((result) =>
+                  Action.of.ProfileRequestSucceeded({
+                    payload: result
+                  }),
                 ),
               )
             ),
@@ -49,7 +46,9 @@ export const FetchResourcesEpic = epic(
         ),
         T.catchAll(() =>
           T.succeed(
-            Action.of.ResourcesRequestFailed({})
+            Action.of.ProfileRequestFailed({
+              payload: 'some error happened'
+            })
           )
         ),
       )
