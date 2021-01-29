@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { FC } from 'react'
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import GoogleSignInButton from 'react-google-button';
 
 import { Action, State, useDispatch, useSelector } from '../store'
-import { Route, Redirect } from '../router'
+import { Route, Link, RouteProps } from '../router'
 
 import logo from '../../assets/logo.svg';
 
@@ -36,70 +36,70 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 function SignInButton() {
 
-  const accountState = useSelector((s: State) => s.account)
+  const account = useSelector((s: State) => s.account)
   const dispatch = useDispatch()
 
   const onLoginClick = () => dispatch(Action.of.LoginStarted({}))
 
   const render = State.account.matchStrict({
-    LoggedIn: () => <Redirect to={Route.of.Feed({})}/>,
+    LoggedIn: () => <GoogleSignInButton disabled />,
     LoggedOut: () => <GoogleSignInButton onClick={onLoginClick} />,
     LoggingIn: () => <GoogleSignInButton disabled />,
     LoggingOut: () => <GoogleSignInButton disabled />,
   })
 
-  return render(accountState)
+  return render(account)
 
 }
 
-export function LoginPage() {
+export const LoginPage: FC<RouteProps<'Login'>> = () => {
 
   const classes = useStyles()
 
   return (
     <div className={classes.root}>
-        <div className={classes.content}>
-          <Typography
-            variant='h4'
-            color='textPrimary'
-            align='center'
-          >
-            Sign In
+      <div className={classes.content}>
+        <Typography
+          variant='h4'
+          color='textPrimary'
+          align='center'
+        >
+          Sign In
         </Typography>
-          <img
-            src={logo}
-            alt='logo'
-            className={classes.logo}
-          />
-          <br />
-          <SignInButton />
-          <br />
-          <div className={classes.links}>
-            <Typography
-              color='textSecondary'
-            >
-              {/* <Link to='/'> */}
+        <img
+          src={logo}
+          alt='logo'
+          className={classes.logo}
+        />
+        <br />
+        <SignInButton />
+        <br />
+        <div className={classes.links}>
+          <Typography
+            color='textSecondary'
+          >
+            <Link to={Route.of.Landing({})}>
               Home
-            {/* </Link> */}
-            </Typography>
+            </Link>
+          </Typography>
           &nbsp;|&nbsp;
           <Typography
-              color='textSecondary'
-            >
-              {/* <Link to='/legal/privacy'> */}
+            color='textSecondary'
+          >
+            {/* <Link to='/legal/privacy'> */}
               Privacy
             {/* </Link> */}
-            </Typography>
+          </Typography>
           &nbsp;|&nbsp;
           <Typography
-              color='textSecondary'
-            >
-              {/* <Link to='/legal/tos'> */}
+            color='textSecondary'
+          >
+            {/* <Link to='/legal/tos'> */}
               Terms of Service
             {/* </Link> */}
-            </Typography>
-          </div>
+          </Typography>
         </div>
       </div>
+    </div>
   )
 }

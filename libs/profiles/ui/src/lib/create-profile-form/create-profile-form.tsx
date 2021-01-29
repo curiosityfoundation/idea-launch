@@ -12,17 +12,17 @@ const useStyles = makeStyles({
   },
 });
 
-export interface ProfileFormValues {
+export interface CreateProfileFormValues {
   first: string
   last: string
   classCode: string
 }
 
 export interface CreateProfileFormProps {
-  form: FormikProps<ProfileFormValues>
+  form: FormikProps<CreateProfileFormValues>
 }
 
-export const validationSchema = Yup.object({
+export const CreateProfileFormSchema = Yup.object({
   first: Yup.string().min(2).max(40).required(),
   last: Yup.string().min(2).max(40).required(),
   classCode: Yup.string().min(6).max(12).required(),

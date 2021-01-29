@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { FC } from 'react'
 import { pipe } from '@effect-ts/core/Function'
 import * as A from '@effect-ts/core/Array'
 import * as O from '@effect-ts/core/Option'
@@ -12,6 +12,7 @@ import { ProjectCard } from '@idea-launch/projects/ui'
 import { mockProjects, mockCommentTable } from '@idea-launch/projects/model'
 
 import { Navbar } from '../components/navbar'
+import { RouteProps } from '../router'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -26,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export function FeedPage() {
+export const FeedPage: FC<RouteProps<'Feed'>> = () => {
 
   const classes = useStyles()
 

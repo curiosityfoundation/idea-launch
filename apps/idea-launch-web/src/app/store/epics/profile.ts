@@ -4,23 +4,34 @@ import { pipe } from '@effect-ts/core/Function';
 import * as O from '@effect-ts/core/Option'
 import { decoder } from '@effect-ts/morphic/Decoder';
 
-import { request } from '@idea-launch/http-client'
+import { get, withHeaders } from '@idea-launch/http-client'
 import { FindProfile } from '@idea-launch/api';
 
 import { accessAppConfigM } from '../../config';
 import { log } from '../../logger';
-import { Action, epic } from '../constants';
+import { Action, epic, State } from '../constants';
 
 export const FetchProfileEpic = epic(
-  (actions) => pipe(
-    actions,
-    S.filter(Action.is.ProfileRequested),
-    S.mapM(() =>
+  (actions, state) => pipe(
+    S.zipWithLatest(
+      state,
+      actions,
+    )((s, a) => [s, a] as const),
+    S.filterMap(([s, a]) =>
+      State.account.is.LoggedIn(s.account)
+        && Action.is.ProfileRequested(a)
+        ? O.some([s.account, a] as const)
+        : O.none
+    ),
+    S.mapM(([account]) =>
       pipe(
         accessAppConfigM((config) =>
-          request('GET', 'JSON', 'JSON')(
-            `${config.functionsUrl}/${FindProfile.name}`
-          ),
+          pipe(
+            get(`${config.functionsUrl}/${FindProfile.name}`),
+            withHeaders({
+              authorization: account.idToken,
+            })
+          )
         ),
         T.chain((resp) =>
           pipe(

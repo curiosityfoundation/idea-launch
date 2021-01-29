@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { FC } from 'react'
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 
 import { Navbar } from '../components/navbar'
+import { RouteProps } from '../router';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -24,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-export function NotFoundPage() {
+export const NotFoundPage: FC<RouteProps<'NotFound'>> = () => {
 
   const classes = useStyles()
 

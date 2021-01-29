@@ -38,3 +38,11 @@ export const LogoutEpic = epic(
     )
   )
 )
+
+export const GetProfile = epic(
+  (actions) => pipe(
+    actions,
+    S.filter(Action.is.LoginSuccess),
+    S.map(() => Action.of.ProfileRequested({}))
+  )
+)

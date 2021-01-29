@@ -113,8 +113,10 @@ export function makeRouteState<Route>(
     }),
   )(
     class extends Component<RedirectProps & { onRender: () => void }> {
-      render() {
+      componentDidMount() {
         this.props.onRender()
+      }
+      render() {
         return React.createElement('div', {})
       }
     }
@@ -125,7 +127,6 @@ export function makeRouteState<Route>(
     const dispatch = useDispatch()
 
     useEffect(() => {
-      console.log(window.location.pathname + window.location.search);
       dispatch(
         RouteAction.of.LocationChanged({
           payload: decodeRoute(window.location.pathname + window.location.search)

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { FC } from 'react'
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, Theme } from '@material-ui/core/styles';
@@ -9,6 +9,7 @@ import community from '../../assets/illustrations/community.svg';
 import getStarted from '../../assets/illustrations/get-started.svg';
 import integrations from '../../assets/illustrations/integrations.svg';
 import welcome from '../../assets/illustrations/welcome.svg';
+import { RouteProps } from '../router';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -28,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-export function LandingPage() {
+export const LandingPage: FC<RouteProps<'Landing'>> = () => {
 
   const classes = useStyles()
 
