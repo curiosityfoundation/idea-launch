@@ -1,7 +1,7 @@
-import { 
-  FetchClientLive, 
-  HTTPHeadersLive, 
-  HTTPMiddlewareStackLive 
+import {
+  FetchClientLive,
+  HTTPHeadersLive,
+  HTTPMiddlewareStackLive
 } from '@idea-launch/http-client'
 import { BrowserWindowLive } from '@idea-launch/browser-window'
 
@@ -12,12 +12,13 @@ import {
   FirebaseAuthClientLive,
   FirebaseAuthLive,
   FirebaseConfigLive,
-  FirebaseLoginProviderLive
+  FirebaseLoginProviderLive,
+  FirebaseAuthStateLive
 } from '../app/firebase'
-import { 
-  ReduxStoreLive, 
-  rootReducer, 
-  EpicMiddlewareLive 
+import {
+  ReduxStoreLive,
+  rootReducer,
+  EpicMiddlewareLive
 } from '../app/store'
 
 console.log('production env');
@@ -25,7 +26,7 @@ console.log('production env');
 const AuthLayer =
   FirebaseAuthLive
   ['<<<'](FirebaseLoginProviderLive)
-  ['<<<'](FirebaseAuthClientLive)
+  ['<+<'](FirebaseAuthClientLive)
 
 const FirebaseAppLayer =
   FirebaseAppLive
@@ -41,7 +42,8 @@ const FirebaseAppLayer =
 
 const MiddlewareLayer =
   EpicMiddlewareLive
-  ['<<<'](AuthLayer)
+  ['<+<'](FirebaseAuthStateLive)
+  ['<+<'](AuthLayer)
   ['<<<'](FirebaseAppLayer)
   ['<<<'](FetchClientLive(fetch))
   ['<<<'](HTTPHeadersLive({
