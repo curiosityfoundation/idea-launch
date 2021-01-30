@@ -34,7 +34,7 @@ export const FetchProfileEpic = epic(
           })
         ]),
         S.merge(
-          S.fromEffect(
+          S.fromIterableM(
             pipe(
               accessAppConfigM((config) =>
                 pipe(
@@ -48,41 +48,67 @@ export const FetchProfileEpic = epic(
                 pipe(
                   resp.body,
                   O.fold(
-                    () => T.succeed(
+                    () => T.succeed([
                       Action.of.APIRequestFailed({
                         payload: {
                           endpoint: FindProfile.name,
                           reason: 'no body present on response'
                         }
                       })
-                    ),
+                    ]),
                     (body) => pipe(
                       body,
                       decoder(FindProfile.Response).decode,
-                      T.map((response) =>
-                        Action.of.APIRequestSucceeded({
-                          payload: {
-                            endpoint: FindProfile.name,
-                            response,
-                          }
-                        }),
+                      T.map(
+                        FindProfile.Response.matchStrict({
+                          Success: (response) => [
+                            Action.of.APIRequestSucceeded({
+                              payload: {
+                                endpoint: FindProfile.name,
+                                response,
+                              }
+                            }),
+                            Action.of.AddEntries({
+                              payload: {
+                                table: 'profiles',
+                                entries: [response.profile],
+                              }
+                            }),
+                          ],
+                          NotFound: (response) => [
+                            Action.of.APIRequestSucceeded({
+                              payload: {
+                                endpoint: FindProfile.name,
+                                response,
+                              }
+                            })
+                          ],
+                          Failure: (response) => [
+                            Action.of.APIRequestSucceeded({
+                              payload: {
+                                endpoint: FindProfile.name,
+                                response,
+                              }
+                            })
+                          ],
+                        })
                       ),
                       T.catchAll((e) =>
-                        T.succeed(
+                        T.succeed([
                           Action.of.APIRequestFailed({
                             payload: {
                               endpoint: FindProfile.name,
                               reason: 'decodeError'
                             }
                           })
-                        )
+                        ])
                       )
                     )
                   ),
                 )
               ),
               T.catchAll((e) =>
-                T.succeed(
+                T.succeed([
                   Action.of.APIRequestFailed({
                     payload: {
                       endpoint: FindProfile.name,
@@ -91,7 +117,7 @@ export const FetchProfileEpic = epic(
                         : `${e._tag}: ${e.response.status}`
                     }
                   })
-                )
+                ])
               ),
             )
           ),

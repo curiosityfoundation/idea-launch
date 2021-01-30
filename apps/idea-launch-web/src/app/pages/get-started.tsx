@@ -62,7 +62,7 @@ export const GetStarted: FC<RouteProps<'GetStarted'>> = (props) => {
             </Typography>
             <br />
             <Formik
-              // validationSchema={CreateProfileFormSchema}
+              validationSchema={CreateProfileFormSchema}
               initialValues={initialValues}
               onSubmit={() => dispatch(
                 Action.of.PushLocation({

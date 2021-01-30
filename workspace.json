@@ -893,6 +893,31 @@
           }
         }
       }
+    },
+    "redux-table": {
+      "root": "libs/redux-table",
+      "sourceRoot": "libs/redux-table/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/redux-table/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/redux-table"
+          ],
+          "options": {
+            "jestConfig": "libs/redux-table/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   },
   "cli": {

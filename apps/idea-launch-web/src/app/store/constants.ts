@@ -25,6 +25,12 @@ import {
   resourcesReducer,
   initResourcesState
 } from '@idea-launch/resources/ui'
+import {
+  ProfileTable,
+  ProfileTableAction,
+  profileTableReducer,
+  initProfileTableState,
+} from '@idea-launch/profiles/ui'
 import { epic as epic_ } from '@idea-launch/redux-effect';
 
 import {
@@ -69,7 +75,7 @@ export interface State {
   account: AccountState
   resources: ResourcesTable
   route: RouteState
-  profile: ADTType<typeof FindProfileState>,
+  profiles: ProfileTable,
   api: {
     listProjects: ADTType<typeof ListProjectsState>, 
     listResources: ADTType<typeof ListResourcesState>, 
@@ -81,7 +87,7 @@ export const rootReducer = combineReducers<State>({
   account: accountReducer,
   resources: resourcesReducer,
   route: routeReducer,
-  profile: findProfileReducer,
+  profiles: profileTableReducer,
   api: combineReducers({
     listProjects: listProjectsReducer, 
     listResources: listResourcesReducer, 
@@ -93,7 +99,7 @@ export const initState: State = {
   account: initAccountState,
   resources: initResourcesState,
   route: initRouteState,
-  profile: initFindProfileState,
+  profiles: initProfileTableState,
   api: {
     findProfile: initFindProfileState,
     listProjects: initListProjectsState,
@@ -105,6 +111,7 @@ export const Action = unionADT([
   AccountAction,
   RouteAction,
   ResourceAction,
+  ProfileTableAction,
   FindProfileAction,
   ListResourcesAction,
   ListProjectsAction,

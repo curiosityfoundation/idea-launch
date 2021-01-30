@@ -54,6 +54,7 @@
     "morphic-router": { "tags": [] },
     "browser-window": { "tags": [] },
     "firebase-web": { "tags": [] },
-    "firebase-functions": { "tags": [] }
+    "firebase-functions": { "tags": [] },
+    "redux-table": { "tags": [] }
   }
 }

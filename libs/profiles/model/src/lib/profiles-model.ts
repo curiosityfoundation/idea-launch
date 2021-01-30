@@ -13,11 +13,11 @@ export const Name = M.opaque<NameRaw, Name>()(Name_)
 
 const Profile_ = M.make((F) => 
   F.interface({
-    owner: F.uuid(),
+    owner: F.string(),
     name: Name(F),
     avatar: F.string(),
-    id: F.uuid(),
-    classCode: F.uuid(),
+    id: F.string(),
+    classCode: F.string(),
     created: F.date(),
     modified: F.optional(F.date()),
   }, { name: 'Profile' })
@@ -40,10 +40,10 @@ export const UpdateProfile = M.opaque<UpdateProfileRaw, UpdateProfile>()(UpdateP
 
 const CreateProfile_ = M.make((F) => 
   F.interface({
-    owner: F.uuid(),
+    owner: F.string(),
     name: Name(F),
     avatar: F.string(),
-    classCode: F.uuid(),
+    classCode: F.string(),
   }, { name: 'CreateProfile' })
 )
 

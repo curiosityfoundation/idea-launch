@@ -24,9 +24,9 @@ export type AccountStatus = ADTType<typeof AccountStatus>
 
 export const makeAccountStatus = (s: State): AccountStatus => {
   if (s.account.state === 'LoggedIn') {
-    if ((s.profile.state === 'Success'
-      || s.profile.state === 'Both')
-      && s.profile.response.tag === 'Success') {
+    if ((s.api.findProfile.state === 'Success'
+      || s.api.findProfile.state === 'Both')
+      && s.api.findProfile.response.tag === 'Success') {
       return AccountStatus.of.LoggedIn({})
     } else {
       return AccountStatus.of.NoProfile({})
