@@ -3,29 +3,27 @@ import * as L from '@effect-ts/core/Effect/Layer'
 import { tag } from '@effect-ts/core/Has'
 
 export interface Logger {
-  log: (...s: any[]) => T.UIO<void>
+  log: <A>(s1: A) => T.UIO<A>
 }
 
 export const Logger = tag<Logger>()
 
-export const accessAppConfig = T.accessService(Logger)
-export const accessAppConfigM = T.accessServiceM(Logger)
+export const accessLogger = T.accessService(Logger)
+export const accessLoggerM = T.accessServiceM(Logger)
 
 export const ConsoleLoggerLive = L.pure(Logger)({
-  log: (...s) =>
+  log: (s1, ...ss) =>
     T.effectTotal(() => {
-      console.log(...s)
+      console.log(s1, ...ss)
+      return s1
     })
 })
 
 export const SilentLoggerLive = L.pure(Logger)({
-  log: () => T.unit
+  log: (s1) => T.succeed(s1)
 })
 
-export const {
-  log
-} = T.deriveLifted(Logger)(
-  ['log'],
-  [] as never,
-  [] as never,
-)
+
+export const log = <A>(a: A) =>
+  accessLoggerM((logger) => logger.log(a))
+  

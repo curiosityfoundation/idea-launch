@@ -8,7 +8,6 @@ import { request } from '@idea-launch/http-client'
 import { ListResources } from '@idea-launch/api';
 
 import { accessAppConfigM } from '../../config';
-import { log } from '../../logger';
 import { Action, epic } from '../constants';
 
 export const FetchResourcesEpic = epic(
@@ -44,7 +43,6 @@ export const FetchResourcesEpic = epic(
                 ),
               )
             ),
-            T.tap(log),
           )
         ),
         T.catchAll(() =>
