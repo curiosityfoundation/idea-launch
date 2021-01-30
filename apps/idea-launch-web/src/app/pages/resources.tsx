@@ -48,7 +48,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 function ResourceCards() {
 
-  const state = useSelector((s) => s.resources)
+  const listResources = useSelector((s) => s.api.listResources)
+  const resources = useSelector((s) => s.resources)
   const dispatch = useDispatch()
   const classes = useStyles()
 
@@ -61,7 +62,7 @@ function ResourceCards() {
     })
   )
 
-  const render = State.resources.matchStrict({
+  const render = State.api.listResources.matchStrict({
     Init: () => (
       <Container className={classes.center}>
         <Typography
@@ -90,7 +91,7 @@ function ResourceCards() {
         </Typography>
       </Container>
     ),
-    Loaded: (s) => R.isEmpty(s.data)
+    Success: (s) => R.isEmpty(resources.entries)
       ? (
         <Container>
           <Typography
@@ -104,7 +105,7 @@ function ResourceCards() {
       )
       : (
         <Grid container justify='center' spacing={4}>
-          {Object.values(s.data).map((r) => (
+          {Object.values(resources.entries).map((r) => (
             <Grid key={r.id} item>
               <ResourceCard
                 image={r.image}
@@ -128,9 +129,36 @@ function ResourceCards() {
         </Typography>
       </Container>
     ),
+    Both: (s) => R.isEmpty(resources.entries)
+      ? (
+        <Container>
+          <Typography
+            variant='h5'
+            color='textSecondary'
+            align='center'
+          >
+            None to show
+          </Typography>
+        </Container>
+      )
+      : (
+        <Grid container justify='center' spacing={4}>
+          {Object.values(resources.entries).map((r) => (
+            <Grid key={r.id} item>
+              <ResourceCard
+                image={r.image}
+                title={r.title}
+                description={r.description}
+                link={r.link}
+              />
+            </Grid>
+          ))
+          }
+        </Grid >
+      ),
   })
 
-  return render(state)
+  return render(listResources)
 
 }
 

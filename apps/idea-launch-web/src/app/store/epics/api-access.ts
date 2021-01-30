@@ -14,7 +14,7 @@ import { log } from '../../logger';
 export const shouldRequest = (endpoint: AnyEndpoint) => (a: Action) =>
   Action.is.APIRequested(a) && a.payload.endpoint === endpoint.name
 
-export const foldBody = (endpoint: AnyEndpoint) =>
+export const foldBody = <E extends AnyEndpoint>(endpoint: E): (o: O.Option<unknown>) => T.UIO<E['_RespA']> =>
   O.fold(
     () => T.succeed(
       Action.of.APIRequestFailed({
@@ -27,14 +27,6 @@ export const foldBody = (endpoint: AnyEndpoint) =>
     (body: unknown) => pipe(
       body,
       decoder(endpoint.Response).decode,
-      T.map((response: (typeof endpoint)['_RespA']) =>
-        Action.of.APIRequestSucceeded({
-          payload: {
-            endpoint: endpoint.name,
-            response,
-          }
-        }),
-      ),
       T.catchAll((e) =>
         T.succeed(
           Action.of.APIRequestFailed({

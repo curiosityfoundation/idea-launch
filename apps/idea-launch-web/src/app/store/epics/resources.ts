@@ -24,33 +24,49 @@ export const FetchResourcesEpic = epic(
             }
           })
         ]),
-        S.fromEffect(
-          pipe(
-            accessAppConfigM((config) =>
-              request(ListResources.method, 'JSON', 'JSON')(
-                `${config.functionsUrl}/${ListResources.name}`
+        pipe(
+          S.fromIterableM(
+            pipe(
+              accessAppConfigM((config) =>
+                request(ListResources.method, 'JSON', 'JSON')(
+                  `${config.functionsUrl}/${ListResources.name}`
+                ),
               ),
-            ),
-            T.chain((resp) =>
-              pipe(
-                resp.body,
-                foldBody(ListResources)
+              T.chain((resp) =>
+                pipe(
+                  resp.body,
+                  foldBody(ListResources),
+                  T.map((response) => [
+                    Action.of.APIRequestSucceeded({
+                      payload: {
+                        endpoint: ListResources.name,
+                        response,
+                      }
+                    }),
+                    ...(response.tag === 'Success'
+                      ? [Action.of.AddResources({
+                        payload: response.resources
+                      })]
+                      : []
+                    )
+                  ]),
+                )
+              ),
+              T.catchAll((e) =>
+                T.succeed([
+                  Action.of.APIRequestFailed({
+                    payload: {
+                      endpoint: ListResources.name,
+                      reason: e._tag === 'HTTPErrorRequest'
+                        ? `${e._tag}: ${e.error.message}`
+                        : `${e._tag}: ${e.response.status}`
+                    }
+                  })
+                ])
               )
             ),
-            T.catchAll((e) =>
-              T.succeed(
-                Action.of.APIRequestFailed({
-                  payload: {
-                    endpoint: ListResources.name,
-                    reason: e._tag === 'HTTPErrorRequest'
-                      ? `${e._tag}: ${e.error.message}`
-                      : `${e._tag}: ${e.response.status}`
-                  }
-                })
-              )
-            )
           ),
-        ),
+        )
       )
     )
   )

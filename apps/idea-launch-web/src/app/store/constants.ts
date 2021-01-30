@@ -20,8 +20,8 @@ import {
   initAccountState
 } from '@idea-launch/accounts/ui'
 import {
-  ResourcesState,
-  ResourcesAction,
+  ResourcesTable,
+  ResourceAction,
   resourcesReducer,
   initResourcesState
 } from '@idea-launch/resources/ui'
@@ -57,7 +57,6 @@ const {
 
 export const State = {
   account: AccountState,
-  resources: ResourcesState,
   profile: FindProfileState,
   api: {
     listProjects: ListProjectsState, 
@@ -68,7 +67,7 @@ export const State = {
 
 export interface State {
   account: AccountState
-  resources: ResourcesState
+  resources: ResourcesTable
   route: RouteState
   profile: ADTType<typeof FindProfileState>,
   api: {
@@ -105,6 +104,7 @@ export const initState: State = {
 export const Action = unionADT([
   AccountAction,
   RouteAction,
+  ResourceAction,
   FindProfileAction,
   ListResourcesAction,
   ListProjectsAction,

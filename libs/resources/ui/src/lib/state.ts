@@ -1,115 +1,75 @@
 import * as A from '@effect-ts/core/Array'
-import * as R from '@effect-ts/core/Record'
 import { pipe } from '@effect-ts/core/Function'
-import * as M from '@effect-ts/morphic'
+import { makeADT, ofType, ADTType } from '@effect-ts/morphic/Adt'
+import * as R from '@effect-ts/core/Record'
 
 import { Resource } from '@idea-launch/resources/model'
+import { eqString } from '@effect-ts/core/Equal'
 
-const Init_ = M.make((F) =>
-  F.interface({
-    state: F.stringLiteral('Init')
-  }, { name: 'Init' })
-)
+export interface ResourcesTable {
+  entries: R.Record<string, Resource>,
+  ids: ReadonlyArray<string>,
+}
 
-export interface Init extends M.AType<typeof Init_> { }
-export interface InitRaw extends M.EType<typeof Init_> { }
-export const Init = M.opaque<InitRaw, Init>()(Init_)
+export const initResourcesState: ResourcesTable = {
+  entries: {},
+  ids: [],
+}
 
-const Pending_ = M.make((F) =>
-  F.interface({
-    state: F.stringLiteral('Pending')
-  }, { name: 'Pending' })
-)
+interface AddResources {
+  type: 'AddResources',
+  payload: ReadonlyArray<Resource>
+}
 
-export interface Pending extends M.AType<typeof Pending_> { }
-export interface PendingRaw extends M.EType<typeof Pending_> { }
-export const Pending = M.opaque<PendingRaw, Pending>()(Pending_)
+interface RemoveResources {
+  type: 'RemoveResources',
+  payload: ReadonlyArray<string>
+}
 
-const Loaded_ = M.make((F) =>
-  F.interface({
-    state: F.stringLiteral('Loaded'),
-    data: F.record(Resource(F))
-  }, { name: 'Loaded' })
-)
-
-export interface Loaded extends M.AType<typeof Loaded_> { }
-export interface LoadedRaw extends M.EType<typeof Loaded_> { }
-export const Loaded = M.opaque<LoadedRaw, Loaded>()(Loaded_)
-
-const Failure_ = M.make((F) => 
-  F.interface({
-    state: F.stringLiteral('Failure'),
-  }, { name: 'Failure' })
-)
-
-export interface Failure extends M.AType<typeof Failure_> { }
-export interface FailureRaw extends M.EType<typeof Failure_> { }
-export const Failure = M.opaque<FailureRaw, Failure>()(Failure_)
-
-export const ResourcesState = M.makeADT('state')({
-  Init,
-  Pending,
-  Failure,
-  Loaded,
+export const ResourceAction = makeADT('type')({
+  AddResources: ofType<AddResources>(),
+  RemoveResources: ofType<RemoveResources>(),
 })
 
-export type ResourcesState = M.AType<typeof ResourcesState>
+export type ResourceAction = ADTType<typeof ResourceAction>
 
-const ResourcesRequested_ = M.make((F) => 
-  F.interface({
-    type: F.stringLiteral('ResourcesRequested'),
-  }, { name: 'ResourcesRequested' })
-)
-
-export interface ResourcesRequested extends M.AType<typeof ResourcesRequested_> { }
-export interface ResourcesRequestedRaw extends M.EType<typeof ResourcesRequested_> { }
-export const ResourcesRequested = M.opaque<ResourcesRequestedRaw, ResourcesRequested>()(ResourcesRequested_)
-
-const ResourcesRequestFailed_ = M.make((F) => 
-  F.interface({
-    type: F.stringLiteral('ResourcesRequestFailed'),
-  }, { name: 'ResourcesRequestFailed' })
-)
-
-export interface ResourcesRequestFailed extends M.AType<typeof ResourcesRequestFailed_> { }
-export interface ResourcesRequestFailedRaw extends M.EType<typeof ResourcesRequestFailed_> { }
-export const ResourcesRequestFailed = M.opaque<ResourcesRequestFailedRaw, ResourcesRequestFailed>()(ResourcesRequestFailed_)
-
-const ResourcesRequestSuccess_ = M.make((F) => 
-  F.interface({
-    type: F.stringLiteral('ResourcesRequestSuccess'),
-    payload: F.array(Resource(F))
-  }, { name: 'ResourcesRequestSuccess' })
-)
-
-export interface ResourcesRequestSuccess extends M.AType<typeof ResourcesRequestSuccess_> { }
-export interface ResourcesRequestSuccessRaw extends M.EType<typeof ResourcesRequestSuccess_> { }
-export const ResourcesRequestSuccess = M.opaque<ResourcesRequestSuccessRaw, ResourcesRequestSuccess>()(ResourcesRequestSuccess_)
-
-export const ResourcesAction = M.makeADT('type')({
-  ResourcesRequested,
-  ResourcesRequestFailed,
-  ResourcesRequestSuccess,
-})
-
-export type ResourcesAction = M.AType<typeof ResourcesAction>
-
-export const initResourcesState = ResourcesState.of.Init({})
-
-export const resourcesReducer = ResourcesAction.createReducer(initResourcesState)({
-  ResourcesRequested: () => ResourcesState.transform({
-    Init: () => ResourcesState.of.Pending({})
-  }),
-  ResourcesRequestFailed: () => ResourcesState.transform({
-    Pending: () => ResourcesState.of.Failure({})
-  }),
-  ResourcesRequestSuccess: (a) => ResourcesState.transform({
-    Pending: () => ResourcesState.of.Loaded({ 
-      data:  pipe(
-        a.payload,
-        A.map((r) => [r.id, r] as const),
-        R.fromArray,
+export const resourcesReducer = ResourceAction.createReducer(initResourcesState)({
+  AddResources: (a) => (s) => ({
+    entries: pipe(
+      a.payload,
+      A.reduce(
+        s.entries,
+        (acc, r) =>
+          pipe(
+            acc,
+            R.insertAt(r.id, r),
+          )
       )
-    })
+    ),
+    ids: pipe(
+      a.payload,
+      A.map((r) => r.id),
+      A.concat(s.ids),
+      A.uniq(eqString),
+    )
+  }),
+  RemoveResources: (a) => (s) => ({
+    entries: pipe(
+      a.payload,
+      A.reduce(
+        s.entries,
+        (acc, id) =>
+          pipe(
+            acc,
+            R.deleteAt(id),
+          )
+      )
+    ),
+    ids: pipe(
+      s.ids,
+      A.filter((id) =>
+        !a.payload.includes(id)
+      ),
+    )
   })
 })

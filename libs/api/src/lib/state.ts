@@ -96,6 +96,7 @@ export function makeRemoteAccess<E extends AnyEndpoint>(
 
   const filterReducer = (r: Reducer<State, Action>): Reducer<State, Action> =>
     (s, a) => pred(a)
+      && a.payload.endpoint === endpoint.name
       ? r(s, a)
       : !!s
         ? s
@@ -156,25 +157,25 @@ export function makeRemoteAccess<E extends AnyEndpoint>(
         State.transform({
           Pending: () =>
             State.of.Success({
-              response: a.payload,
+              response: a.payload.response,
               refreshing: false
             }),
           Failure: (s) => s.refreshing
             ? State.of.Success({
-              response: a.payload,
+              response: a.payload.response,
               refreshing: false
             })
             : s,
           Success: (s) => s.refreshing
             ? State.of.Success({
-              response: a.payload,
+              response: a.payload.response,
               refreshing: false
             })
             : s,
           Both: (s) => s.refreshing
             ? State.of.Success({
               ...s,
-              response: a.payload,
+              response: a.payload.response,
               refreshing: false
             })
             : s,
