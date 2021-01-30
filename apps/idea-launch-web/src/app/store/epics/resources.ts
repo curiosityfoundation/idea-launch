@@ -1,8 +1,6 @@
 import * as T from '@effect-ts/core/Effect'
 import * as S from '@effect-ts/core/Effect/Stream'
 import { pipe } from '@effect-ts/core/Function';
-import * as O from '@effect-ts/core/Option'
-import { decoder } from '@effect-ts/morphic/Decoder';
 
 import { request } from '@idea-launch/http-client'
 import { ListResources } from '@idea-launch/api';
@@ -36,20 +34,32 @@ export const FetchResourcesEpic = epic(
                 pipe(
                   resp.body,
                   foldBody(ListResources),
-                  T.map((response) => [
-                    Action.of.APIRequestSucceeded({
-                      payload: {
-                        endpoint: ListResources.name,
-                        response,
-                      }
-                    }),
-                    ...(response.tag === 'Success'
-                      ? [Action.of.AddResources({
-                        payload: response.resources
-                      })]
-                      : []
-                    )
-                  ]),
+                  T.map(
+                    ListResources.Response.matchStrict<Action[]>({
+                      Success: (response) => [
+                        Action.of.APIRequestSucceeded({
+                          payload: {
+                            endpoint: ListResources.name,
+                            response,
+                          }
+                        }),
+                        Action.of.AddEntries({
+                          payload: {
+                            table: 'resources',
+                            entries: response.resources,
+                          }
+                        })
+                      ],
+                      Failure: (response) => [
+                        Action.of.APIRequestSucceeded({
+                          payload: {
+                            endpoint: ListResources.name,
+                            response,
+                          }
+                        }),
+                      ],
+                    })
+                  ),
                 )
               ),
               T.catchAll((e) =>

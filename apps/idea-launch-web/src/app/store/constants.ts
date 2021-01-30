@@ -20,10 +20,10 @@ import {
   initAccountState
 } from '@idea-launch/accounts/ui'
 import {
-  ResourcesTable,
-  ResourceAction,
-  resourcesReducer,
-  initResourcesState
+  ResourceTable,
+  ResourceTableAction,
+  resourceTableReducer,
+  initResourceTableState,
 } from '@idea-launch/resources/ui'
 import {
   ProfileTable,
@@ -73,7 +73,7 @@ export const State = {
 
 export interface State {
   account: AccountState
-  resources: ResourcesTable
+  resources: ResourceTable
   route: RouteState
   profiles: ProfileTable,
   api: {
@@ -85,8 +85,8 @@ export interface State {
 
 export const rootReducer = combineReducers<State>({
   account: accountReducer,
-  resources: resourcesReducer,
   route: routeReducer,
+  resources: resourceTableReducer,
   profiles: profileTableReducer,
   api: combineReducers({
     listProjects: listProjectsReducer, 
@@ -97,7 +97,7 @@ export const rootReducer = combineReducers<State>({
 
 export const initState: State = {
   account: initAccountState,
-  resources: initResourcesState,
+  resources: initResourceTableState,
   route: initRouteState,
   profiles: initProfileTableState,
   api: {
@@ -110,7 +110,7 @@ export const initState: State = {
 export const Action = unionADT([
   AccountAction,
   RouteAction,
-  ResourceAction,
+  ResourceTableAction,
   ProfileTableAction,
   FindProfileAction,
   ListResourcesAction,
