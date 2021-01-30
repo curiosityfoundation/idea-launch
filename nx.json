@@ -55,6 +55,7 @@
     "browser-window": { "tags": [] },
     "firebase-web": { "tags": [] },
     "firebase-functions": { "tags": [] },
-    "redux-table": { "tags": [] }
+    "redux-table": { "tags": [] },
+    "logger": { "tags": [] }
   }
 }

@@ -16,10 +16,10 @@ export const accessEpicMiddlewareM = T.accessServiceM(EpicMiddleware)
 
 export const EpicMiddlewareLive = L.fromEffect(EpicMiddleware)(
   makeMiddleware([
+    RouteEpic,
     LoginEpic,
     LogoutEpic,
     GetProfile,
-    RouteEpic,
     FetchResourcesEpic,
     FetchProfileEpic,
   ])

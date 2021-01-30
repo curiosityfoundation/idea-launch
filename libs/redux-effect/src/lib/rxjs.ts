@@ -12,6 +12,10 @@ export function encaseObservable<E, A>(
 ): S.IO<E, A> {
   return S.effectAsync(
     (cb) => {
+      console.log('encasing');
+      observable.forEach((a) => {
+        console.log('encased$:', a);
+      })
       observable.forEach(
         (a) => cb(
           T.succeed([a])

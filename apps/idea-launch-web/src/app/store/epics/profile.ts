@@ -5,11 +5,10 @@ import * as O from '@effect-ts/core/Option'
 import { decoder } from '@effect-ts/morphic/Decoder';
 
 import { get, withHeaders } from '@idea-launch/http-client'
-import { FindProfile, AnyEndpoint } from '@idea-launch/api';
+import { FindProfile } from '@idea-launch/api';
 
 import { accessAppConfigM } from '../../config';
 import { Action, epic, State } from '../constants';
-import { log } from '../../logger';
 
 export const FetchProfileEpic = epic(
   (actions, state) => pipe(

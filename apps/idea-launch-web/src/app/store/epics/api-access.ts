@@ -4,12 +4,9 @@ import { pipe } from '@effect-ts/core/Function';
 import * as O from '@effect-ts/core/Option'
 import { decoder } from '@effect-ts/morphic/Decoder';
 
-import { get, withHeaders } from '@idea-launch/http-client'
-import { FindProfile, AnyEndpoint } from '@idea-launch/api';
+import { AnyEndpoint } from '@idea-launch/api';
 
-import { accessAppConfigM } from '../../config';
-import { Action, epic, State } from '../constants';
-import { log } from '../../logger';
+import { Action, State } from '../constants';
 
 export const shouldRequest = (endpoint: AnyEndpoint) => (a: Action) =>
   Action.is.APIRequested(a) && a.payload.endpoint === endpoint.name
@@ -48,7 +45,6 @@ export const pairWithIdToken = (
     actions,
     state,
   )((a, s) => [a, s] as const),
-  S.mapM(log),
   S.filterMap(([a, s]) =>
     State.account.matchStrict({
       LoggedIn: ({ idToken }) => O.some([idToken, a] as const),

@@ -6,6 +6,7 @@ import { connect, useDispatch } from 'react-redux'
 import React, { Component, FC, ForwardedRef, forwardRef, useEffect } from 'react';
 
 import { epic } from '@idea-launch/redux-effect';
+import { log, warn } from '@idea-launch/logger';
 import { accessBrowserWindowM } from '@idea-launch/browser-window';
 
 interface PushLocation<Route> {
@@ -45,11 +46,14 @@ export function makeRouteState<Route>(
   const RouteEpic = epic<RouteAction, any>()(
     (actions) => pipe(
       actions,
+      S.tap(log),
       S.filter(RouteAction.is.PushLocation),
+      S.tap(warn),
       S.mapM((a) =>
         pipe(
           accessBrowserWindowM((browser) =>
             T.effectTotal(() => {
+              console.log(encodeRoute(a.payload));
               browser.window.history.pushState(
                 null,
                 '',

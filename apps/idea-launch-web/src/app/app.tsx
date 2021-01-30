@@ -14,6 +14,7 @@ import { ReduxStore, Action, accessReduxStoreM, accessEpicMiddlewareM } from './
 
 const RenderReact = accessReduxStoreM((redux) =>
   T.effectTotal(() => {
+    console.log('RenderReact')
     ReactDOM.render(
       <React.StrictMode>
         <Provider store={redux.store}>
@@ -67,7 +68,7 @@ const ConnectFirebaseAuthToRedux = T.accessServicesM({
 
 export const App =
   pipe(
-    RenderReact,
-    T.andThen(StartMiddleware),
+    StartMiddleware,
+    T.andThen(RenderReact),
     T.andThen(ConnectFirebaseAuthToRedux),
   )

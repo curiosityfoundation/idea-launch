@@ -7,7 +7,7 @@ import { mockProfiles } from '@idea-launch/profiles/model'
 import { ProfilesPersistence } from './profiles-persistence'
 
 export const profilesPersistenceMock = L.pure(ProfilesPersistence)({
-  createProfile: () => T.unit,
+  createProfile: () => T.succeed(mockProfiles['0']),
   updateProfile: () => T.unit,
-  findByOwner: () => T.succeed(O.some(mockProfiles['0'])),
+  findByOwner: () => T.succeed(O.none),
 })

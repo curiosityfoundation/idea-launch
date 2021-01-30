@@ -12,6 +12,7 @@ import {
   ListProjects,
   ListResources,
   FindProfile,
+  CreateProfile,
 } from '@idea-launch/api'
 import {
   AccountState,
@@ -47,6 +48,9 @@ const {
   reducer: listProjectsReducer,
 } = makeRemoteAccess(ListProjects)
 
+type ListProjectsState = ADTType<typeof ListProjectsState>
+type ListProjectsAction = ADTType<typeof ListProjectsAction>
+
 const {
   initState: initListResourcesState,
   State: ListResourcesState,
@@ -54,12 +58,28 @@ const {
   reducer: listResourcesReducer,
 } = makeRemoteAccess(ListResources)
 
+type ListResourcesState = ADTType<typeof ListResourcesState>
+type ListResourcesAction = ADTType<typeof ListResourcesAction>
+
 const {
   initState: initFindProfileState,
   State: FindProfileState,
   Action: FindProfileAction,
   reducer: findProfileReducer,
 } = makeRemoteAccess(FindProfile)
+
+type FindProfileState = ADTType<typeof FindProfileState>
+type FindProfileAction = ADTType<typeof FindProfileAction>
+
+const {
+  initState: initCreateProfileState,
+  State: CreateProfileState,
+  Action: CreateProfileAction,
+  reducer: createProfileReducer,
+} = makeRemoteAccess(CreateProfile)
+
+type CreateProfileState = ADTType<typeof CreateProfileState>
+type CreateProfileAction = ADTType<typeof CreateProfileAction>
 
 export const State = {
   account: AccountState,
@@ -75,11 +95,12 @@ export interface State {
   account: AccountState
   resources: ResourceTable
   route: RouteState
-  profiles: ProfileTable,
+  profiles: ProfileTable
   api: {
-    listProjects: ADTType<typeof ListProjectsState>, 
-    listResources: ADTType<typeof ListResourcesState>, 
-    findProfile: ADTType<typeof FindProfileState>, 
+    listProjects: ListProjectsState
+    listResources: ListResourcesState
+    findProfile: FindProfileState
+    createProfile: CreateProfileState
   }
 }
 
@@ -92,6 +113,7 @@ export const rootReducer = combineReducers<State>({
     listProjects: listProjectsReducer, 
     listResources: listResourcesReducer, 
     findProfile: findProfileReducer, 
+    createProfile: createProfileReducer, 
   }),
 })
 
@@ -104,6 +126,7 @@ export const initState: State = {
     findProfile: initFindProfileState,
     listProjects: initListProjectsState,
     listResources: initListResourcesState,
+    createProfile: initCreateProfileState,
   }
 }
 
@@ -115,6 +138,7 @@ export const Action = unionADT([
   FindProfileAction,
   ListResourcesAction,
   ListProjectsAction,
+  CreateProfileAction,
 ])
 
 export type Action = ADTType<typeof Action>

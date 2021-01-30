@@ -3,7 +3,12 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Formik } from 'formik'
 
-import { CreateProfileForm, CreateProfileFormSchema, CreateProfileFormValues } from '@idea-launch/profiles/ui'
+import {
+  CreateProfileForm,
+  CreateProfileFormSchema,
+  CreateProfileFormValues,
+  UploadAvatar,
+} from '@idea-launch/profiles/ui'
 
 import { Action, State, useDispatch, useSelector } from '../store'
 import { Route, Link, RouteProps } from '../router'
@@ -78,7 +83,32 @@ export const GetStarted: FC<RouteProps<'GetStarted'>> = (props) => {
         </div>
       )
     case '2':
-      return <div>Case2</div>
+      return (
+        <div className={classes.root}>
+          <div className={classes.content}>
+            <img
+              src={logo}
+              alt='logo'
+              className={classes.logo}
+            />
+
+            <Typography
+              variant='h4'
+              color='textPrimary'
+              align='center'
+            >
+              Upload a Profile Picture
+            </Typography>
+            <br />
+            <br />
+            <UploadAvatar
+              state={'init'}
+              username='123'
+              onUploadClick={console.log}
+            />
+          </div>
+        </div>
+      )
     case '3':
       return <div>Case3</div>
   }

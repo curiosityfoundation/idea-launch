@@ -12,9 +12,9 @@ import {
   FirebaseLoginProviderLive,
   FirebaseAuthStateLive
 } from '@idea-launch/firebase-web'
+import { ConsoleLoggerLive } from '@idea-launch/logger'
 
 import { AppConfigLive } from '../app/config'
-import { ConsoleLoggerLive } from '../app/logger'
 import {
   ReduxStoreLive,
   rootReducer,

@@ -11,7 +11,7 @@ class ProfilePersistenceError {
 }
 
 export interface ProfilesPersistence {
-  createProfile: (opts: CreateProfile) => T.IO<ProfilePersistenceError, void>
+  createProfile: (opts: CreateProfile) => T.IO<ProfilePersistenceError, Profile>
   updateProfile: (opts: UpdateProfile) => T.IO<ProfilePersistenceError, void>
   findByOwner: (owner: string) => T.IO<ProfilePersistenceError, O.Option<Profile>>
 }
