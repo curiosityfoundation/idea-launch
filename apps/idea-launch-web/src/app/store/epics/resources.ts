@@ -9,46 +9,47 @@ import { ListResources } from '@idea-launch/api';
 
 import { accessAppConfigM } from '../../config';
 import { Action, epic } from '../constants';
+import { shouldRequest, foldBody } from './api-access';
 
 export const FetchResourcesEpic = epic(
   (actions) => pipe(
     actions,
-    S.filter(Action.is.ResourcesRequested),
-    S.mapM(() =>
-      pipe(
-        accessAppConfigM((config) =>
-          request('GET', 'JSON', 'JSON')(
-            `${config.functionsUrl}/${ListResources.name}`
-          ),
-        ),
-        T.chain((resp) =>
+    S.filter(shouldRequest(ListResources)),
+    S.chain(() =>
+      S.mergeAll(2)(
+        S.fromIterable([
+          Action.of.APIRequestStarted({
+            payload: {
+              endpoint: ListResources.name
+            }
+          })
+        ]),
+        S.fromEffect(
           pipe(
-            resp.body,
-            O.fold(
-              () => T.succeed(
-                Action.of.ResourcesRequestFailed({})
+            accessAppConfigM((config) =>
+              request(ListResources.method, 'JSON', 'JSON')(
+                `${config.functionsUrl}/${ListResources.name}`
               ),
-              (body) => pipe(
-                body,
-                decoder(ListResources.Response).decode,
-                T.map(
-                  ListResources.Response.matchStrict({
-                    Success: (success) =>
-                      Action.of.ResourcesRequestSuccess({
-                        payload: success.resources
-                      }),
-                    Failure: () => 
-                      Action.of.ResourcesRequestFailed({}),
-                  })
-                ),
+            ),
+            T.chain((resp) =>
+              pipe(
+                resp.body,
+                foldBody(ListResources)
               )
             ),
-          )
-        ),
-        T.catchAll(() =>
-          T.succeed(
-            Action.of.ResourcesRequestFailed({})
-          )
+            T.catchAll((e) =>
+              T.succeed(
+                Action.of.APIRequestFailed({
+                  payload: {
+                    endpoint: ListResources.name,
+                    reason: e._tag === 'HTTPErrorRequest'
+                      ? `${e._tag}: ${e.error.message}`
+                      : `${e._tag}: ${e.response.status}`
+                  }
+                })
+              )
+            )
+          ),
         ),
       )
     )

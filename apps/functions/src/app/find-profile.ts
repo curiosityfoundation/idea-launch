@@ -4,13 +4,7 @@ import { encode } from '@effect-ts/morphic/Encoder'
 import * as O from '@effect-ts/core/Option'
 
 import { findByOwner } from '@idea-launch/profiles/persistence'
-
-import {
-  ListResources,
-  FindProfile,
-  ListProjects,
-  handler,
-} from '@idea-launch/api'
+import { FindProfile, handler } from '@idea-launch/api'
 
 import { authenticate } from './authenticate'
 

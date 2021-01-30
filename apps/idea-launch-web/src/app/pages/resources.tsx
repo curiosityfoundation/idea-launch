@@ -53,7 +53,12 @@ function ResourceCards() {
   const classes = useStyles()
 
   const fetchResources = () => dispatch(
-    Action.of.ResourcesRequested({})
+    Action.of.APIRequested({
+      payload: {
+        endpoint: 'ListResources',
+        body: {}
+      }
+    })
   )
 
   const render = State.resources.matchStrict({

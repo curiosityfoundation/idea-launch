@@ -51,7 +51,12 @@ export function Pages() {
   useEffect(() => {
     setTimeout(() => {
       dispatch(
-        Action.of.ResourcesRequested({})
+        Action.of.APIRequested({
+          payload: {
+            endpoint: 'ListResources',
+            body: {}
+          }
+        })
       )
     }, 1000)
   }, [])

@@ -104,7 +104,6 @@ export const initState: State = {
 
 export const Action = unionADT([
   AccountAction,
-  ResourcesAction,
   RouteAction,
   FindProfileAction,
   ListResourcesAction,

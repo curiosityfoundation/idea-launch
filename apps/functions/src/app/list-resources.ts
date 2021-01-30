@@ -3,11 +3,7 @@ import * as T from '@effect-ts/core/Effect'
 import { encode } from '@effect-ts/morphic/Encoder'
 
 import { listResources } from '@idea-launch/resources/persistence'
-
-import {
-  ListResources,
-  handler,
-} from '@idea-launch/api'
+import { ListResources, handler } from '@idea-launch/api'
 
 export const handleListResources = handler(ListResources)(
   ({ Response, Body }) => pipe(

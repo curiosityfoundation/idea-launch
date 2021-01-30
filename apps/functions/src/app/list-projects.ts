@@ -3,19 +3,10 @@ import * as T from '@effect-ts/core/Effect'
 import { encode } from '@effect-ts/morphic/Encoder'
 import { strictDecoder } from '@effect-ts/morphic/StrictDecoder'
 import * as A from '@effect-ts/core/Array'
-import * as M from '@effect-ts/morphic'
 
 import { listProjects } from '@idea-launch/projects/persistence'
-import { Project, Comment } from '@idea-launch/projects/model'
-
-import { accessFunctionsRequestContextM, FunctionsAuthStatus, FunctionsRequestContext } from '@idea-launch/firebase-functions'
-
-import {
-  ListResources,
-  FindProfile,
-  ListProjects,
-  handler,
-} from '@idea-launch/api'
+import { accessFunctionsRequestContextM } from '@idea-launch/firebase-functions'
+import { ListProjects, handler } from '@idea-launch/api'
 
 import { authenticate } from './authenticate'
 
