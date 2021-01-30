@@ -29,7 +29,7 @@ export const FetchProfileEpic = epic(
           pipe(
             get(`${config.functionsUrl}/${FindProfile.name}`),
             withHeaders({
-              authorization: account.idToken,
+              authorization: `Bearer ${account.idToken}`,
             })
           )
         ),
@@ -44,7 +44,7 @@ export const FetchProfileEpic = epic(
               ),
               (body) => pipe(
                 body,
-                decoder(FindProfile.result).decode,
+                decoder(FindProfile.Response).decode,
                 T.map((result) =>
                   Action.of.ProfileRequestSucceeded({
                     payload: result

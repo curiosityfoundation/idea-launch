@@ -35,6 +35,7 @@ export type Response = M.AType<typeof Response>
 
 export const ListResources = endpoint({
   name: 'ListResources',
+  method: 'GET',
   Response,
   Body: Empty,
 })

@@ -31,9 +31,9 @@ export const FetchResourcesEpic = epic(
               ),
               (body) => pipe(
                 body,
-                decoder(ListResources.result).decode,
+                decoder(ListResources.Response).decode,
                 T.map(
-                  ListResources.result.matchStrict({
+                  ListResources.Response.matchStrict({
                     Success: (success) =>
                       Action.of.ResourcesRequestSuccess({
                         payload: success.resources

@@ -46,6 +46,7 @@ export type Response = M.AType<typeof Response>
 
 export const FindProfile = endpoint({
   name: 'FindProfile',
+  method: 'GET',
   Response,
   Body: Empty,
 })

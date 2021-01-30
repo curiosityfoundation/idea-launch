@@ -60,6 +60,7 @@ export type Response = M.AType<typeof Response>
 
 export const ListProjects = endpoint({
   name: 'ListProjects',
+  method: 'GET',
   Response,
   Body,
 })
