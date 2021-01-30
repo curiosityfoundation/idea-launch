@@ -7,44 +7,75 @@ import {
   useStore as useStore_,
 } from 'react-redux'
 
-import { 
-  findProfileReducer, 
-  FindProfileAction, 
-  FindProfileState, 
-  initFindProfileState 
+import {
+  makeRemoteAccess,
+  ListProjects,
+  ListResources,
+  FindProfile,
 } from '@idea-launch/api'
-import { 
-  AccountState, 
-  AccountAction, 
-  accountReducer, 
-  initAccountState 
+import {
+  AccountState,
+  AccountAction,
+  accountReducer,
+  initAccountState
 } from '@idea-launch/accounts/ui'
-import { 
-  ResourcesState, 
-  ResourcesAction, 
-  resourcesReducer, 
-  initResourcesState 
+import {
+  ResourcesState,
+  ResourcesAction,
+  resourcesReducer,
+  initResourcesState
 } from '@idea-launch/resources/ui'
 import { epic as epic_ } from '@idea-launch/redux-effect';
 
-import { 
-  RouteState, 
-  RouteAction, 
-  routeReducer, 
-  initRouteState 
+import {
+  RouteState,
+  RouteAction,
+  routeReducer,
+  initRouteState
 } from '../router'
+
+const {
+  initState: initListProjectsState,
+  State: ListProjectsState,
+  Action: ListProjectsAction,
+  reducer: listProjectsReducer,
+} = makeRemoteAccess(ListProjects)
+
+const {
+  initState: initListResourcesState,
+  State: ListResourcesState,
+  Action: ListResourcesAction,
+  reducer: listResourcesReducer,
+} = makeRemoteAccess(ListResources)
+
+const {
+  initState: initFindProfileState,
+  State: FindProfileState,
+  Action: FindProfileAction,
+  reducer: findProfileReducer,
+} = makeRemoteAccess(FindProfile)
 
 export const State = {
   account: AccountState,
   resources: ResourcesState,
   profile: FindProfileState,
+  api: {
+    listProjects: ListProjectsState, 
+    listResources: ListResourcesState, 
+    findProfile: FindProfileState, 
+  },
 }
 
 export interface State {
   account: AccountState
   resources: ResourcesState
   route: RouteState
-  profile: FindProfileState,
+  profile: ADTType<typeof FindProfileState>,
+  api: {
+    listProjects: ADTType<typeof ListProjectsState>, 
+    listResources: ADTType<typeof ListResourcesState>, 
+    findProfile: ADTType<typeof FindProfileState>, 
+  }
 }
 
 export const rootReducer = combineReducers<State>({
@@ -52,6 +83,11 @@ export const rootReducer = combineReducers<State>({
   resources: resourcesReducer,
   route: routeReducer,
   profile: findProfileReducer,
+  api: combineReducers({
+    listProjects: listProjectsReducer, 
+    listResources: listResourcesReducer, 
+    findProfile: findProfileReducer, 
+  }),
 })
 
 export const initState: State = {
@@ -59,6 +95,11 @@ export const initState: State = {
   resources: initResourcesState,
   route: initRouteState,
   profile: initFindProfileState,
+  api: {
+    findProfile: initFindProfileState,
+    listProjects: initListProjectsState,
+    listResources: initListResourcesState,
+  }
 }
 
 export const Action = unionADT([
@@ -66,6 +107,8 @@ export const Action = unionADT([
   ResourcesAction,
   RouteAction,
   FindProfileAction,
+  ListResourcesAction,
+  ListProjectsAction,
 ])
 
 export type Action = ADTType<typeof Action>

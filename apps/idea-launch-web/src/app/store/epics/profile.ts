@@ -8,7 +8,6 @@ import { get, withHeaders } from '@idea-launch/http-client'
 import { FindProfile } from '@idea-launch/api';
 
 import { accessAppConfigM } from '../../config';
-import { log } from '../../logger';
 import { Action, epic, State } from '../constants';
 
 export const FetchProfileEpic = epic(
@@ -19,49 +18,83 @@ export const FetchProfileEpic = epic(
     )((s, a) => [s, a] as const),
     S.filterMap(([s, a]) =>
       State.account.is.LoggedIn(s.account)
-        && Action.is.ProfileRequested(a)
+        && Action.is.APIRequested(a)
+        && a.payload.endpoint === FindProfile.name
         ? O.some([s.account, a] as const)
         : O.none
     ),
-    S.mapM(([account]) =>
+    S.chain(([account]) =>
       pipe(
-        accessAppConfigM((config) =>
-          pipe(
-            get(`${config.functionsUrl}/${FindProfile.name}`),
-            withHeaders({
-              authorization: `Bearer ${account.idToken}`,
-            })
-          )
-        ),
-        T.chain((resp) =>
-          pipe(
-            resp.body,
-            O.fold(
-              () => T.succeed(
-                Action.of.ProfileRequestFailed({
-                  payload: 'no body present on response'
-                })
+        S.fromIterable([
+          Action.of.APIRequestStarted({
+            payload: {
+              endpoint: FindProfile.name,
+            }
+          })
+        ]),
+        S.merge(
+          S.fromEffect(
+            pipe(
+              accessAppConfigM((config) =>
+                pipe(
+                  get(`${config.functionsUrl}/${FindProfile.name}`),
+                  withHeaders({
+                    authorization: `Bearer ${account.idToken}`,
+                  })
+                )
               ),
-              (body) => pipe(
-                body,
-                decoder(FindProfile.Response).decode,
-                T.map((result) =>
-                  Action.of.ProfileRequestSucceeded({
-                    payload: result
-                  }),
-                ),
-              )
-            ),
-            T.tap(log),
-          )
-        ),
-        T.catchAll(() =>
-          T.succeed(
-            Action.of.ProfileRequestFailed({
-              payload: 'some error happened'
-            })
-          )
-        ),
+              T.chain((resp) =>
+                pipe(
+                  resp.body,
+                  O.fold(
+                    () => T.succeed(
+                      Action.of.APIRequestFailed({
+                        payload: {
+                          endpoint: FindProfile.name,
+                          reason: 'no body present on response'
+                        }
+                      })
+                    ),
+                    (body) => pipe(
+                      body,
+                      decoder(FindProfile.Response).decode,
+                      T.map((response) =>
+                        Action.of.APIRequestSucceeded({
+                          payload: {
+                            endpoint: FindProfile.name,
+                            response,
+                          }
+                        }),
+                      ),
+                      T.catchAll((e) =>
+                        T.succeed(
+                          Action.of.APIRequestFailed({
+                            payload: {
+                              endpoint: FindProfile.name,
+                              reason: 'decodeError'
+                            }
+                          })
+                        )
+                      )
+                    )
+                  ),
+                )
+              ),
+              T.catchAll((e) =>
+                T.succeed(
+                  Action.of.APIRequestFailed({
+                    payload: {
+                      endpoint: FindProfile.name,
+                      reason: e._tag === 'HTTPErrorRequest'
+                        ? `${e._tag}: ${e.error.message}`
+                        : `${e._tag}: ${e.response.status}`
+                    }
+                  })
+                )
+              ),
+            )
+          ),
+        )
       )
     )
   )

@@ -43,6 +43,11 @@ export const GetProfile = epic(
   (actions) => pipe(
     actions,
     S.filter(Action.is.LoginSuccess),
-    S.map(() => Action.of.ProfileRequested({}))
+    S.map(() => Action.of.APIRequested({
+      payload: {
+        endpoint: 'FindProfile',
+        body: {}
+      }
+    }))
   )
 )
