@@ -53,6 +53,7 @@
     "routing-adt": { "tags": [] },
     "morphic-router": { "tags": [] },
     "browser-window": { "tags": [] },
-    "firebase-web": { "tags": [] }
+    "firebase-web": { "tags": [] },
+    "firebase-functions": { "tags": [] }
   }
 }

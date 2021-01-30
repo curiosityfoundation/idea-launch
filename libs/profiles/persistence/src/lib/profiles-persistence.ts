@@ -13,7 +13,7 @@ class ProfilePersistenceError {
 export interface ProfilesPersistence {
   createProfile: (opts: CreateProfile) => T.IO<ProfilePersistenceError, void>
   updateProfile: (opts: UpdateProfile) => T.IO<ProfilePersistenceError, void>
-  findByOwner: (owner: UUID) => T.IO<ProfilePersistenceError, O.Option<Profile>>
+  findByOwner: (owner: string) => T.IO<ProfilePersistenceError, O.Option<Profile>>
 }
 
 export const ProfilesPersistence = tag<ProfilesPersistence>()

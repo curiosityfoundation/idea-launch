@@ -2,7 +2,6 @@ import { tag } from '@effect-ts/core/Has'
 import * as T from '@effect-ts/core/Effect'
 import * as L from '@effect-ts/core/Effect/Layer'
 import * as S from '@effect-ts/core/Effect/Stream'
-import { pipe } from '@effect-ts/core/Function'
 import { makeADT, ofType, ADTType } from '@effect-ts/morphic/Adt'
 import firebase from 'firebase'
 

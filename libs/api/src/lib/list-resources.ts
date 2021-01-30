@@ -1,12 +1,8 @@
-import { pipe } from '@effect-ts/core/Function'
-import * as T from '@effect-ts/core/Effect'
-import { encode } from '@effect-ts/morphic/Encoder'
 import * as M from '@effect-ts/morphic'
 
-import { listResources } from '@idea-launch/resources/persistence'
 import { Resource } from '@idea-launch/resources/model'
 
-import { endpoint, NoArgs } from './api'
+import { endpoint, Empty } from './api'
 
 const Failure_ = M.make((F) =>
   F.interface({
@@ -30,30 +26,15 @@ export interface Success extends M.AType<typeof Success_> { }
 export interface SuccessRaw extends M.EType<typeof Success_> { }
 export const Success = M.opaque<SuccessRaw, Success>()(Success_)
 
-export const Result = M.makeADT('tag')({
+export const Response = M.makeADT('tag')({
   Failure,
   Success,
 })
 
+export type Response = M.AType<typeof Response>
+
 export const ListResources = endpoint({
   name: 'ListResources',
-  result: Result,
-  args: NoArgs,
-  handler: () =>
-    pipe(
-      listResources,
-      T.map((resources) =>
-        Result.of.Success({
-          resources,
-        })
-      ),
-      T.catchAll((err) =>
-        T.succeed(
-          Result.of.Failure({
-            reason: err.reason,
-          })
-        )
-      ),
-      T.chain(encode(Result)),
-    )
+  Response,
+  Body: Empty,
 })

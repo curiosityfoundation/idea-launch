@@ -5,48 +5,43 @@ import { MorphADT, AOfTypes, AnyADTTypes } from '@effect-ts/morphic/Batteries/us
 
 export interface Endpoint<
   T extends string,
-  R,
-  Args extends M.M<any, any, any>,
-  X extends AnyADTTypes,
-  E,
-  Result extends MorphADT<X, any, any, any, any>
+  A extends M.M<any, any, any>,
+  ResultRaw,
+  O extends MorphADT<any, any, any, any, ResultRaw>,
   > {
-  _R: R
-  _A: M.AType<Args>
-  _O: AOfTypes<X>
+  _O: ResultRaw
   name: T
-  args: Args
-  result: Result
-  handler: (data: unknown, uid: UUID) =>
-    T.Effect<R, E, AOfTypes<X>>
+  Body: A
+  Response: O
 }
 
-export type ResultType<E extends Endpoint<string, unknown, any, any, unknown, unknown>> = E['_O']
-export type ArgsType<E extends Endpoint<string, unknown, any, any, unknown, unknown>> = E['_A']
-
-const NoArgs_ = M.make((F) =>
-  F.interface({}, { name: 'NoArgs' })
+const Empty_ = M.make((F) =>
+  F.interface({})
 )
 
-export interface NoArgs extends M.AType<typeof NoArgs_> { }
-export interface NoArgsRaw extends M.EType<typeof NoArgs_> { }
-export const NoArgs = M.opaque<NoArgsRaw, NoArgs>()(NoArgs_)
+export interface Empty extends M.AType<typeof Empty_> { }
+export interface EmptyRaw extends M.EType<typeof Empty_> { }
+export const Empty = M.opaque<EmptyRaw, Empty>()(Empty_)
 
 export function endpoint<
   T extends string,
-  R,
-  Args extends M.M<any, any, any>,
-  X extends AnyADTTypes,
-  E,
-  Result extends MorphADT<X, any, any, any, any>
->(
-  opt: {
-    name: T
-    args: Args
-    result: Result
-    handler: (data: unknown, uid: UUID) =>
-      T.Effect<R, E, AOfTypes<X>>
-  }
-) {
-  return opt as Endpoint<T, R, Args, X, E, Result>
+  A extends M.M<any, any, any>,
+  ResultRaw,
+  O extends MorphADT<any, any, any, any, ResultRaw>,
+  >(
+    opt: {
+      name: T
+      Body: A
+      Response: O
+    }
+  ) {
+  return opt as Endpoint<T, A, ResultRaw, O>
 }
+
+export function handler<E extends Endpoint<any, any, any, any>>(
+  endpoint: E
+): <R>(fn: (e: E) => T.RIO<R, E['_O']>) => Handler<R, E> {
+  return <R>(fn: (e: E) => T.RIO<R, E['_O']>) => fn(endpoint)
+}
+
+export interface Handler<R, E extends Endpoint<any, any, any, any>> extends T.RIO<R, E['_O']> { }

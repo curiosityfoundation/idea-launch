@@ -1,13 +1,20 @@
 import * as functions from 'firebase-functions'
 import * as T from '@effect-ts/core/Effect'
 import { pipe } from '@effect-ts/core/Function'
-import { UUID } from '@effect-ts/morphic/Algebra/Primitives'
 import * as cors from 'cors';
 
-import * as Endpoints from '@idea-launch/api'
 import { profilesPersistenceMock } from '@idea-launch/profiles/persistence'
 import { projectsPersistenceMock } from '@idea-launch/projects/persistence'
 import { resourcesPersistenceMock } from '@idea-launch/resources/persistence'
+import {
+  FirebaseAdminAppLive,
+  FunctionsAuthStatusLive,
+  provideFunctionsRequestContextLive
+} from '@idea-launch/firebase-functions'
+
+import { handleFindProfile } from './app/find-profile'
+import { handleListProjects } from './app/list-projects'
+import { handleListResources } from './app/list-resources'
 
 const withCors = cors({
   origin: true,
@@ -21,11 +28,11 @@ export const ListProjects =
   functions.https.onRequest(
     checkOrigin((req, res) => {
       pipe(
-        Endpoints.ListProjects.handler(
-          req.body,
-          'xyz' as UUID
-        ),
-        T.provideLayer(projectsPersistenceMock),
+        handleListProjects,
+        T.provideSomeLayer(projectsPersistenceMock),
+        T.provideSomeLayer(FunctionsAuthStatusLive),
+        provideFunctionsRequestContextLive(req, res),
+        T.provideSomeLayer(FirebaseAdminAppLive),
         T.runPromise,
       ).then(
         (raw) => {
@@ -44,11 +51,8 @@ export const ListResources =
   functions.https.onRequest(
     checkOrigin((req, res) => {
       pipe(
-        Endpoints.ListResources.handler(
-          req.body,
-          'xyz' as UUID
-        ),
-        T.provideLayer(resourcesPersistenceMock),
+        handleListResources,
+        T.provideSomeLayer(resourcesPersistenceMock),
         T.runPromise,
       ).then(
         (raw) => {
@@ -67,11 +71,11 @@ export const FindProfile =
   functions.https.onRequest(
     checkOrigin((req, res) => {
       pipe(
-        Endpoints.FindProfile.handler(
-          req.body,
-          'xyz' as UUID
-        ),
-        T.provideLayer(profilesPersistenceMock),
+        handleFindProfile,
+        T.provideSomeLayer(profilesPersistenceMock),
+        T.provideSomeLayer(FunctionsAuthStatusLive),
+        provideFunctionsRequestContextLive(req, res),
+        T.provideSomeLayer(FirebaseAdminAppLive),
         T.runPromise,
       ).then(
         (raw) => {

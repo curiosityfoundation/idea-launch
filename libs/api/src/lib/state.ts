@@ -1,6 +1,6 @@
 import { makeADT, ofType, ADTType } from '@effect-ts/morphic/Adt'
 
-import { Result } from './find-profile'
+import { Response } from './find-profile'
 
 interface Init {
   state: 'Init'
@@ -18,13 +18,13 @@ interface Failure {
 
 interface Success {
   state: 'Success'
-  result: Result
+  result: Response
   refreshing: boolean
 }
 
 interface Both {
   state: 'Both'
-  result: Result
+  result: Response
   reason: string
   refreshing: boolean
 }
@@ -52,7 +52,7 @@ interface ProfileRequestFailed {
 
 interface ProfileRequestSucceeded {
   type: 'ProfileRequestSucceeded'
-  payload: Result
+  payload: Response
 }
 
 export const FindProfileAction = makeADT('type')({
