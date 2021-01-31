@@ -1,27 +1,36 @@
 import * as T from '@effect-ts/core/Effect'
-import * as L from '@effect-ts/core/Effect/Layer'
-import * as S from '@effect-ts/core/Effect/Stream'
+import * as Q from '@effect-ts/core/Effect/Queue'
+import * as A from '@effect-ts/core/Array'
+import * as Ref from '@effect-ts/core/Effect/Ref'
 import { pipe } from '@effect-ts/core/Function'
-import { tag } from '@effect-ts/core/Has'
 import * as NEA from '@effect-ts/core/NonEmptyArray'
-import { Observable } from 'rxjs'
-import * as RxObservable from 'redux-observable'
-import { Action } from 'redux'
+import { Has, HasURI, Tag, tag } from '@effect-ts/core/Has'
+import { Middleware, Action, MiddlewareAPI, Dispatch, AnyAction } from 'redux'
 
-import { encaseObservable, runToObservable, toObservable } from './rxjs'
-
-export interface RxJsEpic<A, S, O = A> {
-  (action$: Observable<A>, state$: Observable<S>): Observable<O>
+export interface ActionWithState<A extends Action, S> {
+  action: A
+  state: S
 }
 
-export interface Epic<R, A, S> {
+export interface ActionQueue<A extends Action, S> {
+  middlewareApi: Ref.Ref<MiddlewareAPI<Dispatch<AnyAction>, S>>
+  actionsWithState: Q.Queue<ActionWithState<A, S>>
+}
+
+export const ActionQueue = <A extends Action, S>() => tag<ActionQueue<A, S>>()
+
+interface ReduxEffect<R, A extends Action, S> {
   _R: R
   _A: A
   _S: S
-  (action: S.UIO<A>, state: S.UIO<S>): S.RIO<R, A>
+  (action: A, state: S): T.RIO<R, A.Array<A>>
 }
 
-export type AnyEpic<S> = Epic<any, any, S> | Epic<never, any, S>
+export const reduxEffect = <A extends Action, S>() =>
+  <R>(fn: (action: A, state: S) => T.RIO<R, A.Array<A>>) =>
+    fn as ReduxEffect<R, A, S>
+
+export type AnyReduxEffect = ReduxEffect<any, Action, any> | ReduxEffect<never, Action, any>
 
 type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
   k: infer I
@@ -29,113 +38,84 @@ type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
   ? I
   : never;
 
-export type CombinedEnv<Epics extends NEA.NonEmptyArray<AnyEpic<any>>> =
+type CombinedEnv<Epics extends NEA.NonEmptyArray<AnyReduxEffect>> =
   UnionToIntersection<Epics[number]['_R']>
 
-export type CombinedActions<Epics extends NEA.NonEmptyArray<AnyEpic<any>>> =
+type CombinedActions<Epics extends NEA.NonEmptyArray<AnyReduxEffect>> =
   Epics[number]['_A']
 
-function toNever(_: any): never {
-  return undefined as never;
-};
+type CombinedState<Epics extends NEA.NonEmptyArray<AnyReduxEffect>> =
+  UnionToIntersection<Epics[number]['_S']>
 
-export function epic<A, S>(): <R>(
-  fn: (action: S.UIO<A>, state: S.UIO<S>) => S.RIO<R, A>
-) => Epic<R, A, S> {
-  return (fn) => fn as any
+interface ReduxEffectMiddleware {
+  middleware: Middleware
+  runEffects: T.Effect<any, never, never>
 }
 
-export function embed<S, Epics extends NEA.NonEmptyArray<AnyEpic<S>>>(
-  ...epics: Epics
-): (
-    provider: (
-      _: T.Effect<CombinedEnv<Epics>, never, unknown>
-    ) => T.Effect<T.DefaultEnv, never, unknown>
-  ) => NEA.NonEmptyArray<RxJsEpic<
-    CombinedActions<Epics>,
-    S,
-    CombinedActions<Epics>
-  >> {
-  return (provider) => pipe(
-    epics,
-    NEA.map((ep) => (action$, state$) =>
-      pipe(
-        toObservable(
-          ep(
-            encaseObservable(action$, toNever),
-            encaseObservable(state$, toNever),
-          ),
-        ),
-        provider,
-        runToObservable,
-      )
-    )
-  )
-}
+// export function combineEffects<
+//   Fx extends NEA.NonEmptyArray<AnyReduxEffect>
+// >(
+//   fx: Fx
+// ) {
+//   return reduxEffect<
+//     CombinedActions<Fx>,
+//     CombinedState<Fx>
+//   >()<CombinedEnv<Fx>>(
+//     (action, state) => pipe(
+//       fx,
+//       NEA.map((e) => e(action, state)),
+//       T.collectAllPar,
+//       T.map((as) => A.flatten(as))
+//     )
+//   )
+// }
 
-export function embedT<S, Epics extends NEA.NonEmptyArray<AnyEpic<S>>>(
-  ...epics: Epics
-): T.RIO<
-  CombinedEnv<Epics>,
-  RxObservable.Epic<
-    CombinedActions<Epics>,
-    CombinedActions<Epics>,
-    S
-  >
-> {
-  return T.access((env) =>
-    RxObservable.combineEpics(
-      ...pipe(
-        epics,
-        NEA.map((ep) => (action$, state$) =>
+export function makeReduxEffectMiddleware<
+  Fx extends AnyReduxEffect
+>(
+  fx: Fx
+):
+  <T extends Tag<ActionQueue<Fx['_A'], Fx['_S']>>>(tag: T) =>
+    T.RIO<
+      Has<ActionQueue<Fx['_A'], Fx['_S']>> & Fx['_R'],
+      ReduxEffectMiddleware
+    > {
+  return (tag) => T.accessService(tag)(
+    (env) => ({
+      middleware: (api) => (next) => (action) =>
+        T.run(
           pipe(
-            toObservable(
-              ep(
-                encaseObservable(action$, toNever),
-                encaseObservable(state$, toNever),
-              ),
+            env.actionsWithState.offer({
+              action,
+              state: api.getState(),
+            }),
+            T.andThen(Ref.set(api)(env.middlewareApi)),
+          ),
+          () => next(action)
+        ),
+      runEffects: pipe(
+        env.actionsWithState.take,
+        T.chain(({ action, state }) =>
+          pipe(
+            fx(action, state),
+            T.chain((actions) =>
+              pipe(
+                env.middlewareApi,
+                Ref.get,
+                T.chain((api) =>
+                  T.effectTotal(() => {
+                    actions.forEach((a) => api.dispatch(a))
+                  })
+                )
+              )
             ),
             T.provide(env),
-            runToObservable,
+            T.fork
           )
-        )
-      )
-    )
+        ),
+        T.forever,
+      ),
+    })
   )
+
 }
-
-export interface EpicMiddleware<A extends Action, S> {
-  middleware: RxObservable.EpicMiddleware<A, A, S, S>
-  runRootEpic: T.UIO<void>
-}
-
-export function makeMiddleware<
-  S,
-  Epics extends NEA.NonEmptyArray<AnyEpic<S>>
->(epics: Epics) {
-
-  type A = CombinedActions<Epics>
-
-  return pipe(
-    T.effectTotal(() =>
-      RxObservable.createEpicMiddleware<A, A, S, S>()
-    ),
-    T.chain((middleware) =>
-      pipe(
-        embedT(...epics),
-        T.map(
-          (rootEpic): EpicMiddleware<A, S> => ({
-            middleware,
-            runRootEpic: T.effectTotal(() => {
-              middleware.run(
-                rootEpic
-              )
-            })
-          })
-        )
-      )
-    )
-  )
-}
-
-export const makeEpicMiddleware = <A extends Action, S>() => tag<EpicMiddleware<A, S>>()
