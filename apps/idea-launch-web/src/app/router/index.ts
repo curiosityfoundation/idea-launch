@@ -66,7 +66,6 @@ export const {
   RouteAction,
   routeReducer,
   Redirect,
-  RouteEpic,
   Router,
   Link
 } = makeRouteState<Route>(

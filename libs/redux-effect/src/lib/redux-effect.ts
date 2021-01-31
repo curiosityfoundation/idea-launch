@@ -12,12 +12,12 @@ export interface ActionWithState<A extends Action, S> {
   state: S
 }
 
-export interface ActionQueue<A extends Action, S> {
+export interface ReduxQueue<A extends Action, S> {
   middlewareApi: Ref.Ref<MiddlewareAPI<Dispatch<AnyAction>, S>>
   actionsWithState: Q.Queue<ActionWithState<A, S>>
 }
 
-export const ActionQueue = <A extends Action, S>() => tag<ActionQueue<A, S>>()
+export const ReduxQueueOf = <A extends Action, S>() => tag<ReduxQueue<A, S>>()
 
 interface ReduxEffect<R, A extends Action, S> {
   _R: R
@@ -47,37 +47,39 @@ type CombinedActions<Epics extends NEA.NonEmptyArray<AnyReduxEffect>> =
 type CombinedState<Epics extends NEA.NonEmptyArray<AnyReduxEffect>> =
   UnionToIntersection<Epics[number]['_S']>
 
-interface ReduxEffectMiddleware {
+export interface ReduxEffectMiddleware {
   middleware: Middleware
   runEffects: T.Effect<any, never, never>
 }
 
-// export function combineEffects<
-//   Fx extends NEA.NonEmptyArray<AnyReduxEffect>
-// >(
-//   fx: Fx
-// ) {
-//   return reduxEffect<
-//     CombinedActions<Fx>,
-//     CombinedState<Fx>
-//   >()<CombinedEnv<Fx>>(
-//     (action, state) => pipe(
-//       fx,
-//       NEA.map((e) => e(action, state)),
-//       T.collectAllPar,
-//       T.map((as) => A.flatten(as))
-//     )
-//   )
-// }
+export const ReduxEffectMiddleware = tag<ReduxEffectMiddleware>()
+
+export function combineEffects<
+  Fx extends NEA.NonEmptyArray<AnyReduxEffect>
+>(
+  fx: Fx
+) {
+  return reduxEffect<
+    CombinedActions<Fx>,
+    CombinedState<Fx>
+  >()<CombinedEnv<Fx>>(
+    (action, state) => pipe(
+      fx,
+      NEA.map((e) => e(action, state)),
+      T.collectAllPar,
+      T.map((as) => A.flatten(as))
+    )
+  )
+}
 
 export function makeReduxEffectMiddleware<
   Fx extends AnyReduxEffect
 >(
   fx: Fx
 ):
-  <T extends Tag<ActionQueue<Fx['_A'], Fx['_S']>>>(tag: T) =>
+  <T extends Tag<ReduxQueue<Fx['_A'], Fx['_S']>>>(tag: T) =>
     T.RIO<
-      Has<ActionQueue<Fx['_A'], Fx['_S']>> & Fx['_R'],
+      Has<ReduxQueue<Fx['_A'], Fx['_S']>> & Fx['_R'],
       ReduxEffectMiddleware
     > {
   return (tag) => T.accessService(tag)(
@@ -108,6 +110,24 @@ export function makeReduxEffectMiddleware<
                   })
                 )
               )
+            ),
+            T.catchAll((err) =>
+              T.effectTotal(() => {
+                if (typeof console === 'object'
+                  && typeof console.warn === 'function'
+                  && process.env.NODE_ENV !== 'production') {
+                    console.warn('an error occured in a redux effect:\n', err);
+                  }
+              })
+            ),
+            T.catchAllDefect((defect) =>
+              T.effectTotal(() => {
+                if (typeof console === 'object'
+                  && typeof console.warn === 'function'
+                  && process.env.NODE_ENV !== 'production') {
+                    console.warn('a defect occured in a redux effect:\n', defect);
+                  }
+              })
             ),
             T.provide(env),
             T.fork

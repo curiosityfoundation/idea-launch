@@ -18,7 +18,8 @@ import { AppConfigLive } from '../app/config'
 import {
   ReduxStoreLive,
   rootReducer,
-  EpicMiddlewareLive
+  ReduxEffectMiddlewareLive,
+  ReduxQueueLive,
 } from '../app/store'
 
 const AuthLayer =
@@ -39,7 +40,9 @@ const FirebaseAppLayer =
   }))
 
 const MiddlewareLayer =
-  EpicMiddlewareLive
+  ReduxEffectMiddlewareLive
+  ['<+<'](ReduxQueueLive)
+  ['<+<'](BrowserWindowLive(window))
   ['<+<'](FirebaseAuthStateLive)
   ['<+<'](AuthLayer)
   ['<<<'](FirebaseAppLayer)
@@ -52,7 +55,6 @@ const MiddlewareLayer =
   }))
   ['<<<'](HTTPMiddlewareStackLive([]))
   ['<<<'](AppConfigLive(process.env.NX_FUNCTIONS_URL))
-  ['<<<'](BrowserWindowLive(window))
   ['<<<'](SilentLoggerLive)
 
 export const AppLayer =

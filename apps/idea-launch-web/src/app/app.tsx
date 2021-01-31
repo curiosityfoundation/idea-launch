@@ -10,11 +10,10 @@ import { Provider } from 'react-redux'
 import { FirebaseAuthState, FirebaseAuthStateChanged } from '@idea-launch/firebase-web'
 
 import { Pages } from './pages';
-import { ReduxStore, Action, accessReduxStoreM, accessEpicMiddlewareM } from './store'
+import { ReduxStore, Action, accessReduxStoreM, accessReduxEffectMiddlewareM } from './store'
 
 const RenderReact = accessReduxStoreM((redux) =>
   T.effectTotal(() => {
-    console.log('RenderReact')
     ReactDOM.render(
       <React.StrictMode>
         <Provider store={redux.store}>
@@ -26,8 +25,8 @@ const RenderReact = accessReduxStoreM((redux) =>
   })
 )
 
-const StartMiddleware = accessEpicMiddlewareM(
-  (middleware) => middleware.runRootEpic
+const StartMiddleware = accessReduxEffectMiddlewareM(
+  (middleware) => middleware.runEffects
 )
 
 const ConnectFirebaseAuthToRedux = T.accessServicesM({
@@ -68,7 +67,9 @@ const ConnectFirebaseAuthToRedux = T.accessServicesM({
 
 export const App =
   pipe(
-    StartMiddleware,
-    T.andThen(RenderReact),
-    T.andThen(ConnectFirebaseAuthToRedux),
+    RenderReact,
+    T.andThen(T.collectAllUnitPar([
+      ConnectFirebaseAuthToRedux,
+      StartMiddleware,
+    ]))
   )

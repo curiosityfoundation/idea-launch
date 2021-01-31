@@ -3,7 +3,7 @@ import * as L from '@effect-ts/core/Effect/Layer'
 import { tag } from '@effect-ts/core/Has'
 import { configureStore, Store, ConfigureStoreOptions } from '@reduxjs/toolkit'
 
-import { accessEpicMiddleware } from './epics'
+import { accessReduxEffectMiddleware } from './effects'
 
 export interface ReduxStore {
   store: Store
@@ -12,7 +12,7 @@ export interface ReduxStore {
 export const ReduxStore = tag<ReduxStore>()
 
 const makeReduxStore = (options: Omit<ConfigureStoreOptions, 'middleware'>) =>
-  accessEpicMiddleware(
+  accessReduxEffectMiddleware(
     ({ middleware }): ReduxStore => ({
       store: configureStore({
         ...options,

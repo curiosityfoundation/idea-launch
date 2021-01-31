@@ -70,7 +70,7 @@ export const GetStarted: FC<RouteProps<'GetStarted'>> = (props) => {
               validationSchema={CreateProfileFormSchema}
               initialValues={initialValues}
               onSubmit={() => dispatch(
-                Action.of.PushLocation({
+                Action.of.LocationPushed({
                   payload: Route.of.GetStarted({
                     step: '2'
                   })

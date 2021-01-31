@@ -1,15 +1,15 @@
 import * as T from '@effect-ts/core/Effect'
-import * as S from '@effect-ts/core/Effect/Stream'
 import { pipe } from '@effect-ts/core/Function';
 import * as O from '@effect-ts/core/Option'
 import { decoder } from '@effect-ts/morphic/Decoder';
 
 import { AnyEndpoint } from '@idea-launch/api';
 
-import { Action, State } from '../constants';
+import { Action } from '../constants';
+import { APIAction } from '../api-constants';
 
-export const shouldRequest = (endpoint: AnyEndpoint) => (a: Action) =>
-  Action.is.APIRequested(a) && a.payload.endpoint === endpoint.name
+export const matches = (endpoint: AnyEndpoint) => (a: APIAction) =>
+  APIAction.verified(a) && a.payload.endpoint === endpoint.name
 
 export const foldBody = <E extends AnyEndpoint>(endpoint: E): (o: O.Option<unknown>) => T.UIO<E['_RespA']> =>
   O.fold(
@@ -36,21 +36,3 @@ export const foldBody = <E extends AnyEndpoint>(endpoint: E): (o: O.Option<unkno
       )
     )
   )
-
-export const pairWithIdToken = (
-  actions: S.UIO<Action>,
-  state: S.UIO<State>
-) => pipe(
-  S.zipWithLatest(
-    actions,
-    state,
-  )((a, s) => [a, s] as const),
-  S.filterMap(([a, s]) =>
-    State.account.matchStrict({
-      LoggedIn: ({ idToken }) => O.some([idToken, a] as const),
-      LoggedOut: () => O.none,
-      LoggingIn: () => O.none,
-      LoggingOut: () => O.none,
-    })(s.account)
-  ),
-)
