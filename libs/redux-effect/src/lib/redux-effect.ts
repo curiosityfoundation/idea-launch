@@ -21,7 +21,7 @@ export interface Epic<R, A, S> {
   (action: S.UIO<A>, state: S.UIO<S>): S.RIO<R, A>
 }
 
-type AnyEpic<S> = Epic<any, any, S> | Epic<never, any, S>
+export type AnyEpic<S> = Epic<any, any, S> | Epic<never, any, S>
 
 type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
   k: infer I
@@ -29,10 +29,10 @@ type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
   ? I
   : never;
 
-type CombinedEnv<S, Epics extends NEA.NonEmptyArray<AnyEpic<S>>> =
+export type CombinedEnv<Epics extends NEA.NonEmptyArray<AnyEpic<any>>> =
   UnionToIntersection<Epics[number]['_R']>
 
-type CombinedActions<S, Epics extends NEA.NonEmptyArray<AnyEpic<S>>> =
+export type CombinedActions<Epics extends NEA.NonEmptyArray<AnyEpic<any>>> =
   Epics[number]['_A']
 
 function toNever(_: any): never {
@@ -49,12 +49,12 @@ export function embed<S, Epics extends NEA.NonEmptyArray<AnyEpic<S>>>(
   ...epics: Epics
 ): (
     provider: (
-      _: T.Effect<CombinedEnv<S, Epics>, never, unknown>
+      _: T.Effect<CombinedEnv<Epics>, never, unknown>
     ) => T.Effect<T.DefaultEnv, never, unknown>
   ) => NEA.NonEmptyArray<RxJsEpic<
-    CombinedActions<S, Epics>,
+    CombinedActions<Epics>,
     S,
-    CombinedActions<S, Epics>
+    CombinedActions<Epics>
   >> {
   return (provider) => pipe(
     epics,
@@ -76,26 +76,28 @@ export function embed<S, Epics extends NEA.NonEmptyArray<AnyEpic<S>>>(
 export function embedT<S, Epics extends NEA.NonEmptyArray<AnyEpic<S>>>(
   ...epics: Epics
 ): T.RIO<
-  CombinedEnv<S, Epics>,
-  NEA.NonEmptyArray<RxJsEpic<
-    CombinedActions<S, Epics>,
-    S,
-    CombinedActions<S, Epics>
-  >>
+  CombinedEnv<Epics>,
+  RxObservable.Epic<
+    CombinedActions<Epics>,
+    CombinedActions<Epics>,
+    S
+  >
 > {
   return T.access((env) =>
-    pipe(
-      epics,
-      NEA.map((ep) => (action$, state$) =>
-        pipe(
-          toObservable(
-            ep(
-              encaseObservable(action$, toNever),
-              encaseObservable(state$, toNever),
+    RxObservable.combineEpics(
+      ...pipe(
+        epics,
+        NEA.map((ep) => (action$, state$) =>
+          pipe(
+            toObservable(
+              ep(
+                encaseObservable(action$, toNever),
+                encaseObservable(state$, toNever),
+              ),
             ),
-          ),
-          T.provide(env),
-          runToObservable,
+            T.provide(env),
+            runToObservable,
+          )
         )
       )
     )
@@ -112,7 +114,7 @@ export function makeMiddleware<
   Epics extends NEA.NonEmptyArray<AnyEpic<S>>
 >(epics: Epics) {
 
-  type A = CombinedActions<S, Epics>
+  type A = CombinedActions<Epics>
 
   return pipe(
     T.effectTotal(() =>
@@ -122,11 +124,11 @@ export function makeMiddleware<
       pipe(
         embedT(...epics),
         T.map(
-          (embeddedEpics): EpicMiddleware<A, S> => ({
+          (rootEpic): EpicMiddleware<A, S> => ({
             middleware,
             runRootEpic: T.effectTotal(() => {
               middleware.run(
-                RxObservable.combineEpics(...embeddedEpics)
+                rootEpic
               )
             })
           })
