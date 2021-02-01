@@ -6,6 +6,7 @@ import CloudUploadOutlined from '@material-ui/icons/CloudUploadOutlined';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton'
 import CircularProgress from '@material-ui/core/CircularProgress'
+import { DropzoneArea } from 'material-ui-dropzone'
 
 import './upload-avatar.module.css';
 
@@ -43,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
 interface InitProps {
   state: 'init'
   username: string
-  onUploadClick: () => void
+  onFileAdded: (files: File[]) => void
 }
 
 interface UploadingProps {
@@ -86,22 +87,12 @@ export function UploadAvatar(props: UploadAvatarProps) {
           </Typography>
           <br />
           <br />
-          <input
-            accept='image/*'
-            className={classes.hidden}
-            id='icon-button-file'
-            type='file'
+          <DropzoneArea
+            onChange={props.onFileAdded}
+            filesLimit={1}
+            showPreviews={false}
+            showPreviewsInDropzone={false}
           />
-          <label htmlFor='icon-button-file'>
-            <IconButton
-              className={classes.avatar}
-              aria-label='upload avatar'
-              color='primary'
-              onClick={props.onUploadClick}
-            >
-              <CloudUploadOutlined className={classes.avatarIcon} />
-            </IconButton>
-          </label>
         </div>
       )
     case 'uploading':

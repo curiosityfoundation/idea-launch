@@ -4,7 +4,7 @@ import * as A from '@effect-ts/core/Array'
 import * as Ref from '@effect-ts/core/Effect/Ref'
 import { pipe } from '@effect-ts/core/Function'
 import * as NEA from '@effect-ts/core/NonEmptyArray'
-import { Has, HasURI, Tag, tag } from '@effect-ts/core/Has'
+import { Has, Tag, tag } from '@effect-ts/core/Has'
 import { Middleware, Action, MiddlewareAPI, Dispatch, AnyAction } from 'redux'
 
 export interface ActionWithState<A extends Action, S> {
@@ -38,14 +38,14 @@ type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
   ? I
   : never;
 
-type CombinedEnv<Epics extends NEA.NonEmptyArray<AnyReduxEffect>> =
-  UnionToIntersection<Epics[number]['_R']>
+type CombinedEnv<Ts extends NEA.NonEmptyArray<AnyReduxEffect>> =
+  UnionToIntersection<Ts[number]['_R']>
 
-type CombinedActions<Epics extends NEA.NonEmptyArray<AnyReduxEffect>> =
-  Epics[number]['_A']
+type CombinedActions<Ts extends NEA.NonEmptyArray<AnyReduxEffect>> =
+  Ts[number]['_A']
 
-type CombinedState<Epics extends NEA.NonEmptyArray<AnyReduxEffect>> =
-  UnionToIntersection<Epics[number]['_S']>
+type CombinedState<Ts extends NEA.NonEmptyArray<AnyReduxEffect>> =
+  UnionToIntersection<Ts[number]['_S']>
 
 export interface ReduxEffectMiddleware {
   middleware: Middleware
@@ -55,31 +55,31 @@ export interface ReduxEffectMiddleware {
 export const ReduxEffectMiddleware = tag<ReduxEffectMiddleware>()
 
 export function combineEffects<
-  Fx extends NEA.NonEmptyArray<AnyReduxEffect>
+  Ts extends NEA.NonEmptyArray<AnyReduxEffect>
 >(
-  fx: Fx
+  effects: Ts
 ) {
   return reduxEffect<
-    CombinedActions<Fx>,
-    CombinedState<Fx>
-  >()<CombinedEnv<Fx>>(
+    CombinedActions<Ts>,
+    CombinedState<Ts>
+  >()<CombinedEnv<Ts>>(
     (action, state) => pipe(
-      fx,
+      effects,
       NEA.map((e) => e(action, state)),
       T.collectAllPar,
-      T.map((as) => A.flatten(as))
+      T.map(A.flatten)
     )
   )
 }
 
 export function makeReduxEffectMiddleware<
-  Fx extends AnyReduxEffect
+  Ts extends AnyReduxEffect
 >(
-  fx: Fx
+  effects: Ts
 ):
-  <T extends Tag<ReduxQueue<Fx['_A'], Fx['_S']>>>(tag: T) =>
+  <T extends Tag<ReduxQueue<Ts['_A'], Ts['_S']>>>(tag: T) =>
     T.RIO<
-      Has<ReduxQueue<Fx['_A'], Fx['_S']>> & Fx['_R'],
+      Has<ReduxQueue<Ts['_A'], Ts['_S']>> & Ts['_R'],
       ReduxEffectMiddleware
     > {
   return (tag) => T.accessService(tag)(
@@ -99,7 +99,7 @@ export function makeReduxEffectMiddleware<
         env.actionsWithState.take,
         T.chain(({ action, state }) =>
           pipe(
-            fx(action, state),
+            effects(action, state),
             T.chain((actions) =>
               pipe(
                 env.middlewareApi,
@@ -110,15 +110,6 @@ export function makeReduxEffectMiddleware<
                   })
                 )
               )
-            ),
-            T.catchAll((err) =>
-              T.effectTotal(() => {
-                if (typeof console === 'object'
-                  && typeof console.warn === 'function'
-                  && process.env.NODE_ENV !== 'production') {
-                    console.warn('an error occured in a redux effect:\n', err);
-                  }
-              })
             ),
             T.catchAllDefect((defect) =>
               T.effectTotal(() => {

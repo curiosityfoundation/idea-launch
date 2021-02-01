@@ -7,7 +7,7 @@ import { makeADT, ofType, ADTType } from '@effect-ts/morphic/Adt'
 import { configureStore } from '@reduxjs/toolkit'
 
 import {
-  ReduxMiddleware,
+  ReduxQueueOf,
   ActionWithState,
   reduxEffect,
   makeReduxEffectMiddleware
@@ -62,7 +62,7 @@ describe('custom middleware', () => {
       }
     }
 
-    const AQ = ReduxMiddleware<Action, State>()
+    const AQ = ReduxQueueOf<Action, State>()
 
     const program = pipe(
       makeReduxEffectMiddleware(pushEffect)(AQ),

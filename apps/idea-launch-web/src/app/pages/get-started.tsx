@@ -49,11 +49,28 @@ export const GetStarted: FC<RouteProps<'GetStarted'>> = (props) => {
   const dispatch = useDispatch()
 
   const [formState, setFormState] = useState(initialFormValues)
+  const [file, setFile] = useState<File>(null)
   const [avatar, setAvatar] = useState('')
+  const [preview, setPreview] = useState('')
+
+  const reader = new FileReader();
+
+  reader.addEventListener('load', function () {
+    setPreview(String(reader.result))
+    dispatch(
+      Action.of.LocationPushed({
+        payload: Route.of.GetStarted({
+          step: '4'
+        })
+      })
+    )
+  }, false);
 
   useEffect(() => {
-    console.log(formState, avatar);
-  }, [formState, avatar])
+    if (!!file) {
+      reader.readAsDataURL(file)
+    }
+  }, [file])
 
   switch (props.step) {
     case '1':
@@ -114,24 +131,26 @@ export const GetStarted: FC<RouteProps<'GetStarted'>> = (props) => {
             <UploadAvatar
               state='init'
               username={`${formState.first} ${formState.last}`}
-              onUploadClick={() => {
-                setTimeout(() => {
-                  setAvatar('https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?r=pg')
-                  dispatch(
-                    Action.of.LocationPushed({
-                      payload: Route.of.GetStarted({
-                        step: '4'
-                      })
-                    })
-                  )
-                }, 2500);
-                dispatch(
-                  Action.of.LocationPushed({
-                    payload: Route.of.GetStarted({
-                      step: '3'
-                    })
-                  })
-                )
+              onFileAdded={([file]) => {
+                if (!!file) {
+                  setFile(file)
+                }
+                // setTimeout(() => {
+                //   dispatch(
+                //     Action.of.LocationPushed({
+                //       payload: Route.of.GetStarted({
+                //         step: '4'
+                //       })
+                //     })
+                //   )
+                // }, 2500);
+                // dispatch(
+                //   Action.of.LocationPushed({
+                //     payload: Route.of.GetStarted({
+                //       step: '3'
+                //     })
+                //   })
+                // )
               }}
             />
           </div>
@@ -175,7 +194,7 @@ export const GetStarted: FC<RouteProps<'GetStarted'>> = (props) => {
             <br />
             <UploadAvatar
               state='uploaded'
-              avatar=''
+              avatar={preview}
               onBackClick={() => dispatch(
                 Action.of.LocationPushed({
                   payload: Route.of.GetStarted({
