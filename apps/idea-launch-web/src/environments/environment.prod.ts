@@ -53,9 +53,9 @@ const MiddlewareLayer =
     redirect: 'follow',
     referrerPolicy: 'no-referrer',
   }))
-  ['<<<'](HTTPMiddlewareStackLive([]))
-  ['<<<'](AppConfigLive(process.env.NX_FUNCTIONS_URL))
-  ['<<<'](SilentLoggerLive)
+  ['<+<'](HTTPMiddlewareStackLive([]))
+  ['<+<'](AppConfigLive(process.env.NX_FUNCTIONS_URL))
+  ['<+<'](SilentLoggerLive)
 
 export const AppLayer =
   ReduxStoreLive({
