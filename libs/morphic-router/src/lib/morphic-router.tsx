@@ -47,6 +47,7 @@ export function makeRouteState<Route>(
   ) => {
     const dispatch = useDispatch()
     const aProps = {
+      style: { cursor: 'pointer' },
       ...props,
       onClick: (ev) => {
         dispatch(

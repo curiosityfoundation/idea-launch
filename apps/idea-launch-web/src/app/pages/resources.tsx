@@ -1,4 +1,4 @@
-import { pipe } from '@effect-ts/core/Function';
+import { pipe, Predicate } from '@effect-ts/core/Function';
 import * as R from '@effect-ts/core/Record';
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography';
@@ -8,7 +8,7 @@ import Button from '@material-ui/core/Button';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import React, { FC } from 'react'
 
-import { ResourceCategories, mockResources } from '@idea-launch/resources/model'
+import { ResourceCategories, mockResources, Resource } from '@idea-launch/resources/model'
 import { ResourceCard } from '@idea-launch/resources/ui'
 
 import ecommerce from '../../assets/illustrations/ecommerce.svg';
@@ -46,10 +46,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-function ResourceCards() {
+function ResourceCards(props: { isSelected: Predicate<Resource> }) {
 
   const listResources = useSelector((s) => s.api.listResources)
   const resources = useSelector((s) => s.resources)
+  const route = useSelector((s) => s.route)
   const dispatch = useDispatch()
   const classes = useStyles()
 
@@ -105,16 +106,18 @@ function ResourceCards() {
       )
       : (
         <Grid container justify='center' spacing={4}>
-          {Object.values(resources.entries).map((r) => (
-            <Grid key={r.id} item>
-              <ResourceCard
-                image={r.image}
-                title={r.title}
-                description={r.description}
-                link={r.link}
-              />
-            </Grid>
-          ))
+          {Object.values(resources.entries)
+            .filter(props.isSelected)
+            .map((r) => (
+              <Grid key={r.id} item>
+                <ResourceCard
+                  image={r.image}
+                  title={r.title}
+                  description={r.description}
+                  link={r.link}
+                />
+              </Grid>
+            ))
           }
         </Grid >
       ),
@@ -143,16 +146,18 @@ function ResourceCards() {
       )
       : (
         <Grid container justify='center' spacing={4}>
-          {Object.values(resources.entries).map((r) => (
-            <Grid key={r.id} item>
-              <ResourceCard
-                image={r.image}
-                title={r.title}
-                description={r.description}
-                link={r.link}
-              />
-            </Grid>
-          ))
+          {Object.values(resources.entries)
+            .filter(props.isSelected)
+            .map((r) => (
+              <Grid key={r.id} item>
+                <ResourceCard
+                  image={r.image}
+                  title={r.title}
+                  description={r.description}
+                  link={r.link}
+                />
+              </Grid>
+            ))
           }
         </Grid >
       ),
@@ -208,11 +213,15 @@ export const ResourcesPage: FC<RouteProps<'Resources'>> = (props) => {
                   <Chip
                     color={props.query && id === props.query.category ? 'primary' : 'default'}
                     component={Link}
-                    to={Route.of.Resources({
-                      query: {
-                        category: id,
-                      }
-                    })}
+                    to={
+                      props.query && id === props.query.category
+                        ? Route.of.Resources({})
+                        : Route.of.Resources({
+                          query: {
+                            category: id,
+                          }
+                        })
+                    }
                     key={label}
                     label={label}
                   />
@@ -223,7 +232,10 @@ export const ResourcesPage: FC<RouteProps<'Resources'>> = (props) => {
           </div>
         </div>
       </Container>
-      <ResourceCards />
+      <ResourceCards isSelected={props.query && props.query.category
+        ? (r: Resource) => r.category === props.query.category
+        : () => true
+      } />
     </div>
   )
 }
