@@ -40,34 +40,27 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-export interface InitProps {
+interface InitProps {
   state: 'init'
   username: string
   onUploadClick: () => void
 }
 
-export interface UploadingProps {
+interface UploadingProps {
   state: 'uploading'
   username: string
 }
 
-export interface UploadedProps {
+interface UploadedProps {
   state: 'uploaded'
   avatar: string
   onBackClick: () => void
   onNextClick: () => void
 }
 
-export interface ConfirmedProps {
-  state: 'confirmed'
-  avatar: string
-  onNextClick: () => void
-}
-
 export type UploadAvatarProps = InitProps
   | UploadingProps
   | UploadedProps
-  | ConfirmedProps
 
 export function UploadAvatar(props: UploadAvatarProps) {
 
@@ -98,13 +91,13 @@ export function UploadAvatar(props: UploadAvatarProps) {
             className={classes.hidden}
             id='icon-button-file'
             type='file'
-            onChange={console.log}
           />
           <label htmlFor='icon-button-file'>
             <IconButton
               className={classes.avatar}
               aria-label='upload avatar'
               color='primary'
+              onClick={props.onUploadClick}
             >
               <CloudUploadOutlined className={classes.avatarIcon} />
             </IconButton>
@@ -179,34 +172,7 @@ export function UploadAvatar(props: UploadAvatarProps) {
           </div>
         </div>
       )
-    case 'confirmed':
-      return (
-        <div className={classes.root}>
-          <Typography
-            variant='h4'
-            color='textPrimary'
-            align='center'
-          >
-            Nice pic! Now lets go to your home page.
-          </Typography>
-          <br />
-          <br />
-          <Avatar
-            className={classes.avatar}
-            src={props.avatar}
-          />
-          <br />
-          <br />
-          <Button
-            color='primary'
-            variant='contained'
-            size='large'
-            onClick={props.onNextClick}
-          >
-            Next
-          </Button>
-        </div>
-      )
+
   }
 }
 

@@ -8,6 +8,7 @@ import { LoginPage } from './login'
 import { FeedPage } from './feed'
 import { GetStarted } from './get-started'
 import { NotFoundPage } from './not-found'
+import { WelcomePage } from './welcome'
 
 import { Action, State, useDispatch, useSelector, makeAccountStatus, AccountStatus } from '../store';
 import { Route, Router, Redirect } from '../router'
@@ -20,6 +21,7 @@ const loggedOutRoutes = Route.matchStrict({
   Login: (route) => (<LoginPage {...route} />),
   Feed: () => (<Redirect to={Route.of.Login({})} />),
   GetStarted: () => (<Redirect to={Route.of.Login({})} />),
+  Welcome: (route) => (<WelcomePage {...route} />),
 })
 
 const noProfileRoutes = Route.matchStrict({
@@ -30,6 +32,7 @@ const noProfileRoutes = Route.matchStrict({
   Login: () => (<Redirect to={Route.of.GetStarted({ step: '1' })} />),
   Feed: () => (<Redirect to={Route.of.GetStarted({ step: '1' })} />),
   GetStarted: (route) => (<GetStarted {...route} />),
+  Welcome: (route) => (<WelcomePage {...route} />),
 })
 
 const loggedInRoutes = Route.matchStrict({
@@ -39,7 +42,8 @@ const loggedInRoutes = Route.matchStrict({
   Contact: (route) => (<ContactPage {...route} />),
   Login: () => (<Redirect to={Route.of.Feed({})} />),
   Feed: (route) => (<FeedPage {...route} />),
-  GetStarted: (route) => (<Redirect to={Route.of.Feed({})} />),
+  GetStarted: () => (<Redirect to={Route.of.Feed({})} />),
+  Welcome: (route) => (<WelcomePage {...route} />),
 })
 
 export function Pages() {

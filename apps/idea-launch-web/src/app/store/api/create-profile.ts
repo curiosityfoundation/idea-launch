@@ -8,6 +8,7 @@ import { AccountState } from '@idea-launch/accounts/ui'
 import { CreateProfile } from '@idea-launch/api'
 
 import { accessAppConfigM } from '../../config';
+import { Route } from '../../router';
 import { reduxEffect, Action } from '../constants'
 import { CreateProfileAction } from '../api-constants'
 import { matches, foldBody } from './api-access'
@@ -74,6 +75,9 @@ export const CreateProfileEffects = reduxEffect(
                             endpoint: 'FindProfile',
                             body: {},
                           }
+                        }),
+                        Action.of.LocationPushed({
+                          payload: Route.of.Welcome({})
                         }),
                       ],
                       Failure: (response) => [

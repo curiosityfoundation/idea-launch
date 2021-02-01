@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Formik } from 'formik'
@@ -8,6 +8,7 @@ import {
   CreateProfileFormSchema,
   CreateProfileFormValues,
   UploadAvatar,
+  UploadAvatarProps
 } from '@idea-launch/profiles/ui'
 
 import { Action, State, useDispatch, useSelector } from '../store'
@@ -36,16 +37,23 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
+const initialFormValues: CreateProfileFormValues = {
+  first: '',
+  last: '',
+  classCode: ''
+}
+
 export const GetStarted: FC<RouteProps<'GetStarted'>> = (props) => {
 
   const classes = useStyles()
   const dispatch = useDispatch()
 
-  const initialValues: CreateProfileFormValues = {
-    first: '',
-    last: '',
-    classCode: ''
-  }
+  const [formState, setFormState] = useState(initialFormValues)
+  const [avatar, setAvatar] = useState('')
+
+  useEffect(() => {
+    console.log(formState, avatar);
+  }, [formState, avatar])
 
   switch (props.step) {
     case '1':
@@ -68,27 +76,22 @@ export const GetStarted: FC<RouteProps<'GetStarted'>> = (props) => {
             <br />
             <Formik
               validationSchema={CreateProfileFormSchema}
-              initialValues={initialValues}
-              onSubmit={(values) => dispatch(
-                Action.of.APIRequested({
-                  payload: {
-                    endpoint: 'CreateProfile',
-                    body: {
-                      avatar: '',
-                      classCode: values.classCode,
-                      name: {
-                        first: values.first,
-                        last: values.last,
-                      }
-                    }
-                  }
-                })
-              )}
+              initialValues={initialFormValues}
+              onSubmit={(values) => {
+                setFormState(values)
+                dispatch(
+                  Action.of.LocationPushed({
+                    payload: Route.of.GetStarted({
+                      step: '2'
+                    })
+                  })
+                )
+              }}
             >
               {(form) => (<CreateProfileForm form={form} />)}
             </Formik>
           </div>
-        </div>
+        </div >
       )
     case '2':
       return (
@@ -99,7 +102,6 @@ export const GetStarted: FC<RouteProps<'GetStarted'>> = (props) => {
               alt='logo'
               className={classes.logo}
             />
-
             <Typography
               variant='h4'
               color='textPrimary'
@@ -110,14 +112,96 @@ export const GetStarted: FC<RouteProps<'GetStarted'>> = (props) => {
             <br />
             <br />
             <UploadAvatar
-              state={'init'}
-              username='123'
-              onUploadClick={console.log}
+              state='init'
+              username={`${formState.first} ${formState.last}`}
+              onUploadClick={() => {
+                setTimeout(() => {
+                  setAvatar('https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?r=pg')
+                  dispatch(
+                    Action.of.LocationPushed({
+                      payload: Route.of.GetStarted({
+                        step: '4'
+                      })
+                    })
+                  )
+                }, 2500);
+                dispatch(
+                  Action.of.LocationPushed({
+                    payload: Route.of.GetStarted({
+                      step: '3'
+                    })
+                  })
+                )
+              }}
             />
           </div>
         </div>
       )
     case '3':
-      return <div>Case3</div>
+      return (
+        <div className={classes.root}>
+          <div className={classes.content}>
+            <img
+              src={logo}
+              alt='logo'
+              className={classes.logo}
+            />
+            <Typography
+              variant='h4'
+              color='textPrimary'
+              align='center'
+            >
+              Upload a Profile Picture
+            </Typography>
+            <br />
+            <br />
+            <UploadAvatar
+              state='uploading'
+              username={`${formState.first} ${formState.last}`}
+            />
+          </div>
+        </div>
+      )
+    case '4':
+      return (
+        <div className={classes.root}>
+          <div className={classes.content}>
+            <img
+              src={logo}
+              alt='logo'
+              className={classes.logo}
+            />
+            <br />
+            <br />
+            <UploadAvatar
+              state='uploaded'
+              avatar=''
+              onBackClick={() => dispatch(
+                Action.of.LocationPushed({
+                  payload: Route.of.GetStarted({
+                    step: '2',
+                  })
+                })
+              )}
+              onNextClick={() => dispatch(
+                Action.of.APIRequested({
+                  payload: {
+                    endpoint: 'CreateProfile',
+                    body: {
+                      classCode: formState.classCode,
+                      avatar,
+                      name: {
+                        first: formState.first,
+                        last: formState.last,
+                      }
+                    }
+                  }
+                })
+              )}
+            />
+          </div>
+        </div>
+      )
   }
+
 }

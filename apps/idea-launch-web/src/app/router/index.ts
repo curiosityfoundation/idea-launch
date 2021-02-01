@@ -3,7 +3,7 @@ import { ADT, ADTType } from '@effect-ts/morphic/Adt'
 import { ExtractUnion } from '@effect-ts/morphic/Adt/utils'
 import * as t from 'io-ts'
 
-import { routingFromMatches6 } from '@idea-launch/routing-adt'
+import { routingFromMatches7 } from '@idea-launch/routing-adt'
 import { makeRouteState, RouteState as RouteState_ } from '@idea-launch/morphic-router'
 
 import { query } from './query'
@@ -25,9 +25,12 @@ const getStarted =
           t.literal('1'),
           t.literal('2'),
           t.literal('3'),
+          t.literal('4'),
         ])
       )
     ).then(R.end)
+
+const welcome = R.lit('welcome').then(R.end)
 
 const resources =
   R.lit('resources')
@@ -43,13 +46,14 @@ export const {
   parse: decodeRoute,
   format: encodeRoute,
   adt: Route
-} = routingFromMatches6(
+} = routingFromMatches7(
   ['Landing', landing],
   ['Contact', contact],
   ['Resources', resources],
   ['Login', login],
   ['GetStarted', getStarted],
   ['Feed', feed],
+  ['Welcome', welcome],
 )
 
 export type Route = ADTType<typeof Route>
