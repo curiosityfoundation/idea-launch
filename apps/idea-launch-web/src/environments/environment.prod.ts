@@ -45,9 +45,9 @@ const MiddlewareLayer =
   ['<+<'](BrowserWindowLive(window))
   ['<+<'](FirebaseAuthStateLive)
   ['<+<'](AuthLayer)
-  ['<<<'](FirebaseAppLayer)
-  ['<<<'](FetchClientLive(fetch))
-  ['<<<'](HTTPHeadersLive({
+  ['<+<'](FirebaseAppLayer)
+  ['<+<'](FetchClientLive(fetch))
+  ['<+<'](HTTPHeadersLive({
     cache: 'no-cache',
     credentials: 'same-origin',
     redirect: 'follow',
