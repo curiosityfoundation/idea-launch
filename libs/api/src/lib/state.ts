@@ -36,6 +36,13 @@ interface APIRequestSucceeded<T, A> {
   }
 }
 
+interface APIReset<T> {
+  type: 'APIReset',
+  payload: {
+    endpoint: T
+  }
+}
+
 interface Init {
   state: 'Init'
 }
@@ -84,19 +91,13 @@ export function makeRemoteAccess<E extends AnyEndpoint>(
     APIRequestStarted: ofType<APIRequestStarted<E['_T'], E['_BodyA']>>(),
     APIRequestFailed: ofType<APIRequestFailed<E['_T']>>(),
     APIRequestSucceeded: ofType<APIRequestSucceeded<E['_T'], E['_RespA']>>(),
+    APIReset: ofType<APIReset<E['_T']>>(),
   })
 
   type Action = ADTType<typeof Action>
 
-  const pred = Action.isAnyOf([
-    'APIRequestFailed',
-    'APIRequestStarted',
-    'APIRequestFailed',
-    'APIRequestSucceeded',
-  ])
-
   const filterReducer = (r: Reducer<State, Action>): Reducer<State, Action> =>
-    (s, a) => pred(a)
+    (s, a) => Action.verified(a)
       && a.payload.endpoint === endpoint.name
       ? r(s, a)
       : !!s
@@ -181,6 +182,7 @@ export function makeRemoteAccess<E extends AnyEndpoint>(
             })
             : s,
         }),
+      APIReset: () => () => initState,
     }),
     filterReducer,
   )

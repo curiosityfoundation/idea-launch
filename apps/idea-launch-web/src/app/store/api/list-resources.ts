@@ -17,6 +17,7 @@ export const ListResourcesEffects = reduxEffect(
     O.fold(
       () => T.succeed([]),
       ListResourcesAction.matchStrict({
+        APIReset: (a) => T.succeed([]),
         APIRequested: (a) =>
           T.succeed([
             Action.of.APIRequestStarted({

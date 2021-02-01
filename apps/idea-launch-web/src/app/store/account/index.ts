@@ -39,7 +39,17 @@ export const AccountEffects = reduxEffect(
           logOut,
           T.map(() => [])
         ),
-        LogoutSuccess: () => T.succeed([]),
+        LogoutSuccess: () => T.succeed([
+          Action.of.APIReset({
+            payload: { endpoint: 'CreateProfile' }
+          }),
+          Action.of.APIReset({
+            payload: { endpoint: 'FindProfile' }
+          }),
+          Action.of.APIReset({
+            payload: { endpoint: 'ListProjects' }
+          }),
+        ]),
       }),
     )
   )

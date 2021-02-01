@@ -19,6 +19,7 @@ export const CreateProfileEffects = reduxEffect(
     O.fold(
       () => T.succeed([]),
       CreateProfileAction.matchStrict({
+        APIReset: (a) => T.succeed([]),
         APIRequested: (a) => pipe(
           state.account,
           AccountState.matchStrict({
