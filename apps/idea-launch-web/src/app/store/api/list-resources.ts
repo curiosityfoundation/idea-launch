@@ -17,11 +17,12 @@ export const ListResourcesEffects = reduxEffect(
     O.fold(
       () => T.succeed([]),
       ListResourcesAction.matchStrict({
-        APIRequested: () =>
+        APIRequested: (a) =>
           T.succeed([
             Action.of.APIRequestStarted({
               payload: {
                 endpoint: ListResources.name,
+                body: a.payload.body,
               }
             })
           ]),

@@ -10,11 +10,11 @@ import { CreateProfile, handler } from '@idea-launch/api'
 import { authenticate } from './authenticate'
 import { accessFunctionsRequestContextM } from '@idea-launch/firebase-functions'
 
-export const handleFindProfile = handler(CreateProfile)(
+export const handleCreateProfile = handler(CreateProfile)(
   ({ Body, Response }) => authenticate({
     Authenticated: (status) =>
       pipe(
-        findByOwner(String(status.decodedId)),
+        findByOwner(status.decodedId.uid),
         T.mapError((e) => e.reason),
         T.chain(
           O.fold(
@@ -31,7 +31,7 @@ export const handleFindProfile = handler(CreateProfile)(
         ),
         T.chain((body) =>
           pipe(
-            body,
+            { ...body, owner: status.decodedId.uid },
             createProfile,
             T.mapError((e) => e.reason),
             T.map((profile) =>

@@ -62,7 +62,7 @@ export function CreateProfileForm(props: CreateProfileFormProps) {
       <br />
       <Field
         component={TextField}
-        name='classcode'
+        name='classCode'
         type='text'
         label='Class Code'
         variant='outlined'

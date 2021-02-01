@@ -12,7 +12,7 @@ export const handleFindProfile = handler(FindProfile)(
   ({ Response }) => authenticate({
     Authenticated: (status) =>
       pipe(
-        findByOwner(String(status.decodedId)),
+        findByOwner(status.decodedId.uid),
         T.chain(
           O.fold(
             () => T.succeed(

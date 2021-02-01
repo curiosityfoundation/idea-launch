@@ -69,11 +69,19 @@ export const GetStarted: FC<RouteProps<'GetStarted'>> = (props) => {
             <Formik
               validationSchema={CreateProfileFormSchema}
               initialValues={initialValues}
-              onSubmit={() => dispatch(
-                Action.of.LocationPushed({
-                  payload: Route.of.GetStarted({
-                    step: '2'
-                  })
+              onSubmit={(values) => dispatch(
+                Action.of.APIRequested({
+                  payload: {
+                    endpoint: 'CreateProfile',
+                    body: {
+                      avatar: '',
+                      classCode: values.classCode,
+                      name: {
+                        first: values.first,
+                        last: values.last,
+                      }
+                    }
+                  }
                 })
               )}
             >

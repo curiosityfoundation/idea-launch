@@ -12,10 +12,11 @@ interface APIRequested<T, B> {
   }
 }
 
-interface APIRequestStarted<T> {
+interface APIRequestStarted<T, B> {
   type: 'APIRequestStarted'
   payload: {
     endpoint: T
+    body: B
   }
 }
 
@@ -80,7 +81,7 @@ export function makeRemoteAccess<E extends AnyEndpoint>(
 
   const Action = makeADT('type')({
     APIRequested: ofType<APIRequested<E['_T'], E['_BodyA']>>(),
-    APIRequestStarted: ofType<APIRequestStarted<E['_T']>>(),
+    APIRequestStarted: ofType<APIRequestStarted<E['_T'], E['_BodyA']>>(),
     APIRequestFailed: ofType<APIRequestFailed<E['_T']>>(),
     APIRequestSucceeded: ofType<APIRequestSucceeded<E['_T'], E['_RespA']>>(),
   })
