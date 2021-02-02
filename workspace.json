@@ -943,6 +943,31 @@
           }
         }
       }
+    },
+    "uuid-gen": {
+      "root": "libs/uuid-gen",
+      "sourceRoot": "libs/uuid-gen/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/uuid-gen/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/uuid-gen"
+          ],
+          "options": {
+            "jestConfig": "libs/uuid-gen/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   },
   "cli": {

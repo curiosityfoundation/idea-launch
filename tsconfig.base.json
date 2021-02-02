@@ -43,7 +43,8 @@
         "libs/firebase-functions/src/index.ts"
       ],
       "@idea-launch/redux-table": ["libs/redux-table/src/index.ts"],
-      "@idea-launch/logger": ["libs/logger/src/index.ts"]
+      "@idea-launch/logger": ["libs/logger/src/index.ts"],
+      "@idea-launch/uuid-gen": ["libs/uuid-gen/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
