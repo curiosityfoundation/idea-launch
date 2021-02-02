@@ -6,12 +6,9 @@ import * as L from '@effect-ts/core/Effect/Layer'
 import { makeADT, ofType, ADTType } from '@effect-ts/morphic/Adt'
 import { configureStore } from '@reduxjs/toolkit'
 
-import {
-  ReduxQueueOf,
-  ActionWithState,
-  reduxEffect,
-  makeReduxEffectMiddleware
-} from './redux-effect'
+import { reduxEffect } from './effect'
+import { ReduxQueueOf, ActionWithState, ReduxQueue, } from './queue'
+import { makeReduxEffectMiddleware } from './middleware'
 
 describe('custom middleware', () => {
 
@@ -108,7 +105,7 @@ describe('custom middleware', () => {
           () => Ref.makeRef(null),
         ),
         T.map(
-          ({ actionsWithState, middlewareApi }): ReduxMiddleware<Action, State> => ({
+          ({ actionsWithState, middlewareApi }): ReduxQueue<Action, State> => ({
             actionsWithState,
             middlewareApi
           })

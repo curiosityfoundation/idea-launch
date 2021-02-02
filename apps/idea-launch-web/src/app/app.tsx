@@ -1,6 +1,5 @@
 import * as T from '@effect-ts/core/Effect'
 import * as S from '@effect-ts/core/Effect/Stream'
-import * as O from '@effect-ts/core/Option'
 import { pipe } from '@effect-ts/core/Function'
 import { UUID } from '@effect-ts/morphic/Algebra/Primitives'
 import React from 'react'
@@ -26,7 +25,7 @@ const RenderReact = accessReduxStoreM((redux) =>
 )
 
 const StartMiddleware = accessReduxEffectMiddlewareM(
-  (middleware) => middleware.runEffects
+  (middleware) => middleware.runEffects,
 )
 
 const ConnectFirebaseAuthToRedux = T.accessServicesM({
