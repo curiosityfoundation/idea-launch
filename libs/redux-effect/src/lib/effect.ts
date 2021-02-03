@@ -11,7 +11,7 @@ import {
   CombinedState
 } from './util'
 
-interface ReduxEffect<R, A extends Action, S> extends ReduxEffectType<R, A, S> {
+export interface ReduxEffect<R, A extends Action, S> extends ReduxEffectType<R, A, S> {
   (action: A, getState: T.UIO<S>): T.RIO<R, A.Array<A>>
 }
 

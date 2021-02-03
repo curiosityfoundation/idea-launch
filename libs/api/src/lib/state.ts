@@ -9,16 +9,16 @@ interface APIRequested<T, B> {
   payload: {
     endpoint: T
     body: B
+    jwt?: string
   }
 }
 
-interface APIRequestStarted<T, B> {
-  type: 'APIRequestStarted'
-  payload: {
-    endpoint: T
-    body: B
-  }
-}
+// interface APIRequestStarted<T, B> {
+//   type: 'APIRequestStarted'
+//   payload: {
+//     endpoint: T
+//   }
+// }
 
 interface APIRequestFailed<T> {
   type: 'APIRequestFailed'
@@ -88,7 +88,7 @@ export function makeRemoteAccess<E extends AnyEndpoint>(
 
   const Action = makeADT('type')({
     APIRequested: ofType<APIRequested<E['_T'], E['_BodyA']>>(),
-    APIRequestStarted: ofType<APIRequestStarted<E['_T'], E['_BodyA']>>(),
+    // APIRequestStarted: ofType<APIRequestStarted<E['_T'], E['_BodyA']>>(),
     APIRequestFailed: ofType<APIRequestFailed<E['_T']>>(),
     APIRequestSucceeded: ofType<APIRequestSucceeded<E['_T'], E['_RespA']>>(),
     APIReset: ofType<APIReset<E['_T']>>(),
@@ -106,8 +106,8 @@ export function makeRemoteAccess<E extends AnyEndpoint>(
 
   const reducer = pipe(
     Action.createReducer(initState)({
-      APIRequested: () => (s) => s,
-      APIRequestStarted: () =>
+      // APIRequestStarted: () =>
+      APIRequested: () => 
         State.transform({
           Init: () =>
             State.of.Pending({}),

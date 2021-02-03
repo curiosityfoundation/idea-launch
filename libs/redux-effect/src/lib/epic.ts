@@ -12,7 +12,7 @@ import {
   CombinedState
 } from './util'
 
-interface ReduxEpic<R, A extends Action, S> extends ReduxEffectType<R, A, S> {
+export interface ReduxEpic<R, A extends Action, S> extends ReduxEffectType<R, A, S> {
   (action: S.UIO<A>, getState: T.UIO<S>): S.RIO<R, A>
 }
 
