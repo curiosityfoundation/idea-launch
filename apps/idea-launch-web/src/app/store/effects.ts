@@ -5,11 +5,12 @@ import * as Ref from '@effect-ts/core/Effect/Ref'
 import { pipe } from '@effect-ts/core/Function'
 
 import {
-  makeReduxEffectMiddleware,
+  makeReduxEpicMiddleware,
   ReduxQueueOf,
-  ActionWithState,
+  makeReduxQueue,
   ReduxEffectMiddleware,
   combineEffects,
+  fromReduxEffect
 } from '@idea-launch/redux-effect'
 
 import { Action, State } from './constants'
@@ -25,28 +26,10 @@ export const RootEffects = combineEffects([
 
 const ReduxQueue = ReduxQueueOf<Action, State>()
 
-export const ReduxQueueLive = L.fromEffect(ReduxQueue)(
-  pipe(
-    T.do,
-    T.bind(
-      'actionsWithState',
-      () => Q.makeUnbounded<ActionWithState<Action, State>>(),
-    ),
-    T.bind(
-      'middlewareApi',
-      () => Ref.makeRef(null),
-    ),
-    T.map(
-      ({ actionsWithState, middlewareApi }) => ({
-        actionsWithState,
-        middlewareApi
-      })
-    )
-  )
-)
+export const ReduxQueueLive = L.fromEffect(ReduxQueue)(makeReduxQueue)
 
 export const ReduxEffectMiddlewareLive = L.fromEffect(ReduxEffectMiddleware)(
-  makeReduxEffectMiddleware(RootEffects)(ReduxQueue)
+  makeReduxEpicMiddleware(fromReduxEffect(RootEffects))(ReduxQueue)
 )
 
 export const accessReduxEffectMiddleware = T.accessService(ReduxEffectMiddleware)

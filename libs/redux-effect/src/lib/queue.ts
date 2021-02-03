@@ -1,16 +1,31 @@
+import * as T from '@effect-ts/core/Effect'
 import * as Q from '@effect-ts/core/Effect/Queue'
 import * as Ref from '@effect-ts/core/Effect/Ref'
-import { Has, Tag, tag } from '@effect-ts/core/Has'
+import { pipe } from '@effect-ts/core/Function'
+import { tag } from '@effect-ts/core/Has'
 import { Action, MiddlewareAPI, Dispatch, AnyAction } from 'redux'
-
-export interface ActionWithState<A extends Action, S> {
-  action: A
-  state: S
-}
 
 export interface ReduxQueue<A extends Action, S> {
   middlewareApi: Ref.Ref<MiddlewareAPI<Dispatch<AnyAction>, S>>
-  actionsWithState: Q.Queue<ActionWithState<A, S>>
+  actions: Q.Queue<A>
 }
 
 export const ReduxQueueOf = <A extends Action, S>() => tag<ReduxQueue<A, S>>()
+
+export const makeReduxQueue = pipe(
+  T.do,
+  T.bind(
+    'actions',
+    () => Q.makeUnbounded<Action>(),
+  ),
+  T.bind(
+    'middlewareApi',
+    () => Ref.makeRef(null),
+  ),
+  T.map(
+    ({ actions, middlewareApi }) => ({
+      actions,
+      middlewareApi,
+    })
+  )
+)

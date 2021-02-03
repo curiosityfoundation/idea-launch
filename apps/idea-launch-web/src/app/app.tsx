@@ -68,7 +68,7 @@ export const App =
   pipe(
     RenderReact,
     T.andThen(T.collectAllUnitPar([
-      ConnectFirebaseAuthToRedux,
       StartMiddleware,
+      ConnectFirebaseAuthToRedux,
     ]))
   )

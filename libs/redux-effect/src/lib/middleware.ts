@@ -6,24 +6,23 @@ import { Has, Tag, tag } from '@effect-ts/core/Has'
 import { Middleware } from 'redux'
 
 import { AnyReduxEffect } from './effect'
-import { AnyReduxStream } from './stream'
+import { AnyReduxEpic } from './epic'
 import { ReduxQueue } from './queue'
 
 export interface ReduxEffectMiddleware {
   middleware: Middleware
-  runEffects: T.Effect<unknown, never, any>
+  runEffects: T.Effect<any, any, never>
 }
 
 export const ReduxEffectMiddleware = tag<ReduxEffectMiddleware>()
 
 export function makeReduxEffectMiddleware<
-  Ts extends AnyReduxEffect
+  ReduxEffect extends AnyReduxEffect
 >(
-  effect: Ts
-):
-  <T extends Tag<ReduxQueue<Ts['_A'], Ts['_S']>>>(tag: T) =>
+  effect: ReduxEffect
+): <T extends Tag<ReduxQueue<ReduxEffect['_A'], ReduxEffect['_S']>>>(tag: T) =>
     T.RIO<
-      Has<ReduxQueue<Ts['_A'], Ts['_S']>> & Ts['_R'],
+      Has<ReduxQueue<ReduxEffect['_A'], ReduxEffect['_S']>> & ReduxEffect['_R'],
       ReduxEffectMiddleware
     > {
   return (tag) => T.accessService(tag)(
@@ -31,19 +30,22 @@ export function makeReduxEffectMiddleware<
       middleware: (api) => (next) => (action) =>
         T.run(
           pipe(
-            env.actionsWithState.offer({
-              action,
-              state: api.getState(),
-            }),
+            env.actions.offer(action),
             T.andThen(Ref.set(api)(env.middlewareApi)),
           ),
           () => next(action)
         ),
       runEffects: pipe(
-        env.actionsWithState.take,
-        T.chain(({ action, state }) =>
+        env.actions.take,
+        T.chain((action) =>
           pipe(
-            effect(action, state),
+            effect(
+              action,
+              pipe(
+                Ref.get(env.middlewareApi),
+                T.map((api) => api.getState())
+              ),
+            ),
             T.chain((actions) =>
               pipe(
                 env.middlewareApi,
@@ -65,9 +67,11 @@ export function makeReduxEffectMiddleware<
               })
             ),
             T.provide(env),
-            T.fork
+            T.fork,
+            T.asUnit,
           )
         ),
+        T.provide(env),
         T.forever,
       ),
     })
@@ -75,14 +79,13 @@ export function makeReduxEffectMiddleware<
 
 }
 
-export function makeReduxStreamMiddleware<
-  Ss extends AnyReduxStream
+export function makeReduxEpicMiddleware<
+  ReduxEffectEpic extends AnyReduxEpic
 >(
-  stream: Ss
-):
-  <T extends Tag<ReduxQueue<Ss['_A'], Ss['_S']>>>(tag: T) =>
+  epic: ReduxEffectEpic
+): <T extends Tag<ReduxQueue<ReduxEffectEpic['_A'], ReduxEffectEpic['_S']>>>(tag: T) =>
     T.RIO<
-      Has<ReduxQueue<Ss['_A'], Ss['_S']>> & Ss['_R'],
+      Has<ReduxQueue<ReduxEffectEpic['_A'], ReduxEffectEpic['_S']>> & ReduxEffectEpic['_R'],
       ReduxEffectMiddleware
     > {
   return (tag) => T.accessService(tag)(
@@ -90,24 +93,27 @@ export function makeReduxStreamMiddleware<
       middleware: (api) => (next) => (action) =>
         T.run(
           pipe(
-            env.actionsWithState.offer({
-              action,
-              state: api.getState(),
-            }),
-            T.andThen(Ref.set(api)(env.middlewareApi)),
+            env.actions.offer(action),
+            T.andThen(
+              Ref.set(api)(env.middlewareApi)
+            ),
           ),
           () => next(action)
         ),
       runEffects: pipe(
-        env.actionsWithState,
-        S.fromQueue,
-        S.chain(({ action, state }) =>
-          stream(action, state)
+        epic(
+          pipe(
+            env.actions,
+            S.fromQueue,
+          ),
+          pipe(
+            Ref.get(env.middlewareApi),
+            T.map((api) => api.getState())
+          ),
         ),
         S.mapM((a) =>
           pipe(
-            env.middlewareApi,
-            Ref.get,
+            Ref.get(env.middlewareApi),
             T.chain((api) =>
               T.effectTotal(() => {
                 api.dispatch(a)
@@ -116,7 +122,8 @@ export function makeReduxStreamMiddleware<
           )
         ),
         S.runDrain,
-        T.asUnit,
+        T.provide(env),
+        T.forever,
       ),
     })
   )
