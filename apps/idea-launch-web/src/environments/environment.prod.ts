@@ -14,7 +14,7 @@ import {
 } from '@idea-launch/firebase-web'
 import { SilentLoggerLive } from '@idea-launch/logger'
 
-import { AppConfigLive } from '../app/config'
+import { APIConfigLive } from '../app/api'
 import {
   ReduxStoreLive,
   rootReducer,
@@ -54,7 +54,7 @@ const MiddlewareLayer =
     referrerPolicy: 'no-referrer',
   }))
   ['<+<'](HTTPMiddlewareStackLive([]))
-  ['<+<'](AppConfigLive(process.env.NX_FUNCTIONS_URL))
+  ['<+<'](APIConfigLive(process.env.NX_FUNCTIONS_URL))
   ['<+<'](SilentLoggerLive)
 
 export const AppLayer =

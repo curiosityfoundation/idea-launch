@@ -2,19 +2,18 @@ import React, { FC, useEffect, useState } from 'react'
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Formik } from 'formik'
+import { useDispatch } from 'react-redux';
 
 import {
   CreateProfileForm,
   CreateProfileFormSchema,
   CreateProfileFormValues,
   UploadAvatar,
-  UploadAvatarProps
 } from '@idea-launch/profiles/ui'
 
-import { Action, State, useDispatch, useSelector } from '../store'
-import { Route, Link, RouteProps } from '../router'
-
 import logo from '../../assets/logo.svg';
+import { AppAction } from '../store'
+import { Route, RouteProps } from '../router'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -58,7 +57,7 @@ export const GetStarted: FC<RouteProps<'GetStarted'>> = (props) => {
   reader.addEventListener('load', function () {
     setPreview(String(reader.result))
     dispatch(
-      Action.of.LocationPushed({
+      AppAction.of.LocationPushed({
         payload: Route.of.GetStarted({
           step: '4'
         })
@@ -97,7 +96,7 @@ export const GetStarted: FC<RouteProps<'GetStarted'>> = (props) => {
               onSubmit={(values) => {
                 setFormState(values)
                 dispatch(
-                  Action.of.LocationPushed({
+                  AppAction.of.LocationPushed({
                     payload: Route.of.GetStarted({
                       step: '2'
                     })
@@ -196,14 +195,14 @@ export const GetStarted: FC<RouteProps<'GetStarted'>> = (props) => {
               state='uploaded'
               avatar={preview}
               onBackClick={() => dispatch(
-                Action.of.LocationPushed({
+                AppAction.of.LocationPushed({
                   payload: Route.of.GetStarted({
                     step: '2',
                   })
                 })
               )}
               onNextClick={() => dispatch(
-                Action.of.APIRequested({
+                AppAction.of.APIRequested({
                   payload: {
                     endpoint: 'CreateProfile',
                     body: {

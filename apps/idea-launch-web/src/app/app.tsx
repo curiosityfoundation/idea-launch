@@ -9,7 +9,7 @@ import { Provider } from 'react-redux'
 import { FirebaseAuthState, FirebaseAuthStateChanged } from '@idea-launch/firebase-web'
 
 import { Pages } from './pages';
-import { ReduxStore, Action, accessReduxStoreM, accessReduxEffectMiddlewareM } from './store'
+import { ReduxStore, AppAction, accessReduxStoreM, accessReduxEffectMiddlewareM } from './store'
 
 const RenderReact = accessReduxStoreM((redux) =>
   T.effectTotal(() => {
@@ -42,7 +42,7 @@ const ConnectFirebaseAuthToRedux = T.accessServicesM({
             T.chain((idToken) =>
               T.effectTotal(() => {
                 redux.store.dispatch(
-                  Action.of.LoginSuccess({
+                  AppAction.of.LoginSuccess({
                     payload: {
                       userId: loggedIn.user.uid as UUID,
                       idToken,
@@ -55,7 +55,7 @@ const ConnectFirebaseAuthToRedux = T.accessServicesM({
         LoggedOut: () =>
           T.effectTotal(() => {
             redux.store.dispatch(
-              Action.of.LogoutSuccess({})
+              AppAction.of.LogoutSuccess({})
             )
           })
       })

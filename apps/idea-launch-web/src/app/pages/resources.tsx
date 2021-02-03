@@ -7,13 +7,14 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import React, { FC } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 
 import { ResourceCategories, mockResources, Resource } from '@idea-launch/resources/model'
 import { ResourceCard } from '@idea-launch/resources/ui'
 
 import ecommerce from '../../assets/illustrations/ecommerce.svg';
 import { Navbar } from '../components/navbar'
-import { Action, State, useDispatch, useSelector } from '../store';
+import { AppAction, AppState } from '../store';
 import { Route, Link, RouteProps } from '../router';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -48,14 +49,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 function ResourceCards(props: { isSelected: Predicate<Resource> }) {
 
-  const listResources = useSelector((s) => s.api.listResources)
-  const resources = useSelector((s) => s.resources)
-  const route = useSelector((s) => s.route)
+  const listResources = useSelector((s: AppState) => s.api.listResources)
+  const resources = useSelector((s: AppState) => s.data.resources)
+  const route = useSelector((s: AppState) => s.route)
   const dispatch = useDispatch()
   const classes = useStyles()
 
   const fetchResources = () => dispatch(
-    Action.of.APIRequested({
+    AppAction.of.APIRequested({
       payload: {
         endpoint: 'ListResources',
         body: {}
@@ -63,7 +64,7 @@ function ResourceCards(props: { isSelected: Predicate<Resource> }) {
     })
   )
 
-  const render = State.api.listResources.matchStrict({
+  const render = AppState.api.listResources.matchStrict({
     Init: () => (
       <Container className={classes.center}>
         <Typography
@@ -170,7 +171,7 @@ function ResourceCards(props: { isSelected: Predicate<Resource> }) {
 export const ResourcesPage: FC<RouteProps<'Resources'>> = (props) => {
 
   const classes = useStyles()
-  const route = useSelector((s) => s.route)
+  const route = useSelector((s: AppState) => s.route)
 
   return (
     <div className={classes.root}>

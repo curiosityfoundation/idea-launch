@@ -5,11 +5,15 @@ import { pipe } from '@effect-ts/core/Function'
 import { accessBrowserWindowM } from '@idea-launch/browser-window'
 import { reduxEpic } from '@idea-launch/redux-effect'
 
-import { RouteAction, RouteState, encodeRoute } from './constants'
+import { RouteAction, encodeRoute } from './constants'
 
-export const RouterEpic = reduxEpic<RouteAction, RouteState>()(
+export const RouterEpic = reduxEpic<RouteAction, {}>()(
   (actions) => pipe(
     actions,
+    S.map((a) => {
+      console.log('LocationPushed', a);
+      return a
+    }),
     S.filter(RouteAction.is.LocationPushed),
     S.mapM((a) =>
       pipe(
@@ -33,4 +37,3 @@ export const RouterEpic = reduxEpic<RouteAction, RouteState>()(
     )
   )
 )
-

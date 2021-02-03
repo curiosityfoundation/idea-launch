@@ -1,5 +1,9 @@
-import React, { useEffect } from 'react';
 import { pipe } from '@effect-ts/core/Function'
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { AppAction, AppState, selectAccountStatus, AccountStatus } from '../store';
+import { Route, Router, Redirect } from '../router'
 
 import { LandingPage } from './landing'
 import { ResourcesPage } from './resources'
@@ -9,9 +13,6 @@ import { FeedPage } from './feed'
 import { GetStarted } from './get-started'
 import { NotFoundPage } from './not-found'
 import { WelcomePage } from './welcome'
-
-import { Action, State, useDispatch, useSelector, makeAccountStatus, AccountStatus } from '../store';
-import { Route, Router, Redirect } from '../router'
 
 const loggedOutRoutes = Route.matchStrict({
   Landing: (route) => (<LandingPage {...route} />),
@@ -48,14 +49,14 @@ const loggedInRoutes = Route.matchStrict({
 
 export function Pages() {
 
-  const route = useSelector((s) => s.route)
-  const accountStatus = useSelector(makeAccountStatus)
+  const route = useSelector((s: AppState) => s.route)
+  const accountStatus = useSelector(selectAccountStatus)
   const dispatch = useDispatch()
 
   useEffect(() => {
     setTimeout(() => {
       dispatch(
-        Action.of.APIRequested({
+        AppAction.of.APIRequested({
           payload: {
             endpoint: 'ListResources',
             body: {}

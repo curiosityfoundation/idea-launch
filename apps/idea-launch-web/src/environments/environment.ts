@@ -14,7 +14,7 @@ import {
 } from '@idea-launch/firebase-web'
 import { ConsoleLoggerLive } from '@idea-launch/logger'
 
-import { AppConfigLive } from '../app/config'
+import { APIConfigLive } from '../app/api'
 import {
   ReduxStoreLive,
   rootReducer,
@@ -24,12 +24,12 @@ import {
 
 const AuthLayer =
   FirebaseAuthLive
-  ['<<<'](FirebaseLoginProviderLive)
+  ['<+<'](FirebaseLoginProviderLive)
   ['<+<'](FirebaseAuthClientEmulator(process.env.NX_EMULATOR_URL))
 
 const FirebaseAppLayer =
   FirebaseAppLive
-  ['<<<'](FirebaseConfigLive({
+  ['<+<'](FirebaseConfigLive({
     apiKey: process.env.NX_API_KEY,
     authDomain: process.env.NX_AUTH_DOMAIN,
     projectId: process.env.NX_PROJECT_ID,
@@ -41,9 +41,9 @@ const FirebaseAppLayer =
 
 const MiddlewareLayer =
   ReduxEffectMiddlewareLive
+  ['<+<'](FirebaseAuthStateLive)
   ['<+<'](ReduxQueueLive)
   ['<+<'](BrowserWindowLive(window))
-  ['<+<'](FirebaseAuthStateLive)
   ['<+<'](AuthLayer)
   ['<+<'](FirebaseAppLayer)
   ['<+<'](FetchClientLive(fetch))
@@ -54,7 +54,7 @@ const MiddlewareLayer =
     referrerPolicy: 'no-referrer',
   }))
   ['<+<'](HTTPMiddlewareStackLive([]))
-  ['<+<'](AppConfigLive(process.env.NX_FUNCTIONS_URL))
+  ['<+<'](APIConfigLive(process.env.NX_FUNCTIONS_URL))
   ['<+<'](ConsoleLoggerLive)
 
 export const AppLayer =

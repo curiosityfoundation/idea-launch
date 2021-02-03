@@ -1,96 +1,36 @@
 import { unionADT, ADTType } from '@effect-ts/morphic/Adt'
 import { combineReducers } from 'redux'
-import { Dispatch } from 'react';
-import {
-  useDispatch as useDispatch_,
-  useSelector as useSelector_,
-  useStore as useStore_,
-} from 'react-redux'
 
-import {
-  makeRemoteAccess,
-  ListProjects,
-  ListResources,
-  FindProfile,
-  CreateProfile,
-} from '@idea-launch/api'
-import {
-  AccountState,
-  AccountAction,
-  accountReducer,
-  initAccountState
-} from '@idea-launch/accounts/ui'
-import {
-  ResourceTable,
-  ResourceTableAction,
-  resourceTableReducer,
-  initResourceTableState,
-} from '@idea-launch/resources/ui'
-import {
-  ProfileTable,
-  ProfileTableAction,
-  profileTableReducer,
-  initProfileTableState,
-} from '@idea-launch/profiles/ui'
-import { 
-  reduxEffect as reduxEffect_,
-} from '@idea-launch/redux-effect';
+import { AccountAction, AccountState, AccountEpic, accountReducer } from '@idea-launch/accounts/ui'
 
-import {
-  RouteState,
-  RouteAction,
-  routeReducer,
-  initRouteState
-} from '../router'
+import { DataAction, DataState, dataReducer } from '../data'
+import { APIAction, APIState, APIEpic, APIReducer } from '../api'
+import { RouteAction, RouteState, RouterEpic, routeReducer } from '../router'
 
-import {
-  initAPIState,
-  APIAction,
-  APIReducer,
-  APIState,
-} from './api-constants'
-
-export const State = {
+export const AppState = {
   account: AccountState,
   api: APIState,
 }
 
-export interface State {
+export interface AppState {
   account: AccountState
-  resources: ResourceTable
-  route: RouteState
-  profiles: ProfileTable
   api: APIState
+  route: RouteState
+  data: DataState
 }
 
-export const rootReducer = combineReducers<State>({
+export const rootReducer = combineReducers<AppState>({
   account: accountReducer,
   route: routeReducer,
-  resources: resourceTableReducer,
-  profiles: profileTableReducer,
+  data: dataReducer,
   api: APIReducer,
 })
 
-export const initState: State = {
-  account: initAccountState,
-  resources: initResourceTableState,
-  route: initRouteState,
-  profiles: initProfileTableState,
-  api: initAPIState
-}
-
-export const Action = unionADT([
+export const AppAction = unionADT([
   AccountAction,
   RouteAction,
-  ResourceTableAction,
-  ProfileTableAction,
+  DataAction,
   APIAction,
 ])
 
-export type Action = ADTType<typeof Action>
-
-export const reduxEffect = reduxEffect_<Action, State>()
-
-export const useDispatch = () => useDispatch_<Dispatch<Action>>()
-export const useSelector = <A>(fn: (s: State) => A) => useSelector_(fn)
-export const useStore = () => useStore_<State, Action>()
+export type AppAction = ADTType<typeof AppAction>

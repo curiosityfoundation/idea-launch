@@ -10,7 +10,7 @@ import { AccountAction } from './state'
 const LogInWithGoogleEpic = reduxEpic<AccountAction, {}>()(
   (actions) => pipe(
     actions,
-    S.filter(AccountAction.verified),
+    S.filter(AccountAction.is.LoginStarted),
     S.mapConcatM(() =>
       pipe(
         logInWithGoogle,
@@ -27,10 +27,10 @@ const LogInWithGoogleEpic = reduxEpic<AccountAction, {}>()(
   )
 )
 
-const LogOutGoogleEpic = reduxEpic<AccountAction, {}>()(
+const LogOutEpic = reduxEpic<AccountAction, {}>()(
   (actions) => pipe(
     actions,
-    S.filter(AccountAction.verified),
+    S.filter(AccountAction.is.LogoutStarted),
     S.mapConcatM(() =>
       pipe(
         logOut,
@@ -42,5 +42,5 @@ const LogOutGoogleEpic = reduxEpic<AccountAction, {}>()(
 
 export const AccountEpic = combineEpics([
   LogInWithGoogleEpic,
-  LogOutGoogleEpic,
+  LogOutEpic,
 ])

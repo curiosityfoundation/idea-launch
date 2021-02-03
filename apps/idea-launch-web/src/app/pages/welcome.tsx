@@ -1,10 +1,11 @@
-import React, { FC } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import React, { FC } from 'react'
+import { useDispatch } from 'react-redux';
 
 import { Route, RouteProps } from '../router';
-import { Action, useDispatch } from '../store';
+import { AppAction } from '../store';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,7 +48,7 @@ export const WelcomePage:  FC<RouteProps<'Welcome'>> = (props) => {
         variant='contained'
         size='large'
         onClick={() => dispatch(
-          Action.of.LocationPushed({
+          AppAction.of.LocationPushed({
             payload: Route.of.Feed({})
           })
         )}

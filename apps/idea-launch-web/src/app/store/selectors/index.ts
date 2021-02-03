@@ -1,6 +1,6 @@
 import { ADTType, ofType, makeADT } from '@effect-ts/morphic/Adt'
 
-import { State } from './constants'
+import { AppState } from '../constants'
 
 interface LoggedIn {
   status: 'LoggedIn'
@@ -22,7 +22,7 @@ export const AccountStatus = makeADT('status')({
 
 export type AccountStatus = ADTType<typeof AccountStatus>
 
-export const makeAccountStatus = (s: State): AccountStatus => {
+export const selectAccountStatus = (s: AppState): AccountStatus => {
   if (s.account.state === 'LoggedIn') {
     if ((s.api.findProfile.state === 'Success'
       || s.api.findProfile.state === 'Both')

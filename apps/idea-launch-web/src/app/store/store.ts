@@ -3,7 +3,7 @@ import * as L from '@effect-ts/core/Effect/Layer'
 import { tag } from '@effect-ts/core/Has'
 import { configureStore, Store, ConfigureStoreOptions } from '@reduxjs/toolkit'
 
-import { accessReduxEffectMiddleware } from './effects'
+import { accessReduxEffectMiddleware } from './middleware'
 
 export interface ReduxStore {
   store: Store

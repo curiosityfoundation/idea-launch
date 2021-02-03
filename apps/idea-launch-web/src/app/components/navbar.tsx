@@ -1,11 +1,11 @@
 import React from 'react';
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-
-import { Link, Route } from '../router';
+import { useDispatch, useSelector } from 'react-redux';
 
 import logo from '../../assets/logo.svg';
-import { State, useSelector, useDispatch, Action } from '../store';
+import { Link, Route } from '../router';
+import { AppState, AppAction } from '../store';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 export function Navbar() {
 
   const classes = useStyles()
-  const account = useSelector((s) => s.account)
+  const account = useSelector((s: AppState) => s.account)
   const dispatch = useDispatch()
 
   return (
@@ -54,7 +54,7 @@ export function Navbar() {
         >
           Contact Us
         </Button>
-        {State.account.matchStrict({
+        {AppState.account.matchStrict({
           LoggedIn: () => (
             <Button
               className={classes.menuButton}
@@ -62,7 +62,7 @@ export function Navbar() {
               variant='contained'
               size='large'
               onClick={() => dispatch(
-                Action.of.LogoutStarted({})
+                AppAction.of.LogoutStarted({})
               )}
             >
               Log Out

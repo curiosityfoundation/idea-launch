@@ -1,9 +1,10 @@
-import React, { FC } from 'react'
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, Theme } from '@material-ui/core/styles';
+import React, { FC } from 'react'
 import GoogleSignInButton from 'react-google-button';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { Action, State, useDispatch, useSelector } from '../store'
+import { AppState, AppAction } from '../store'
 import { Route, Link, RouteProps } from '../router'
 
 import logo from '../../assets/logo.svg';
@@ -36,12 +37,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 function SignInButton() {
 
-  const account = useSelector((s: State) => s.account)
+  const account = useSelector((s: AppState) => s.account)
   const dispatch = useDispatch()
 
-  const onLoginClick = () => dispatch(Action.of.LoginStarted({}))
+  const onLoginClick = () => dispatch(AppAction.of.LoginStarted({}))
 
-  const render = State.account.matchStrict({
+  const render = AppState.account.matchStrict({
     LoggedIn: () => <GoogleSignInButton disabled />,
     LoggedOut: () => <GoogleSignInButton onClick={onLoginClick} />,
     LoggingIn: () => <GoogleSignInButton disabled />,
@@ -86,17 +87,17 @@ export const LoginPage: FC<RouteProps<'Login'>> = () => {
           <Typography
             color='textSecondary'
           >
-            {/* <Link to='/legal/privacy'> */}
+            <Link to={Route.of.Landing({})}>
               Privacy
-            {/* </Link> */}
+            </Link>
           </Typography>
           &nbsp;|&nbsp;
           <Typography
             color='textSecondary'
           >
-            {/* <Link to='/legal/tos'> */}
+            <Link to={Route.of.Landing({})}>
               Terms of Service
-            {/* </Link> */}
+            </Link>
           </Typography>
         </div>
       </div>
