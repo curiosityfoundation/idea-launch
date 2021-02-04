@@ -20,6 +20,7 @@ interface UploadSucceeded {
   type: 'UploadSucceeded'
   payload: {
     id: string
+    url: string
   }
 }
 

@@ -7,6 +7,6 @@ import { App } from './app/app'
 T.runPromise(
   pipe(
     App,
-    T.provideLayer(AppLayer)
+    T.provideLayer(AppLayer as any)
   )
 ).catch(console.warn)

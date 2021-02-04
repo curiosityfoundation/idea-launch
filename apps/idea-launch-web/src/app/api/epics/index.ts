@@ -1,10 +1,10 @@
 import { combineEpics } from '@idea-launch/redux-effect'
-import { CreateProfileEffects } from './create-profile'
-import { FindProfileEffects } from './find-profile'
-import { ListResourcesEffects } from './list-resources'
+import { CreateProfileEpic } from './create-profile'
+import { FindProfileEpic } from './find-profile'
+import { ListResourcesEpic } from './list-resources'
 
 export const APIEpic = combineEpics([
-  CreateProfileEffects,
-  FindProfileEffects,
-  ListResourcesEffects,
+  CreateProfileEpic,
+  FindProfileEpic,
+  ListResourcesEpic,
 ])

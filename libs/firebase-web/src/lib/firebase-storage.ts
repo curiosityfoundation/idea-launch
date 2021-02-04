@@ -23,4 +23,4 @@ const makeFirebaseStorage = accessFirebaseAppM(
     ),
 )
 
-export const FirebaseStorageClientLive = L.fromEffect(FirebaseStorage)(makeFirebaseStorage)
+export const FirebaseStorageLive = L.fromEffect(FirebaseStorage)(makeFirebaseStorage)

@@ -14,7 +14,7 @@ const AddEntriesFromStorageEpic =
     (actions) =>
       pipe(
         actions,
-        S.filter(AppAction.verified),
+        S.filter(StorageAction.verified),
         S.map(
           StorageAction.matchStrict({
             UploadFailed: (a) =>

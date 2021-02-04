@@ -10,7 +10,7 @@ export interface ReduxQueue<A extends Action, S> {
   actions: Q.Queue<A>
 }
 
-export const ReduxQueueOf = <A extends Action, S>() => tag<ReduxQueue<A, S>>()
+export const ReduxQueueOf = <A extends Action = Action, S = any>() => tag<ReduxQueue<A, S>>()
 
 export const makeReduxQueue = pipe(
   T.do,

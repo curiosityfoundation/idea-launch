@@ -11,7 +11,7 @@ import { accessAPIConfigM } from '../config'
 import { APIAction } from '../constants'
 import { foldBody } from './api-access'
 
-export const FindProfileEffects = reduxEpic<APIAction, {}>()(
+export const FindProfileEpic = reduxEpic<APIAction, {}>()(
   (actions) => pipe(
     actions,
     S.filter(APIAction.is.APIRequested),

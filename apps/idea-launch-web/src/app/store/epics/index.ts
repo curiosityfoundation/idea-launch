@@ -6,6 +6,7 @@ import { RouterEpic } from '../../router'
 import { StorageEpic } from '../../storage'
 import { AddEntriesEpic } from './add-entries'
 import { FindProfileOnLoginEpic } from './find-profile-on-login'
+import { FindResourcesOnLocationChange } from './find-resources-on-location-change'
 
 export const AppEpic = combineEpics([
   APIEpic,
@@ -13,5 +14,6 @@ export const AppEpic = combineEpics([
   AccountEpic,
   AddEntriesEpic,
   FindProfileOnLoginEpic,
+  FindResourcesOnLocationChange,
   StorageEpic,
 ])

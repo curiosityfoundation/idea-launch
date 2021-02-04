@@ -51,20 +51,6 @@ export function Pages() {
 
   const route = useSelector((s: AppState) => s.route)
   const accountStatus = useSelector(selectAccountStatus)
-  const dispatch = useDispatch()
-
-  useEffect(() => {
-    setTimeout(() => {
-      dispatch(
-        AppAction.of.APIRequested({
-          payload: {
-            endpoint: 'ListResources',
-            body: {}
-          }
-        })
-      )
-    }, 1000)
-  }, [])
 
   const render = pipe(
     accountStatus,

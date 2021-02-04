@@ -58,12 +58,13 @@ export function makeReduxEpicMiddleware<
           )
         ),
         S.runDrain,
+        T.provide(env),
         T.catchAllDefect((e) =>
           T.effectTotal(() => {
-            console.log(e);
+            console.log('defect occurred in redux effect middleware:\n', e)
           })
         ),
-        T.provide(env),
+        T.forever,
       ),
     })
   )

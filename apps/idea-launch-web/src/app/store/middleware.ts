@@ -1,5 +1,6 @@
 import * as T from '@effect-ts/core/Effect'
 import * as L from '@effect-ts/core/Effect/Layer'
+import { Action } from 'redux'
 
 import {
   makeReduxEpicMiddleware,
@@ -11,7 +12,9 @@ import {
 import { AppAction, AppState } from './constants'
 import { AppEpic } from './epics'
 
-const ReduxQueue = ReduxQueueOf<AppAction, AppState>()
+type AppEpic = typeof AppEpic
+
+const ReduxQueue = ReduxQueueOf<AppEpic['_A'] | AppEpic['_O'], AppEpic['_S']>()
 
 export const ReduxQueueLive = L.fromEffect(ReduxQueue)(makeReduxQueue)
 

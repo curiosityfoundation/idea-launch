@@ -10,9 +10,11 @@ import {
   FirebaseAuthLive,
   FirebaseConfigLive,
   FirebaseLoginProviderLive,
-  FirebaseAuthStateLive
+  FirebaseAuthStateLive,
+  FirebaseStorageLive
 } from '@idea-launch/firebase-web'
 import { SilentLoggerLive } from '@idea-launch/logger'
+import { NanoidUUIDLive } from '@idea-launch/uuid-gen'
 
 import { APIConfigLive } from '../app/api'
 import {
@@ -22,14 +24,14 @@ import {
   ReduxQueueLive,
 } from '../app/store'
 
-const AuthLayer =
-  FirebaseAuthLive
-  ['<<<'](FirebaseLoginProviderLive)
+const FirebaseLayer =
+  FirebaseAuthStateLive
+  ['<+<'](FirebaseAuthLive)
+  ['<+<'](FirebaseLoginProviderLive)
   ['<+<'](FirebaseAuthClientLive)
-
-const FirebaseAppLayer =
-  FirebaseAppLive
-  ['<<<'](FirebaseConfigLive({
+  ['<+<'](FirebaseStorageLive)
+  ['<+<'](FirebaseAppLive)
+  ['<+<'](FirebaseConfigLive({
     apiKey: process.env.NX_API_KEY,
     authDomain: process.env.NX_AUTH_DOMAIN,
     projectId: process.env.NX_PROJECT_ID,
@@ -39,14 +41,8 @@ const FirebaseAppLayer =
     measurementId: process.env.NX_MEASUREMENT_ID
   }))
 
-const MiddlewareLayer =
-  ReduxEffectMiddlewareLive
-  ['<+<'](ReduxQueueLive)
-  ['<+<'](BrowserWindowLive(window))
-  ['<+<'](FirebaseAuthStateLive)
-  ['<+<'](AuthLayer)
-  ['<+<'](FirebaseAppLayer)
-  ['<+<'](FetchClientLive(fetch))
+const APIAccessLayer =
+  FetchClientLive(fetch)
   ['<+<'](HTTPHeadersLive({
     cache: 'no-cache',
     credentials: 'same-origin',
@@ -55,7 +51,15 @@ const MiddlewareLayer =
   }))
   ['<+<'](HTTPMiddlewareStackLive([]))
   ['<+<'](APIConfigLive(process.env.NX_FUNCTIONS_URL))
+
+const MiddlewareLayer =
+  ReduxEffectMiddlewareLive
+  ['<+<'](ReduxQueueLive)
+  ['<+<'](BrowserWindowLive(window))
+  ['<+<'](FirebaseLayer)
+  ['<+<'](APIAccessLayer)
   ['<+<'](SilentLoggerLive)
+  ['<+<'](NanoidUUIDLive)
 
 export const AppLayer =
   ReduxStoreLive({

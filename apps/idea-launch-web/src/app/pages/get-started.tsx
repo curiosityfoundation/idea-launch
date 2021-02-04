@@ -17,7 +17,8 @@ import {
 import logo from '../../assets/logo.svg'
 import { AppAction, AppState } from '../store'
 import { selectUpload } from '../data'
-import { Route, RouteProps } from '../router'
+import { Redirect, Route, RouteProps } from '../router'
+import { Upload } from '../storage'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -123,93 +124,90 @@ export const GetStarted: FC<RouteProps<'GetStarted'>> = (props) => {
                       state='init'
                       username={`${formState.first} ${formState.last}`}
                       onFileAdded={([file]) => {
-                        dispatch(
-                          AppAction.of.UploadRequested({
-                            payload: {
-                              id: avatarUploadId,
-                              file,
-                            }
-                          })
-                        )
+                        if (!!file) {
+                          dispatch(
+                            AppAction.of.UploadRequested({
+                              payload: {
+                                id: avatarUploadId,
+                                file,
+                              }
+                            })
+                          )
+                        }
                       }}
                     />
                   ),
-                  () => (
-                    <UploadAvatar
-                      state='uploading'
-                      username={`${formState.first} ${formState.last}`}
-                    />
-                  )
+                  Upload.matchStrict({
+                    InProgress: () => (
+                      <UploadAvatar
+                        state='uploading'
+                        username={`${formState.first} ${formState.last}`}
+                      />
+                    ),
+                    Complete: ({ url }) => (
+                      <UploadAvatar
+                        state='uploaded'
+                        avatar={url}
+                        onBackClick={() => dispatch(
+                          AppAction.of.RemoveEntries({
+                            payload: {
+                              table: 'uploads',
+                              ids: [avatarUploadId]
+                            }
+                          })
+                        )}
+                        onNextClick={() => dispatch(
+                          AppAction.of.APIRequested({
+                            payload: {
+                              endpoint: 'CreateProfile',
+                              body: {
+                                classCode: formState.classCode,
+                                avatar: url,
+                                name: {
+                                  first: formState.first,
+                                  last: formState.last,
+                                }
+                              }
+                            }
+                          })
+                        )}
+                      />
+                    ),
+                    Failed: ({ reason }) => (
+                      <div>
+                        <UploadAvatar
+                          state='init'
+                          username={`${formState.first} ${formState.last}`}
+                          onFileAdded={([file]) => {
+                            if (!!file) {
+                              dispatch(
+                                AppAction.of.UploadRequested({
+                                  payload: {
+                                    id: avatarUploadId,
+                                    file,
+                                  }
+                                })
+                              )
+                            }
+                          }}
+                        />
+                        <Typography
+                          variant='h4'
+                          color='textPrimary'
+                          align='center'
+                        >
+                          Something went wrong... {reason}. Please try again.
+                        </Typography>
+                      </div>
+                    ),
+                  })
+
                 )
               )}
           </div>
         </div>
       )
-    case '3':
-      return (
-        <div className={classes.root}>
-          <div className={classes.content}>
-            <img
-              src={logo}
-              alt='logo'
-              className={classes.logo}
-            />
-            <Typography
-              variant='h4'
-              color='textPrimary'
-              align='center'
-            >
-              Upload a Profile Picture
-            </Typography>
-            <br />
-            <br />
-            <UploadAvatar
-              state='uploading'
-              username={`${formState.first} ${formState.last}`}
-            />
-          </div>
-        </div>
-      )
-    case '4':
-      return (
-        <div className={classes.root}>
-          <div className={classes.content}>
-            <img
-              src={logo}
-              alt='logo'
-              className={classes.logo}
-            />
-            <br />
-            <br />
-            <UploadAvatar
-              state='uploaded'
-              avatar={''}
-              onBackClick={() => dispatch(
-                AppAction.of.LocationPushed({
-                  payload: Route.of.GetStarted({
-                    step: '2',
-                  })
-                })
-              )}
-              onNextClick={() => dispatch(
-                AppAction.of.APIRequested({
-                  payload: {
-                    endpoint: 'CreateProfile',
-                    body: {
-                      classCode: formState.classCode,
-                      avatar: '',
-                      name: {
-                        first: formState.first,
-                        last: formState.last,
-                      }
-                    }
-                  }
-                })
-              )}
-            />
-          </div>
-        </div>
-      )
+    
   }
 
 }

@@ -21,8 +21,8 @@ const uploadFile = (id: string, file: File) =>
       T.map((generatedId) =>
         pipe(
           S.effectAsync<unknown, string, StorageAction>((cb) => {
-            storage.storage.ref()
-              .child(`${id}-${generatedId}`)
+            const childRef = storage.storage.ref().child(`${id}-${generatedId}`)
+            childRef
               .put(file)
               .on(
                 'state_changed',
@@ -44,11 +44,29 @@ const uploadFile = (id: string, file: File) =>
                     O.some(error.code)
                   )
                 ),
-                () => cb(
-                  T.fail(
-                    O.none
+                () => childRef.getDownloadURL()
+                  .then(
+                    (url: string) => {
+                      cb(
+                        T.succeed([
+                          StorageAction.of.UploadSucceeded({
+                            payload: {
+                              id,
+                              url,
+                            }
+                          })
+                        ])
+                      )
+                      cb(
+                        T.fail(O.none)
+                      )
+                    },
+                    (err) => cb(
+                      T.fail(
+                        O.some(err)
+                      )
+                    ),
                   )
-                )
               )
           }),
           S.catchAll((reason) =>

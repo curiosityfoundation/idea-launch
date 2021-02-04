@@ -24,8 +24,6 @@ const getStarted =
         t.union([
           t.literal('1'),
           t.literal('2'),
-          t.literal('3'),
-          t.literal('4'),
         ])
       )
     ).then(R.end)
