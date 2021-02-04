@@ -9,7 +9,7 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 
 import { mockProfileTable } from '@idea-launch/profiles/model'
 import { ProjectCard } from '@idea-launch/projects/ui'
-import { mockProjects, mockCommentTable } from '@idea-launch/projects/model'
+import { mockProjects } from '@idea-launch/projects/model'
 
 import { Navbar } from '../components/navbar'
 import { RouteProps } from '../router'

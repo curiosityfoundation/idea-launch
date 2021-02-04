@@ -10,10 +10,6 @@ import { RouteAction, encodeRoute } from './constants'
 export const RouterEpic = reduxEpic<RouteAction, {}>()(
   (actions) => pipe(
     actions,
-    S.map((a) => {
-      console.log('LocationPushed', a);
-      return a
-    }),
     S.filter(RouteAction.is.LocationPushed),
     S.mapM((a) =>
       pipe(

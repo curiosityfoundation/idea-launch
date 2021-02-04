@@ -1,9 +1,7 @@
 import * as T from '@effect-ts/core/Effect'
 import * as S from '@effect-ts/core/Effect/Stream'
-import * as A from '@effect-ts/core/Array'
-import * as Ma from '@effect-ts/core/Effect/Managed'
 import * as Ref from '@effect-ts/core/Effect/Ref'
-import { pipe, flow } from '@effect-ts/core/Function'
+import { pipe } from '@effect-ts/core/Function'
 import { Has, Tag, tag } from '@effect-ts/core/Has'
 import { Middleware } from 'redux'
 
@@ -21,7 +19,7 @@ export function makeReduxEpicMiddleware<
   ReduxEffectEpic extends AnyReduxEpic
 >(
   epic: ReduxEffectEpic
-): <T extends Tag<ReduxQueue<ReduxEffectEpic['_A'], ReduxEffectEpic['_S']>>>(tag: T) =>
+): <T extends Tag<ReduxQueue<ReduxEffectEpic['_A'] | ReduxEffectEpic['_O'], ReduxEffectEpic['_S']>>>(tag: T) =>
     T.RIO<
       Has<ReduxQueue<ReduxEffectEpic['_A'], ReduxEffectEpic['_S']>> & ReduxEffectEpic['_R'],
       ReduxEffectMiddleware

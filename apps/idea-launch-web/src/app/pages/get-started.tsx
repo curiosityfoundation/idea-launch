@@ -1,8 +1,11 @@
+import Typography from '@material-ui/core/Typography'
+import { makeStyles, Theme } from '@material-ui/core/styles'
+import { pipe } from '@effect-ts/core/Function'
+import * as O from '@effect-ts/core/Option'
 import React, { FC, useEffect, useState } from 'react'
-import Typography from '@material-ui/core/Typography';
-import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Formik } from 'formik'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux'
+
 
 import {
   CreateProfileForm,
@@ -11,8 +14,9 @@ import {
   UploadAvatar,
 } from '@idea-launch/profiles/ui'
 
-import logo from '../../assets/logo.svg';
-import { AppAction } from '../store'
+import logo from '../../assets/logo.svg'
+import { AppAction, AppState } from '../store'
+import { selectUpload } from '../data'
 import { Route, RouteProps } from '../router'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -34,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: theme.spacing(30),
     height: theme.spacing(30),
   }
-}));
+}))
 
 const initialFormValues: CreateProfileFormValues = {
   first: '',
@@ -42,34 +46,17 @@ const initialFormValues: CreateProfileFormValues = {
   classCode: ''
 }
 
+const avatarUploadId = 'avatar-upload-id'
+
 export const GetStarted: FC<RouteProps<'GetStarted'>> = (props) => {
 
   const classes = useStyles()
   const dispatch = useDispatch()
+  const avatarUpload = useSelector(
+    (s: AppState) => selectUpload(s.data)(avatarUploadId)
+  )
 
   const [formState, setFormState] = useState(initialFormValues)
-  const [file, setFile] = useState<File>(null)
-  const [avatar, setAvatar] = useState('')
-  const [preview, setPreview] = useState('')
-
-  const reader = new FileReader();
-
-  reader.addEventListener('load', function () {
-    setPreview(String(reader.result))
-    dispatch(
-      AppAction.of.LocationPushed({
-        payload: Route.of.GetStarted({
-          step: '4'
-        })
-      })
-    )
-  }, false);
-
-  useEffect(() => {
-    if (!!file) {
-      reader.readAsDataURL(file)
-    }
-  }, [file])
 
   switch (props.step) {
     case '1':
@@ -127,31 +114,34 @@ export const GetStarted: FC<RouteProps<'GetStarted'>> = (props) => {
             </Typography>
             <br />
             <br />
-            <UploadAvatar
-              state='init'
-              username={`${formState.first} ${formState.last}`}
-              onFileAdded={([file]) => {
-                if (!!file) {
-                  setFile(file)
-                }
-                // setTimeout(() => {
-                //   dispatch(
-                //     Action.of.LocationPushed({
-                //       payload: Route.of.GetStarted({
-                //         step: '4'
-                //       })
-                //     })
-                //   )
-                // }, 2500);
-                // dispatch(
-                //   Action.of.LocationPushed({
-                //     payload: Route.of.GetStarted({
-                //       step: '3'
-                //     })
-                //   })
-                // )
-              }}
-            />
+            {
+              pipe(
+                avatarUpload,
+                O.fold(
+                  () => (
+                    <UploadAvatar
+                      state='init'
+                      username={`${formState.first} ${formState.last}`}
+                      onFileAdded={([file]) => {
+                        dispatch(
+                          AppAction.of.UploadRequested({
+                            payload: {
+                              id: avatarUploadId,
+                              file,
+                            }
+                          })
+                        )
+                      }}
+                    />
+                  ),
+                  () => (
+                    <UploadAvatar
+                      state='uploading'
+                      username={`${formState.first} ${formState.last}`}
+                    />
+                  )
+                )
+              )}
           </div>
         </div>
       )
@@ -193,7 +183,7 @@ export const GetStarted: FC<RouteProps<'GetStarted'>> = (props) => {
             <br />
             <UploadAvatar
               state='uploaded'
-              avatar={preview}
+              avatar={''}
               onBackClick={() => dispatch(
                 AppAction.of.LocationPushed({
                   payload: Route.of.GetStarted({
@@ -207,7 +197,7 @@ export const GetStarted: FC<RouteProps<'GetStarted'>> = (props) => {
                     endpoint: 'CreateProfile',
                     body: {
                       classCode: formState.classCode,
-                      avatar,
+                      avatar: '',
                       name: {
                         first: formState.first,
                         last: formState.last,

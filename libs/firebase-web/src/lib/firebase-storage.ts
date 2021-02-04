@@ -9,10 +9,10 @@ export interface FirebaseStorage {
   storage: firebase.storage.Storage
 }
 
-export const FirebaseStorageClient = tag<FirebaseStorage>()
+export const FirebaseStorage = tag<FirebaseStorage>()
 
-export const accessFirebaseStorage = T.accessService(FirebaseStorageClient)
-export const accessFirebaseStorageM = T.accessServiceM(FirebaseStorageClient)
+export const accessFirebaseStorage = T.accessService(FirebaseStorage)
+export const accessFirebaseStorageM = T.accessServiceM(FirebaseStorage)
 
 const makeFirebaseStorage = accessFirebaseAppM(
   ({ app }) =>
@@ -23,4 +23,4 @@ const makeFirebaseStorage = accessFirebaseAppM(
     ),
 )
 
-export const FirebaseStorageClientLive = L.fromEffect(FirebaseStorageClient)(makeFirebaseStorage)
+export const FirebaseStorageClientLive = L.fromEffect(FirebaseStorage)(makeFirebaseStorage)

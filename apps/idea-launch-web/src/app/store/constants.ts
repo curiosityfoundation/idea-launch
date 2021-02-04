@@ -1,11 +1,12 @@
 import { unionADT, ADTType } from '@effect-ts/morphic/Adt'
 import { combineReducers } from 'redux'
 
-import { AccountAction, AccountState, AccountEpic, accountReducer } from '@idea-launch/accounts/ui'
+import { AccountAction, AccountState, accountReducer } from '@idea-launch/accounts/ui'
 
 import { DataAction, DataState, dataReducer } from '../data'
-import { APIAction, APIState, APIEpic, APIReducer } from '../api'
-import { RouteAction, RouteState, RouterEpic, routeReducer } from '../router'
+import { APIAction, APIState, APIReducer } from '../api'
+import { RouteAction, RouteState, routeReducer } from '../router'
+import { StorageAction } from '../storage'
 
 export const AppState = {
   account: AccountState,
@@ -27,10 +28,11 @@ export const rootReducer = combineReducers<AppState>({
 })
 
 export const AppAction = unionADT([
+  APIAction,
   AccountAction,
   RouteAction,
   DataAction,
-  APIAction,
+  StorageAction,
 ])
 
 export type AppAction = ADTType<typeof AppAction>

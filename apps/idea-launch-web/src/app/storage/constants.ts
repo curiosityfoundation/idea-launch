@@ -1,17 +1,7 @@
-import * as A from '@effect-ts/core/Array'
 import { makeADT, ofType, ADTType } from '@effect-ts/morphic/Adt'
-
-import { makeTable, Table } from '@idea-launch/redux-table'
 
 interface UploadRequested {
   type: 'UploadRequested'
-  payload: {
-    file: File
-  }
-}
-
-interface UploadStarted {
-  type: 'UploadStarted'
   payload: {
     id: string
     file: File
@@ -43,7 +33,6 @@ interface UploadFailed {
 
 export const StorageAction = makeADT('type')({
   UploadRequested: ofType<UploadRequested>(),
-  UploadStarted: ofType<UploadStarted>(),
   UploadProgressChanged: ofType<UploadProgressChanged>(),
   UploadSucceeded: ofType<UploadSucceeded>(),
   UploadFailed: ofType<UploadFailed>(),
@@ -51,16 +40,28 @@ export const StorageAction = makeADT('type')({
 
 export type StorageAction = ADTType<typeof StorageAction>
 
-interface Upload {
-  id: string,
+interface InProgress {
+  state: 'InProgress'
+  id: string
   progress: number
 }
 
-export const {
-  initState: initUploadsTableState,
-  reducer: uploadsTableReducer,
-  Action: UploadTableAction,
-} = makeTable<Upload>()('uploads')
+interface Failed {
+  state: 'Failed'
+  id: string
+  reason: string
+}
 
-export type UploadsTable = Table<Upload>
-export type UploadsTableAction = ADTType<typeof UploadTableAction>
+interface Complete {
+  state: 'Complete'
+  id: string
+  url: string
+}
+
+export const Upload = makeADT('state')({
+  InProgress: ofType<InProgress>(),
+  Failed: ofType<Failed>(),
+  Complete: ofType<Complete>(),
+})
+
+export type Upload = ADTType<typeof Upload>

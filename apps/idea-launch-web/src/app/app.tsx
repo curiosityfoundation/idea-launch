@@ -38,7 +38,9 @@ const ConnectFirebaseAuthToRedux = T.accessServicesM({
       FirebaseAuthStateChanged.matchStrict({
         LoggedIn: (loggedIn) =>
           pipe(
-            T.fromPromise(() => loggedIn.user.getIdToken(false)),
+            T.fromPromise(() =>
+              loggedIn.user.getIdToken(false)
+            ),
             T.chain((idToken) =>
               T.effectTotal(() => {
                 redux.store.dispatch(
