@@ -5,7 +5,6 @@ import { mockResources } from '@idea-launch/resources/model'
 
 import { ResourcesPersistence } from './resources-persistence'
 
-export const resourcesPersistenceMock =
-  L.pure(ResourcesPersistence)({
-    listResources: T.succeed(mockResources),
-  })
+export const ResourcesPersistenceMock = L.pure(ResourcesPersistence)({
+  listResources: T.succeed(mockResources),
+})

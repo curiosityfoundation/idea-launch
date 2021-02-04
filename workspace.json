@@ -480,7 +480,7 @@
                 "command": "nx run functions:build"
               },
               {
-                "command": "firebase emulators:start --only auth,firestore,functions --inspect-functions"
+                "command": "firebase emulators:start --import=./firebase-emulator-data --only auth,firestore,functions --inspect-functions"
               }
             ],
             "parallel": false

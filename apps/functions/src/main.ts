@@ -5,10 +5,11 @@ import * as cors from 'cors';
 
 import { profilesPersistenceMock } from '@idea-launch/profiles/persistence'
 import { projectsPersistenceMock } from '@idea-launch/projects/persistence'
-import { resourcesPersistenceMock } from '@idea-launch/resources/persistence'
+import { ResourcesPersistenceLive } from '@idea-launch/resources/persistence'
 import {
   FirebaseAdminAppLive,
   FunctionsAuthStatusLive,
+  FirebaseStorageLive,
   provideFunctionsRequestContextLive
 } from '@idea-launch/firebase-functions'
 
@@ -53,7 +54,9 @@ export const ListResources =
     checkOrigin((req, res) => {
       pipe(
         handleListResources,
-        T.provideSomeLayer(resourcesPersistenceMock),
+        T.provideSomeLayer(ResourcesPersistenceLive),
+        T.provideSomeLayer(FirebaseStorageLive),
+        T.provideSomeLayer(FirebaseAdminAppLive),
         T.runPromise,
       ).then(
         (raw) => {
