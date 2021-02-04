@@ -4,7 +4,7 @@ import { Resource } from './resources-model'
 
 export const mockResources: Resource[] = [
   Resource.build({
-    id: '0' as UUID,
+    id: '0',
     title: 'Figma',
     description: 'Start with Figma styles why stop there! Go all the way to add all and integrated back into Figma properties.',
     category: 'graphic-design',
@@ -12,7 +12,7 @@ export const mockResources: Resource[] = [
     link: 'https://www.figma.com/',
   }),
   Resource.build({
-    id: '1' as UUID,
+    id: '1',
     title: 'Dribbble',
     description: `Dribbble is the leading destination to find & showcase creative work and home to the world's best design professionals.`,
     category: 'ideation',
@@ -20,7 +20,7 @@ export const mockResources: Resource[] = [
     link: 'https://dribbble.com/',
   }),
   Resource.build({
-    id: '2' as UUID,
+    id: '2',
     title: 'Launchaco',
     description: 'The Simplest Way to Build a Website For Your Startup.',
     category: 'web-design',
@@ -28,7 +28,7 @@ export const mockResources: Resource[] = [
     link: 'https://www.launchaco.com/',
   }),
   Resource.build({
-    id: '3' as UUID,
+    id: '3',
     title: 'Code Naturally',
     description: 'The Code Naturally app allows youto learn to code in JavaScript through project-based learning and an easy to use curriculum.',
     category: 'coding',
@@ -36,7 +36,7 @@ export const mockResources: Resource[] = [
     link: 'https://app.codenaturally.com/',
   }),
   Resource.build({
-    id: '4' as UUID,
+    id: '4',
     title: 'Product Hunt',
     description: `Product Hunt is a curation of the best new products, every day. Discover the latest mobile apps, websites, and technology products that everyone's talking about.`,
     category: 'ideation',
@@ -44,7 +44,7 @@ export const mockResources: Resource[] = [
     link: 'https://www.producthunt.com/',
   }),
   Resource.build({
-    id: '5' as UUID,
+    id: '5',
     title: 'Google Drawings',
     description: 'Google Drawings is a diagramming software included as part of the free, web-based Google Docs Editors suite offered by Google. ',
     category: 'graphic-design',
