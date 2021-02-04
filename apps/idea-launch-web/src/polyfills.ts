@@ -5,3 +5,7 @@
  */
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
+import 'buffer'
+import Buffer from 'buffer'
+(window as any).Buffer = Buffer.Buffer as any
+(window as any).Buffer.isBuffer = () => false

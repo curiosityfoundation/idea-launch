@@ -1,7 +1,9 @@
 import * as T from '@effect-ts/core/Effect'
 import * as S from '@effect-ts/core/Effect/Stream'
+import * as A from '@effect-ts/core/Array'
+import * as Ma from '@effect-ts/core/Effect/Managed'
 import * as Ref from '@effect-ts/core/Effect/Ref'
-import { pipe } from '@effect-ts/core/Function'
+import { pipe, flow } from '@effect-ts/core/Function'
 import { Has, Tag, tag } from '@effect-ts/core/Has'
 import { Middleware } from 'redux'
 
@@ -58,8 +60,12 @@ export function makeReduxEpicMiddleware<
           )
         ),
         S.runDrain,
+        T.catchAllDefect((e) =>
+          T.effectTotal(() => {
+            console.log(e);
+          })
+        ),
         T.provide(env),
-        T.forever,
       ),
     })
   )

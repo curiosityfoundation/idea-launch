@@ -1,6 +1,7 @@
 import * as A from '@effect-ts/core/Array'
 import * as C from '@effect-ts/core/Chunk'
 import * as T from '@effect-ts/core/Effect'
+import * as Ma from '@effect-ts/core/Effect/Managed'
 import * as S from '@effect-ts/core/Effect/Stream'
 import { pipe } from '@effect-ts/core/Function'
 import * as NEA from '@effect-ts/core/NonEmptyArray'
@@ -33,38 +34,25 @@ export function combineEpics<
     CombinedState<Epics>
   >()<CombinedEnv<Epics>>(
     (actions, getState) =>
-      S.mergeAllUnbounded()(
-        ...pipe(
-          epics,
-          NEA.map((epic) => epic(actions, getState))
-        )
-      )
-  )
-}
-
-export function combineEpicsBroadcast<
-  Epics extends NEA.NonEmptyArray<AnyReduxEpic>
->(
-  epics: Epics
-) {
-  return reduxEpic<
-    CombinedAction<Epics>,
-    CombinedState<Epics>
-  >()<CombinedEnv<Epics>>(
-    (actions, getState) =>
       pipe(
         actions,
-        S.broadcast(epics.length, 10),
+        S.broadcast(
+          epics.length,
+          Number.MAX_SAFE_INTEGER
+        ),
         S.managed,
-        S.chain((as) =>
+        S.chain((copies) =>
           pipe(
-            C.asArray(as),
+            copies,
+            C.asArray,
             A.zip(epics),
-            A.map(([a, epic]) => epic(a, getState)),
+            A.map(([copy, epic]) =>
+              epic(copy, getState)
+            ),
             S.fromIterable,
-            S.flatten,
           )
         ),
+        S.flattenParUnbounded,
       )
   )
 }
