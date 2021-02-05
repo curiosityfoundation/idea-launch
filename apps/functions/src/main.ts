@@ -3,7 +3,7 @@ import * as T from '@effect-ts/core/Effect'
 import { pipe } from '@effect-ts/core/Function'
 import * as cors from 'cors';
 
-import { profilesPersistenceMock } from '@idea-launch/profiles/persistence'
+import { ProfilesPersistenceLive } from '@idea-launch/profiles/persistence'
 import { projectsPersistenceMock } from '@idea-launch/projects/persistence'
 import { ResourcesPersistenceLive } from '@idea-launch/resources/persistence'
 import {
@@ -13,6 +13,7 @@ import {
   provideFunctionsRequestContextLive,
   FunctionsLogger,
 } from '@idea-launch/firebase-functions'
+import { NanoidUUIDLive } from '@idea-launch/uuid-gen'
 
 import { handleFindProfile } from './app/find-profile'
 import { handleListProjects } from './app/list-projects'
@@ -78,10 +79,13 @@ export const FindProfile =
     checkOrigin((req, res) => {
       pipe(
         handleFindProfile,
-        T.provideSomeLayer(profilesPersistenceMock),
+        T.provideSomeLayer(ProfilesPersistenceLive),
         T.provideSomeLayer(FunctionsAuthStatusLive),
         provideFunctionsRequestContextLive(req, res),
+        T.provideSomeLayer(FirebaseStorageLive),
         T.provideSomeLayer(FirebaseAdminAppLive),
+        T.provideSomeLayer(FunctionsLogger),
+        T.provideSomeLayer(NanoidUUIDLive),
         T.runPromise,
       ).then(
         (raw) => {
@@ -101,10 +105,13 @@ export const CreateProfile =
     checkOrigin((req, res) => {
       pipe(
         handleCreateProfile,
-        T.provideSomeLayer(profilesPersistenceMock),
+        T.provideSomeLayer(ProfilesPersistenceLive),
         T.provideSomeLayer(FunctionsAuthStatusLive),
         provideFunctionsRequestContextLive(req, res),
+        T.provideSomeLayer(FirebaseStorageLive),
         T.provideSomeLayer(FirebaseAdminAppLive),
+        T.provideSomeLayer(FunctionsLogger),
+        T.provideSomeLayer(NanoidUUIDLive),
         T.runPromise,
       ).then(
         (raw) => {

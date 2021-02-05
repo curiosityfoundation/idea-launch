@@ -5,7 +5,7 @@ import { UUID } from '@effect-ts/morphic/Algebra/Primitives'
 
 import { CreateProfile, UpdateProfile, Profile } from '@idea-launch/profiles/model'
 
-class ProfilePersistenceError {
+export class ProfilePersistenceError {
   readonly tag: 'ProfilePersistenceError'
   constructor(readonly reason: string) { }
 }

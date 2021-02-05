@@ -64,6 +64,6 @@ const MiddlewareLayer =
 export const AppLayer =
   ReduxStoreLive({
     reducer: rootReducer,
-    devTools: false,
+    devTools: true,
   })
   ['<+<'](MiddlewareLayer)

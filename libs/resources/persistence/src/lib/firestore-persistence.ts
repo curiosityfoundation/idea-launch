@@ -8,7 +8,7 @@ import { formatValidationErrors } from '@effect-ts/morphic/Decoder/reporters'
 
 import { Resource } from '@idea-launch/resources/model'
 import { FirestoreClient } from '@idea-launch/firebase-functions'
-import { Logger, warn } from '@idea-launch/logger'
+import { Logger } from '@idea-launch/logger'
 
 import { ResourcesPersistence, ResourcesPersistenceError } from './resources-persistence'
 
@@ -20,7 +20,11 @@ const makeResourcesPersistence = T.accessServices({
     listResources: pipe(
       T.fromPromiseWith(
         (err: any) => new ResourcesPersistenceError(err.code)
-      )(() => firestore.client.collection('resources').limit(10).get()),
+      )(() =>
+        firestore.client
+          .collection('resources')
+          .get()
+      ),
       T.chain((snapshot) =>
         pipe(
           snapshot.docs,
