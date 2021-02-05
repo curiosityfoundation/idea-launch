@@ -33,8 +33,10 @@ const makeResourcesPersistence = T.accessServices({
                 pipe(
                   errors,
                   formatValidationErrors,
-                  A.join('\n'),
-                  logger.warn,
+                  A.map(
+                    (err) => logger.warn(`resource ${doc.id} failed validation: ${err}`),
+                  ),
+                  T.collectAllPar,
                   T.andThen(
                     T.succeed(O.none)
                   )

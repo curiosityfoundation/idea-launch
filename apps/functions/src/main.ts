@@ -6,12 +6,12 @@ import * as cors from 'cors';
 import { profilesPersistenceMock } from '@idea-launch/profiles/persistence'
 import { projectsPersistenceMock } from '@idea-launch/projects/persistence'
 import { ResourcesPersistenceLive } from '@idea-launch/resources/persistence'
-import { ConsoleLoggerLive } from '@idea-launch/logger'
 import {
   FirebaseAdminAppLive,
   FunctionsAuthStatusLive,
   FirebaseStorageLive,
-  provideFunctionsRequestContextLive
+  provideFunctionsRequestContextLive,
+  FunctionsLogger,
 } from '@idea-launch/firebase-functions'
 
 import { handleFindProfile } from './app/find-profile'
@@ -58,7 +58,7 @@ export const ListResources =
         T.provideSomeLayer(ResourcesPersistenceLive),
         T.provideSomeLayer(FirebaseStorageLive),
         T.provideSomeLayer(FirebaseAdminAppLive),
-        T.provideSomeLayer(ConsoleLoggerLive),
+        T.provideSomeLayer(FunctionsLogger),
         T.runPromise,
       ).then(
         (raw) => {
