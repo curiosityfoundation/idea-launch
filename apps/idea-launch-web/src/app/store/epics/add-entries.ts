@@ -60,7 +60,7 @@ const AddEntriesFromStorageEpic =
                   entries: [
                     Upload.of.Complete({
                       id: a.payload.id,
-                      url: '',
+                      url: a.payload.url,
                     })
                   ],
                 }

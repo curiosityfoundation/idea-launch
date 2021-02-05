@@ -6,7 +6,7 @@ import React, { FC, useEffect, useState } from 'react'
 import { Formik } from 'formik'
 import { useDispatch, useSelector } from 'react-redux'
 
-
+import { selectLoggedIn } from '@idea-launch/accounts/ui'
 import {
   CreateProfileForm,
   CreateProfileFormSchema,
@@ -56,7 +56,10 @@ export const GetStarted: FC<RouteProps<'GetStarted'>> = (props) => {
   const avatarUpload = useSelector(
     (s: AppState) => selectUpload(s.data)(avatarUploadId)
   )
-
+  const loggedIn = useSelector(
+    (s: AppState) => selectLoggedIn(s.account)
+  )
+  
   const [formState, setFormState] = useState(initialFormValues)
 
   switch (props.step) {
@@ -160,6 +163,11 @@ export const GetStarted: FC<RouteProps<'GetStarted'>> = (props) => {
                           AppAction.of.APIRequested({
                             payload: {
                               endpoint: 'CreateProfile',
+                              jwt: O.fold_(
+                                loggedIn,
+                                () => '',
+                                ({ idToken }) => idToken,
+                              ),
                               body: {
                                 classCode: formState.classCode,
                                 avatar: url,
