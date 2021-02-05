@@ -3,7 +3,7 @@ import * as S from '@effect-ts/core/Effect/Stream'
 import { pipe } from '@effect-ts/core/Function'
 import { encoder } from '@effect-ts/morphic/Encoder'
 
-import { post, withHeaders } from '@idea-launch/http-client'
+import { get, withHeaders } from '@idea-launch/http-client'
 import { ListResources } from '@idea-launch/api'
 import { reduxEpic } from '@idea-launch/redux-effect'
 
@@ -23,10 +23,7 @@ export const ListResourcesEpic = reduxEpic<APIAction, {}>()(
             a.payload.body,
             encoder(ListResources.Body).encode,
             T.chain((body) =>
-              post(
-                `${config.functionsUrl}/${ListResources.name}`,
-                body,
-              )
+              get(`${config.functionsUrl}/${ListResources.name}`)
             ),
             withHeaders({
               authorization: `Bearer ${a.payload.jwt}`,
