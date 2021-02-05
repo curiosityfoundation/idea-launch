@@ -6,6 +6,7 @@ import * as cors from 'cors';
 import { profilesPersistenceMock } from '@idea-launch/profiles/persistence'
 import { projectsPersistenceMock } from '@idea-launch/projects/persistence'
 import { ResourcesPersistenceLive } from '@idea-launch/resources/persistence'
+import { ConsoleLoggerLive } from '@idea-launch/logger'
 import {
   FirebaseAdminAppLive,
   FunctionsAuthStatusLive,
@@ -57,6 +58,7 @@ export const ListResources =
         T.provideSomeLayer(ResourcesPersistenceLive),
         T.provideSomeLayer(FirebaseStorageLive),
         T.provideSomeLayer(FirebaseAdminAppLive),
+        T.provideSomeLayer(ConsoleLoggerLive),
         T.runPromise,
       ).then(
         (raw) => {

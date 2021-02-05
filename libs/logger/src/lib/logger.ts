@@ -3,8 +3,8 @@ import * as L from '@effect-ts/core/Effect/Layer'
 import { tag } from '@effect-ts/core/Has'
 
 export interface Logger {
-  log: <A>(s1: A) => T.UIO<A>
-  warn: <A>(s1: A) => T.UIO<A>
+  log: (s1: any) => T.UIO<void>
+  warn: (s1: any) => T.UIO<void>
 }
 
 export const Logger = tag<Logger>()
@@ -16,18 +16,16 @@ export const ConsoleLoggerLive = L.pure(Logger)({
   log: (s1, ...ss) =>
     T.effectTotal(() => {
       console.log(s1, ...ss)
-      return s1
     }),
   warn: (s1, ...ss) =>
     T.effectTotal(() => {
       console.warn(s1, ...ss)
-      return s1
     })
 })
 
 export const SilentLoggerLive = L.pure(Logger)({
-  log: (s1) => T.succeed(s1),
-  warn: (s1) => T.succeed(s1)
+  log: (s1) => T.unit,
+  warn: (s1) => T.unit
 })
 
 export const log = <A>(a: A) =>
