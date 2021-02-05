@@ -17,6 +17,7 @@ import { ConsoleLoggerLive } from '@idea-launch/logger'
 import { NanoidUUIDLive } from '@idea-launch/uuid-gen'
 
 import { APIConfigLive } from '../app/api'
+import { UploadFileMock } from '../app/storage'
 import {
   ReduxStoreLive,
   rootReducer,
@@ -29,7 +30,6 @@ const FirebaseLayer =
   ['<+<'](FirebaseAuthLive)
   ['<+<'](FirebaseLoginProviderLive)
   ['<+<'](FirebaseAuthClientEmulator(process.env.NX_EMULATOR_URL))
-  ['<+<'](FirebaseStorageLive)
   ['<+<'](FirebaseAppLive)
   ['<+<'](FirebaseConfigLive({
     apiKey: process.env.NX_API_KEY,
@@ -54,6 +54,7 @@ const APIAccessLayer =
 
 const MiddlewareLayer =
   ReduxEffectMiddlewareLive
+  ['<+<'](UploadFileMock)
   ['<+<'](ReduxQueueLive)
   ['<+<'](BrowserWindowLive(window))
   ['<+<'](FirebaseLayer)

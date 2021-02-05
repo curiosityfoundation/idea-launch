@@ -4,11 +4,11 @@ import { encode } from '@effect-ts/morphic/Encoder'
 import * as O from '@effect-ts/core/Option'
 import { strictDecoder } from '@effect-ts/morphic/StrictDecoder'
 
-import { createProfile, findByOwner } from '@idea-launch/profiles/persistence'
 import { CreateProfile, handler } from '@idea-launch/api'
-
-import { authenticate } from './authenticate'
 import { accessFunctionsRequestContextM } from '@idea-launch/firebase-functions'
+import { createProfile, findByOwner } from '@idea-launch/profiles/persistence'
+
+import { authenticate } from './util'
 
 export const handleCreateProfile = handler(CreateProfile)(
   ({ Body, Response }) => authenticate({

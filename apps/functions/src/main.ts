@@ -19,6 +19,7 @@ import { handleFindProfile } from './app/find-profile'
 import { handleListProjects } from './app/list-projects'
 import { handleListResources } from './app/list-resources'
 import { handleCreateProfile } from './app/create-profile'
+import { logDefect } from './app/util'
 
 const withCors = cors({
   origin: true,
@@ -33,10 +34,12 @@ export const ListProjects =
     checkOrigin((req, res) => {
       pipe(
         handleListProjects,
+        logDefect,
         T.provideSomeLayer(projectsPersistenceMock),
         T.provideSomeLayer(FunctionsAuthStatusLive),
         provideFunctionsRequestContextLive(req, res),
         T.provideSomeLayer(FirebaseAdminAppLive),
+        T.provideSomeLayer(FunctionsLogger),
         T.runPromise,
       ).then(
         (raw) => {
@@ -56,6 +59,7 @@ export const ListResources =
     checkOrigin((req, res) => {
       pipe(
         handleListResources,
+        logDefect,
         T.provideSomeLayer(ResourcesPersistenceLive),
         T.provideSomeLayer(FirebaseStorageLive),
         T.provideSomeLayer(FirebaseAdminAppLive),
@@ -79,6 +83,7 @@ export const FindProfile =
     checkOrigin((req, res) => {
       pipe(
         handleFindProfile,
+        logDefect,
         T.provideSomeLayer(ProfilesPersistenceLive),
         T.provideSomeLayer(FunctionsAuthStatusLive),
         provideFunctionsRequestContextLive(req, res),
@@ -99,12 +104,13 @@ export const FindProfile =
       )
     })
   )
-
+  
 export const CreateProfile =
   functions.https.onRequest(
     checkOrigin((req, res) => {
       pipe(
         handleCreateProfile,
+        logDefect,
         T.provideSomeLayer(ProfilesPersistenceLive),
         T.provideSomeLayer(FunctionsAuthStatusLive),
         provideFunctionsRequestContextLive(req, res),

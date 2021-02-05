@@ -17,6 +17,7 @@ import { SilentLoggerLive } from '@idea-launch/logger'
 import { NanoidUUIDLive } from '@idea-launch/uuid-gen'
 
 import { APIConfigLive } from '../app/api'
+import { UploadFileLive } from '../app/storage'
 import {
   ReduxStoreLive,
   rootReducer,
@@ -56,6 +57,7 @@ const MiddlewareLayer =
   ReduxEffectMiddlewareLive
   ['<+<'](ReduxQueueLive)
   ['<+<'](BrowserWindowLive(window))
+  ['<+<'](UploadFileLive)
   ['<+<'](FirebaseLayer)
   ['<+<'](APIAccessLayer)
   ['<+<'](SilentLoggerLive)

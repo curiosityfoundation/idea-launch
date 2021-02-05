@@ -6,7 +6,7 @@ import * as O from '@effect-ts/core/Option'
 import { findByOwner } from '@idea-launch/profiles/persistence'
 import { FindProfile, handler } from '@idea-launch/api'
 
-import { authenticate } from './authenticate'
+import { authenticate } from './util'
 
 export const handleFindProfile = handler(FindProfile)(
   ({ Response }) => authenticate({

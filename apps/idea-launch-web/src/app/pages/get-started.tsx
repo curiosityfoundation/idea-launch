@@ -2,7 +2,7 @@ import Typography from '@material-ui/core/Typography'
 import { makeStyles, Theme } from '@material-ui/core/styles'
 import { pipe } from '@effect-ts/core/Function'
 import * as O from '@effect-ts/core/Option'
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useState } from 'react'
 import { Formik } from 'formik'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -17,7 +17,7 @@ import {
 import logo from '../../assets/logo.svg'
 import { AppAction, AppState } from '../store'
 import { selectUpload } from '../data'
-import { Redirect, Route, RouteProps } from '../router'
+import { Route, RouteProps } from '../router'
 import { Upload } from '../storage'
 
 const useStyles = makeStyles((theme: Theme) => ({

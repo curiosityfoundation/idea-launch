@@ -8,7 +8,7 @@ import { listProjects } from '@idea-launch/projects/persistence'
 import { accessFunctionsRequestContextM } from '@idea-launch/firebase-functions'
 import { ListProjects, handler } from '@idea-launch/api'
 
-import { authenticate } from './authenticate'
+import { authenticate } from './util'
 
 export const handleListProjects = handler(ListProjects)(
   ({ Response, Body }) => authenticate({
