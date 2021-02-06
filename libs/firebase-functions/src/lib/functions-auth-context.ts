@@ -64,8 +64,8 @@ const makeFunctionsAuthStatus = T.accessServicesM({
         })
       )
     ),
-    T.map((status): FunctionsAuthStatus => ({ 
-      status 
+    T.map((status): FunctionsAuthStatus => ({
+      status
     }))
   )
 )
@@ -74,3 +74,5 @@ export const accessFuntionsAuthStatus = T.accessService(FunctionsAuthStatus)
 export const accessFuntionsAuthStatusM = T.accessServiceM(FunctionsAuthStatus)
 
 export const FunctionsAuthStatusLive = L.fromEffect(FunctionsAuthStatus)(makeFunctionsAuthStatus)
+
+export const FunctionsAuthStatusMock = (status: AuthStatus) => L.pure(FunctionsAuthStatus)({ status })

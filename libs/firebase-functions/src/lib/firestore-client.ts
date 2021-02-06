@@ -22,4 +22,4 @@ const makeFirestoreClient = accessFirebaseAdminAppM(
     ),
 )
 
-export const FirebaseStorageLive = L.fromEffect(FirestoreClient)(makeFirestoreClient)
+export const FirestoreClientLive = L.fromEffect(FirestoreClient)(makeFirestoreClient)

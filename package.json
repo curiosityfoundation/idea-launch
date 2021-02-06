@@ -25,7 +25,8 @@
     "update": "nx migrate latest",
     "workspace-generator": "nx workspace-generator",
     "dep-graph": "nx dep-graph",
-    "help": "nx help"
+    "help": "nx help",
+    "emulator": "firebase emulators:start --import=./firebase-emulator-data --only auth,firestore,functions --inspect-functions"
   },
   "private": true,
   "dependencies": {

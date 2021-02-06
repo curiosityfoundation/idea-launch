@@ -5,6 +5,7 @@ import * as O from '@effect-ts/core/Option'
 
 import { findByOwner } from '@idea-launch/profiles/persistence'
 import { FindProfile, handler } from '@idea-launch/api'
+import { log } from '@idea-launch/logger'
 
 import { authenticate } from './util'
 
@@ -13,6 +14,7 @@ export const handleFindProfile = handler(FindProfile)(
     Authenticated: (status) =>
       pipe(
         findByOwner(status.decodedId.uid),
+        T.tap(log),
         T.chain(
           O.fold(
             () => T.succeed(
@@ -25,6 +27,7 @@ export const handleFindProfile = handler(FindProfile)(
             ),
           )
         ),
+        T.tap(log),
         T.catchAll((err) =>
           T.succeed(
             Response.of.Failure({
@@ -32,7 +35,9 @@ export const handleFindProfile = handler(FindProfile)(
             })
           )
         ),
+        T.tap(log),
         T.chain(encode(Response)),
+        T.tap(log),
       ),
     NotAuthenticated: (status) =>
       pipe(

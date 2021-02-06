@@ -8,7 +8,7 @@ import { mockProfiles, Profile } from '@idea-launch/profiles/model'
 import { ProfilesPersistence } from './profiles-persistence'
 import { pipe } from '@effect-ts/core/Function'
 
-export const profilesPersistenceMock = L.pure(ProfilesPersistence)((() => {
+export const ProfilesPersistenceMock = L.pure(ProfilesPersistence)((() => {
   let id = 100
   const profiles: Profile[] = []
   const persistence: ProfilesPersistence = {
@@ -17,7 +17,7 @@ export const profilesPersistenceMock = L.pure(ProfilesPersistence)((() => {
         ...opts,
         id: String(id++),
         created: new Date,
-        modified: new Date
+        modified: O.none,
       }
       profiles.push(profile)
       return profile

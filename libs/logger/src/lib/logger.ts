@@ -13,13 +13,13 @@ export const accessLogger = T.accessService(Logger)
 export const accessLoggerM = T.accessServiceM(Logger)
 
 export const ConsoleLoggerLive = L.pure(Logger)({
-  log: (s1, ...ss) =>
+  log: (s1) =>
     T.effectTotal(() => {
-      console.log(s1, ...ss)
+      console.log(s1)
     }),
-  warn: (s1, ...ss) =>
+  warn: (s1) =>
     T.effectTotal(() => {
-      console.warn(s1, ...ss)
+      console.warn(s1)
     })
 })
 

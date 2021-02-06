@@ -3,13 +3,13 @@ import * as T from '@effect-ts/core/Effect'
 import { pipe } from '@effect-ts/core/Function'
 import * as cors from 'cors';
 
-import { ProfilesPersistenceLive } from '@idea-launch/profiles/persistence'
+import { ProfilesPersistenceLive, ProfilesPersistenceMock } from '@idea-launch/profiles/persistence'
 import { projectsPersistenceMock } from '@idea-launch/projects/persistence'
 import { ResourcesPersistenceLive } from '@idea-launch/resources/persistence'
 import {
   FirebaseAdminAppLive,
   FunctionsAuthStatusLive,
-  FirebaseStorageLive,
+  FirestoreClientLive,
   provideFunctionsRequestContextLive,
   FunctionsLogger,
 } from '@idea-launch/firebase-functions'
@@ -61,7 +61,7 @@ export const ListResources =
         handleListResources,
         logDefect,
         T.provideSomeLayer(ResourcesPersistenceLive),
-        T.provideSomeLayer(FirebaseStorageLive),
+        T.provideSomeLayer(FirestoreClientLive),
         T.provideSomeLayer(FirebaseAdminAppLive),
         T.provideSomeLayer(FunctionsLogger),
         T.runPromise,
@@ -84,10 +84,10 @@ export const FindProfile =
       pipe(
         handleFindProfile,
         logDefect,
-        T.provideSomeLayer(ProfilesPersistenceLive),
+        T.provideSomeLayer(ProfilesPersistenceMock),
         T.provideSomeLayer(FunctionsAuthStatusLive),
         provideFunctionsRequestContextLive(req, res),
-        T.provideSomeLayer(FirebaseStorageLive),
+        T.provideSomeLayer(FirestoreClientLive),
         T.provideSomeLayer(FirebaseAdminAppLive),
         T.provideSomeLayer(FunctionsLogger),
         T.provideSomeLayer(NanoidUUIDLive),
@@ -114,7 +114,7 @@ export const CreateProfile =
         T.provideSomeLayer(ProfilesPersistenceLive),
         T.provideSomeLayer(FunctionsAuthStatusLive),
         provideFunctionsRequestContextLive(req, res),
-        T.provideSomeLayer(FirebaseStorageLive),
+        T.provideSomeLayer(FirestoreClientLive),
         T.provideSomeLayer(FirebaseAdminAppLive),
         T.provideSomeLayer(FunctionsLogger),
         T.provideSomeLayer(NanoidUUIDLive),

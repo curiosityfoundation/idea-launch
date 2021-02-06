@@ -5,12 +5,12 @@ import * as logger from 'firebase-functions/lib/logger'
 import { Logger } from '@idea-launch/logger'
 
 export const FunctionsLogger = L.pure(Logger)({
-  log: (s, ...ss) =>
+  log: (s) =>
     T.effectTotal(() => {
-      logger.log(s, ...s)
+      logger.log(s)
     }),
-  warn: (s, ...ss) => T
+  warn: (s) => T
     .effectTotal(() => {
-      logger.warn(s, ...s)
+      logger.warn(s)
     }),
 })

@@ -5,6 +5,7 @@ import * as O from '@effect-ts/core/Option'
 import { strictDecoder } from '@effect-ts/morphic/StrictDecoder'
 
 import { CreateProfile, handler } from '@idea-launch/api'
+import { log } from '@idea-launch/logger'
 import { accessFunctionsRequestContextM } from '@idea-launch/firebase-functions'
 import { createProfile, findByOwner } from '@idea-launch/profiles/persistence'
 
@@ -60,4 +61,4 @@ export const handleCreateProfile = handler(CreateProfile)(
         T.chain(encode(Response)),
       )
   })
-)  
+)

@@ -19,7 +19,7 @@ const Profile_ = M.make((F) =>
     id: F.string(),
     classCode: F.string(),
     created: F.date(),
-    modified: F.optional(F.date()),
+    modified: F.option(F.date()),
   }, { name: 'Profile' })
 )
 

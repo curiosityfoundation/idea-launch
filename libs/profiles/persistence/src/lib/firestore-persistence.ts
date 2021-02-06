@@ -8,7 +8,7 @@ import { strictDecoder } from '@effect-ts/morphic/StrictDecoder'
 import { formatValidationErrors } from '@effect-ts/morphic/Decoder/reporters'
 
 import { FirestoreClient } from '@idea-launch/firebase-functions'
-import { Logger } from '@idea-launch/logger'
+import { log, Logger } from '@idea-launch/logger'
 import { UUIDGen } from '@idea-launch/uuid-gen'
 
 import { Profile } from '@idea-launch/profiles/model'
@@ -29,29 +29,36 @@ export const makeProfilesPersistence = T.accessServices({
           classCode: '',
           id: '',
           created: new Date(),
-          modified: new Date(),
+          modified: O.some(new Date()),
         })
       ),
     findByOwner: (owner) =>
       pipe(
-        T.fromPromiseWith(
-          (err: any) => new ProfilePersistenceError(err.code)
-        )(() =>
-          firestore.client
-            .collection('resources')
-            .where('owner', '==', owner)
-            .get()
+        log(owner),
+        T.andThen(
+          T.fromPromiseWith(
+            (err: any) => new ProfilePersistenceError(err.code)
+          )(() =>
+            firestore.client
+              .collection('profiles')
+              .limit(1)
+              .get()
+          ),
         ),
+        T.tap((snapshot) => log(snapshot.docs)),
         T.map((snapshot) =>
           A.head(snapshot.docs)
         ),
+        T.tap(log),
         T.chain(
           O.fold(
             () => T.succeed(O.none),
             (doc) => pipe(
               doc.data(),
               strictDecoder(Profile).decode,
+              T.tap(log),
               T.map(O.some),
+              T.tap(log),
               T.catchAll((errors) =>
                 pipe(
                   errors,
@@ -64,7 +71,7 @@ export const makeProfilesPersistence = T.accessServices({
                     T.succeed(O.none)
                   )
                 )
-              )
+              ),
             )
           )
         ),
@@ -77,7 +84,7 @@ export const makeProfilesPersistence = T.accessServices({
             ...opts,
             id,
             created: new Date(),
-            modified: null,
+            modified: O.none,
           })
         ),
         T.chain((profile) =>
@@ -88,7 +95,7 @@ export const makeProfilesPersistence = T.accessServices({
               T.fromPromiseWith(
                 (err: any) => new ProfilePersistenceError(err.code)
               )(() => firestore.client
-                .collection('resources')
+                .collection('profiles')
                 .doc(profile.id)
                 .set(raw)
               )
