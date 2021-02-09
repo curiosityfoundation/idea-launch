@@ -1,3 +1,4 @@
+import * as A from '@effect-ts/core/Array'
 import * as T from '@effect-ts/core/Effect'
 import { tag } from '@effect-ts/core/Has'
 import { UUID } from '@effect-ts/morphic/Algebra/Primitives'
@@ -19,16 +20,16 @@ export class ProjectPersistenceError {
 }
 
 export interface ProjectsPersistence {
-  createProject: (opts: CreateProject) => T.IO<ProjectPersistenceError, void>
+  createProject: (opts: CreateProject, owner: string) => T.IO<ProjectPersistenceError, Project>
   deleteProject: (opts: DeleteProject) => T.IO<ProjectPersistenceError, void>
-  listProjectByOwner: (owner: UUID, page: number) => T.IO<ProjectPersistenceError, Project[]>
-  listProjects: (page: number) => T.IO<ProjectPersistenceError, Project[]>
+  listProjectByOwner: (owner: UUID, page: number) => T.IO<ProjectPersistenceError, A.Array<Project>>
+  listProjects: (page: number) => T.IO<ProjectPersistenceError, A.Array<Project>>
   createComment: (opts: CreateComment) => T.IO<ProjectPersistenceError, void>
-  listCommentsByOwner: (owner: UUID) => T.IO<ProjectPersistenceError, Comment[]>
-  listCommentsByProjectId: (projectId: UUID) => T.IO<ProjectPersistenceError, Comment[]>
+  listCommentsByOwner: (owner: UUID) => T.IO<ProjectPersistenceError, A.Array<Comment>>
+  listCommentsByProjectId: (projectId: UUID) => T.IO<ProjectPersistenceError, A.Array<Comment>>
   createReaction: (opts: CreateReaction) => T.IO<ProjectPersistenceError, void>
   deleteReaction: (opts: DeleteReaction) => T.IO<ProjectPersistenceError, void>
-  listReactionsByProjectId: (projectId: UUID) => T.IO<ProjectPersistenceError, Reaction[]>
+  listReactionsByProjectId: (projectId: UUID) => T.IO<ProjectPersistenceError, A.Array<Reaction>>
 }
 
 export const ProjectsPersistence = tag<ProjectsPersistence>()

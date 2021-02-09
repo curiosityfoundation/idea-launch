@@ -1,18 +1,8 @@
 import * as M from '@effect-ts/morphic'
 
-import { Project, Comment } from '@idea-launch/projects/model'
+import { CreateProject as CreateProject_, Project } from '@idea-launch/projects/model'
 
 import { endpoint } from './api'
-
-const Body_ = M.make((F) =>
-  F.interface({
-    page: F.number(),
-  }, { name: 'Args' })
-)
-
-export interface Body extends M.AType<typeof Body_> { }
-export interface BodyRaw extends M.EType<typeof Body_> { }
-export const Body = M.opaque<BodyRaw, Body>()(Body_)
 
 const Failure_ = M.make((F) =>
   F.interface({
@@ -28,8 +18,7 @@ export const Failure = M.opaque<FailureRaw, Failure>()(Failure_)
 const Success_ = M.make((F) =>
   F.interface({
     tag: F.stringLiteral('Success'),
-    projects: F.array(Project(F)),
-    page: F.number(),
+    project: Project(F),
   }, { name: 'Success' })
 )
 
@@ -44,9 +33,9 @@ export const Response = M.makeADT('tag')({
 
 export type Response = M.AType<typeof Response>
 
-export const ListProjects = endpoint({
-  name: 'ListProjects',
-  method: 'GET',
+export const CreateProject = endpoint({
+  name: 'CreateProject',
+  method: 'POST',
   Response,
-  Body,
+  Body: CreateProject_,
 })

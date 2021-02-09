@@ -3,8 +3,8 @@ import * as T from '@effect-ts/core/Effect'
 import { pipe } from '@effect-ts/core/Function'
 import * as cors from 'cors';
 
-import { ProfilesPersistenceLive, ProfilesPersistenceMock } from '@idea-launch/profiles/persistence'
-import { projectsPersistenceMock } from '@idea-launch/projects/persistence'
+import { ProfilesPersistenceLive } from '@idea-launch/profiles/persistence'
+import { ProjectsPersistenceLive } from '@idea-launch/projects/persistence'
 import { ResourcesPersistenceLive } from '@idea-launch/resources/persistence'
 import {
   FirebaseAdminAppLive,
@@ -35,11 +35,13 @@ export const ListProjects =
       pipe(
         handleListProjects,
         logDefect,
-        T.provideSomeLayer(projectsPersistenceMock),
+        T.provideSomeLayer(ProjectsPersistenceLive),
         T.provideSomeLayer(FunctionsAuthStatusLive),
         provideFunctionsRequestContextLive(req, res),
+        T.provideSomeLayer(FirestoreClientLive),
         T.provideSomeLayer(FirebaseAdminAppLive),
         T.provideSomeLayer(FunctionsLogger),
+        T.provideSomeLayer(NanoidUUIDLive),
         T.runPromise,
       ).then(
         (raw) => {

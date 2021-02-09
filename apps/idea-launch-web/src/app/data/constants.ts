@@ -13,6 +13,12 @@ import {
   profileTableReducer,
   initProfileTableState,
 } from '@idea-launch/profiles/ui'
+import {
+  ProjectTable,
+  ProjectTableAction,
+  projectTableReducer,
+  initProjectTableState,
+} from '@idea-launch/projects/ui'
 import { Table, makeTable } from '@idea-launch/redux-table'
 
 import { Upload } from '../storage'
@@ -31,23 +37,27 @@ export interface DataState {
   uploads: UploadsTable,
   resources: ResourceTable,
   profiles: ProfileTable,
+  projects: ProjectTable,
 }
 
 export const dataReducer = combineReducers<DataState>({
   uploads: uploadsTableReducer,
   resources: resourceTableReducer,
   profiles: profileTableReducer,
+  projects: projectTableReducer,
 })
 
 export const initDataState: DataState = {
   uploads: initUploadsTableState,
   resources: initResourceTableState,
   profiles: initProfileTableState,
+  projects: initProjectTableState,
 }
 
 export const DataAction = unionADT([
   ProfileTableAction,
   ResourceTableAction,
+  ProjectTableAction,
   UploadTableAction,
 ])
 

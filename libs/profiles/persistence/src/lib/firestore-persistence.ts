@@ -8,7 +8,7 @@ import { strictDecoder } from '@effect-ts/morphic/StrictDecoder'
 import { formatValidationErrors } from '@effect-ts/morphic/Decoder/reporters'
 
 import { FirestoreClient } from '@idea-launch/firebase-functions'
-import { log, Logger } from '@idea-launch/logger'
+import { Logger } from '@idea-launch/logger'
 import { UUIDGen } from '@idea-launch/uuid-gen'
 
 import { Profile } from '@idea-launch/profiles/model'
@@ -34,31 +34,24 @@ export const makeProfilesPersistence = T.accessServices({
       ),
     findByOwner: (owner) =>
       pipe(
-        log(owner),
-        T.andThen(
-          T.fromPromiseWith(
-            (err: any) => new ProfilePersistenceError(err.code)
-          )(() =>
-            firestore.client
-              .collection('profiles')
-              .limit(1)
-              .get()
-          ),
+        T.fromPromiseWith(
+          (err: any) => new ProfilePersistenceError(err.code)
+        )(() =>
+          firestore.client
+            .collection('profiles')
+            .limit(1)
+            .get()
         ),
-        T.tap((snapshot) => log(snapshot.docs)),
         T.map((snapshot) =>
           A.head(snapshot.docs)
         ),
-        T.tap(log),
         T.chain(
           O.fold(
             () => T.succeed(O.none),
             (doc) => pipe(
               doc.data(),
               strictDecoder(Profile).decode,
-              T.tap(log),
               T.map(O.some),
-              T.tap(log),
               T.catchAll((errors) =>
                 pipe(
                   errors,
@@ -100,7 +93,9 @@ export const makeProfilesPersistence = T.accessServices({
                 .set(raw)
               )
             ),
-            T.andThen(T.succeed(profile))
+            T.andThen(
+              T.succeed(profile)
+            )
           )
         )
       )

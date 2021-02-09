@@ -2,13 +2,13 @@ import * as M from '@effect-ts/morphic'
 
 const Project_ = M.make((F) => 
   F.interface({
-    id: F.uuid(),
+    id: F.string(),
     title: F.string(),
     description: F.string(),
     link: F.string(),
-    owner: F.uuid(),
+    owner: F.string(),
     created: F.date(),
-    modified: F.optional(F.date()),
+    modified: F.option(F.date()),
   }, { name: 'Project' })
 )
 
@@ -21,7 +21,6 @@ const CreateProject_ = M.make((F) =>
     title: F.string(),
     description: F.string(),
     link: F.string(),
-    owner: F.uuid(),
   }, { name: 'CreateProject' })
 )
 
@@ -32,7 +31,6 @@ export const CreateProject = M.opaque<CreateProjectRaw, CreateProject>()(CreateP
 const DeleteProject_ = M.make((F) => 
   F.interface({
     id: F.uuid(),
-    owner: F.uuid(),
   }, { name: 'DeleteProject' })
 )
 

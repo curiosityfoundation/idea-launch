@@ -1,42 +1,32 @@
 import { pipe } from '@effect-ts/core/Function'
 import * as T from '@effect-ts/core/Effect'
 import { encode } from '@effect-ts/morphic/Encoder'
-import * as O from '@effect-ts/core/Option'
 import { strictDecoder } from '@effect-ts/morphic/StrictDecoder'
 
-import { CreateProfile, handler } from '@idea-launch/api'
+import { CreateProject, handler } from '@idea-launch/api'
 import { accessFunctionsRequestContextM } from '@idea-launch/firebase-functions'
-import { createProfile, findByOwner } from '@idea-launch/profiles/persistence'
+import { createProject } from '@idea-launch/projects/persistence'
 
 import { authenticate } from './util'
 
-export const handleCreateProfile = handler(CreateProfile)(
+export const handleCreateProject = handler(CreateProject)(
   ({ Body, Response }) => authenticate({
     Authenticated: (status) =>
       pipe(
-        findByOwner(status.decodedId.uid),
-        T.mapError((e) => e.reason),
-        T.chain(
-          O.fold(
-            () =>
-              accessFunctionsRequestContextM(
-                (context) => pipe(
-                  context.request.body,
-                  strictDecoder(Body).decode,
-                  T.mapError((e) => 'decode error')
-                ),
-              ),
-            () => T.fail('profile already created'),
-          )
+        accessFunctionsRequestContextM(
+          (context) => pipe(
+            context.request.body,
+            strictDecoder(Body).decode,
+            T.mapError((e) => 'decode error')
+          ),
         ),
         T.chain((body) =>
           pipe(
-            { ...body, owner: status.decodedId.uid },
-            createProfile,
+            createProject(body, status.decodedId.uid),
             T.mapError((e) => e.reason),
-            T.map((profile) =>
+            T.map((project) =>
               Response.of.Success({
-                profile,
+                project,
               }),
             )
           )

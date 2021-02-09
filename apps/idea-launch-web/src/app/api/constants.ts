@@ -7,6 +7,7 @@ import {
   ListResources,
   FindProfile,
   CreateProfile,
+  CreateProject,
 } from '@idea-launch/api'
 
 export const {
@@ -49,11 +50,22 @@ export const {
 export type CreateProfileState = ADTType<typeof CreateProfileState>
 export type CreateProfileAction = ADTType<typeof CreateProfileAction>
 
+export const {
+  initState: initCreateProjectState,
+  State: CreateProjectState,
+  Action: CreateProjectAction,
+  reducer: createProjectReducer,
+} = makeRemoteAccess(CreateProject)
+
+export type CreateProjectState = ADTType<typeof CreateProjectState>
+export type CreateProjectAction = ADTType<typeof CreateProjectAction>
+
 export interface APIState {
   listProjects: ListProjectsState
   listResources: ListResourcesState
   findProfile: FindProfileState
   createProfile: CreateProfileState
+  createProject: CreateProjectState
 }
 
 export const APIState = {
@@ -61,6 +73,7 @@ export const APIState = {
   listResources: ListResourcesState,
   findProfile: FindProfileState,
   createProfile: CreateProfileState,
+  createProject: CreateProjectState,
 }
 
 export const APIReducer = combineReducers<APIState>({
@@ -68,6 +81,7 @@ export const APIReducer = combineReducers<APIState>({
   listResources: listResourcesReducer,
   findProfile: findProfileReducer,
   createProfile: createProfileReducer,
+  createProject: createProjectReducer,
 })
 
 export const initAPIState: APIState = {
@@ -75,6 +89,7 @@ export const initAPIState: APIState = {
   listProjects: initListProjectsState,
   listResources: initListResourcesState,
   createProfile: initCreateProfileState,
+  createProject: initCreateProjectState,
 }
 
 export const APIAction = unionADT([
@@ -82,6 +97,7 @@ export const APIAction = unionADT([
   ListResourcesAction,
   ListProjectsAction,
   CreateProfileAction,
+  CreateProjectAction,
 ])
 
 export type APIAction = ADTType<typeof APIAction>
