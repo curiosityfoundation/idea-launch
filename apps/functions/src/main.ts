@@ -84,7 +84,7 @@ export const FindProfile =
       pipe(
         handleFindProfile,
         logDefect,
-        T.provideSomeLayer(ProfilesPersistenceMock),
+        T.provideSomeLayer(ProfilesPersistenceLive),
         T.provideSomeLayer(FunctionsAuthStatusLive),
         provideFunctionsRequestContextLive(req, res),
         T.provideSomeLayer(FirestoreClientLive),
