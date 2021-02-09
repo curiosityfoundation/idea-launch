@@ -1,4 +1,4 @@
-import { unionADT, ADTType } from '@effect-ts/morphic/Adt'
+import { unionADT, makeADT, ofType, ADTType } from '@effect-ts/morphic/Adt'
 import { combineReducers } from 'redux'
 
 import { AccountAction, AccountState, accountReducer } from '@idea-launch/accounts/ui'
@@ -27,12 +27,24 @@ export const rootReducer = combineReducers<AppState>({
   api: APIReducer,
 })
 
+interface JWTRequested {
+  type: 'JWTRequested'
+  payload: APIAction
+}
+
+export const JWTAction = makeADT('type')({
+  JWTRequested: ofType<JWTRequested>(),
+})
+
+export type JWTAction = ADTType<typeof JWTAction>
+
 export const AppAction = unionADT([
   APIAction,
   AccountAction,
   RouteAction,
   DataAction,
   StorageAction,
+  JWTAction,
 ])
 
 export type AppAction = ADTType<typeof AppAction>

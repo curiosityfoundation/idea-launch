@@ -59,7 +59,7 @@ export const GetStarted: FC<RouteProps<'GetStarted'>> = (props) => {
   const loggedIn = useSelector(
     (s: AppState) => selectLoggedIn(s.account)
   )
-  
+
   const [formState, setFormState] = useState(initialFormValues)
 
   switch (props.step) {
@@ -160,23 +160,20 @@ export const GetStarted: FC<RouteProps<'GetStarted'>> = (props) => {
                           })
                         )}
                         onNextClick={() => dispatch(
-                          AppAction.of.APIRequested({
-                            payload: {
-                              endpoint: 'CreateProfile',
-                              jwt: O.fold_(
-                                loggedIn,
-                                () => '',
-                                ({ idToken }) => idToken,
-                              ),
-                              body: {
-                                classCode: formState.classCode,
-                                avatar: url,
-                                name: {
-                                  first: formState.first,
-                                  last: formState.last,
+                          AppAction.of.JWTRequested({
+                            payload: AppAction.as.APIRequested({
+                              payload: {
+                                endpoint: 'CreateProfile',
+                                body: {
+                                  classCode: formState.classCode,
+                                  avatar: url,
+                                  name: {
+                                    first: formState.first,
+                                    last: formState.last,
+                                  }
                                 }
                               }
-                            }
+                            })
                           })
                         )}
                       />
@@ -215,7 +212,7 @@ export const GetStarted: FC<RouteProps<'GetStarted'>> = (props) => {
           </div>
         </div>
       )
-    
+
   }
 
 }
