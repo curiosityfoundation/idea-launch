@@ -40,13 +40,13 @@ export const DeleteProject = M.opaque<DeleteProjectRaw, DeleteProject>()(DeleteP
 
 const Comment_ = M.make((F) => 
   F.interface({
-    id: F.uuid(),
-    projectId: F.uuid(),
-    owner: F.uuid(),
+    id: F.string(),
+    projectId: F.string(),
+    owner: F.string(),
     content: F.string(),
     created: F.date(),
     approved: F.boolean(),
-  }, { name: 'Comment' })
+  })
 )
 
 export interface Comment extends M.AType<typeof Comment_> { }
@@ -55,9 +55,9 @@ export const Comment = M.opaque<CommentRaw, Comment>()(Comment_)
 
 const CreateComment_ = M.make((F) => 
   F.interface({
-    owner: F.uuid(),
+    projectId: F.string(),
     content: F.string(),
-  }, { name: 'CreateComment' })
+  })
 )
 
 export interface CreateComment extends M.AType<typeof CreateComment_> { }

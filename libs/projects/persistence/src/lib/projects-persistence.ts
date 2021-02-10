@@ -22,11 +22,11 @@ export class ProjectPersistenceError {
 export interface ProjectsPersistence {
   createProject: (opts: CreateProject, classCode: string, owner: string) => T.IO<ProjectPersistenceError, Project>
   deleteProject: (opts: DeleteProject) => T.IO<ProjectPersistenceError, void>
-  listProjectByOwner: (owner: UUID, page: number) => T.IO<ProjectPersistenceError, A.Array<Project>>
+  listProjectByOwner: (owner: string, page: number) => T.IO<ProjectPersistenceError, A.Array<Project>>
   listProjects: (classCode: string, page: number) => T.IO<ProjectPersistenceError, A.Array<Project>>
-  createComment: (opts: CreateComment) => T.IO<ProjectPersistenceError, void>
+  createComment: (opts: CreateComment, classCode: string, owner: string) => T.IO<ProjectPersistenceError, Comment>
   listCommentsByOwner: (owner: UUID) => T.IO<ProjectPersistenceError, A.Array<Comment>>
-  listCommentsByProjectId: (projectId: UUID) => T.IO<ProjectPersistenceError, A.Array<Comment>>
+  listCommentsByProjectId: (classCode: string, projectId: string) => T.IO<ProjectPersistenceError, A.Array<Comment>>
   createReaction: (opts: CreateReaction) => T.IO<ProjectPersistenceError, void>
   deleteReaction: (opts: DeleteReaction) => T.IO<ProjectPersistenceError, void>
   listReactionsByProjectId: (projectId: UUID) => T.IO<ProjectPersistenceError, A.Array<Reaction>>
@@ -42,6 +42,8 @@ export const {
   deleteReaction,
   listProjectByOwner,
   listProjects,
+  listCommentsByProjectId,
+  listReactionsByProjectId
 } = T.deriveLifted(ProjectsPersistence)(
   [
     'createProject', 
@@ -51,6 +53,8 @@ export const {
     'deleteReaction',
     'listProjects',
     'listProjectByOwner',
+    'listCommentsByProjectId',
+    'listReactionsByProjectId'
   ],
   [] as never[],
   [] as never[],

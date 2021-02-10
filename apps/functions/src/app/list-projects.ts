@@ -1,16 +1,15 @@
-import { pipe } from '@effect-ts/core/Function'
+import * as A from '@effect-ts/core/Array'
 import * as T from '@effect-ts/core/Effect'
+import { pipe } from '@effect-ts/core/Function'
 import { encode } from '@effect-ts/morphic/Encoder'
-import { strictDecoder } from '@effect-ts/morphic/StrictDecoder'
 
-import { listProjects } from '@idea-launch/projects/persistence'
-import { accessFunctionsRequestContextM } from '@idea-launch/firebase-functions'
+import { listProjects, listCommentsByProjectId } from '@idea-launch/projects/persistence'
 import { ListProjects, handler } from '@idea-launch/api'
 
-import { authenticateAndFindProfile, makeValidationFailureReason } from './util'
+import { authenticateAndFindProfile } from './util'
 
 export const handleListProjects = handler(ListProjects)(
-  ({ Response, Body }) => pipe(
+  ({ Response }) => pipe(
     authenticateAndFindProfile({
       NoProfile: () =>
         T.succeed(
@@ -26,11 +25,23 @@ export const handleListProjects = handler(ListProjects)(
         ),
       Authenticated: (profile) =>
         pipe(
-          listProjects(profile.classCode, 1),
-          T.map((projects) =>
+          T.do,
+          T.bind('projects', () => listProjects(profile.classCode, 1)),
+          T.bind('comments', ({ projects }) =>
+            pipe(
+              projects,
+              A.map((p) =>
+                listCommentsByProjectId(profile.classCode, p.id)
+              ),
+              T.collectAllPar,
+              T.map(A.flatten),
+            )
+          ),
+          T.map(({ projects, comments }) =>
             Response.of.Success({
               page: 1,
               projects,
+              comments,
             })
           ),
           T.catchAll((err) =>
