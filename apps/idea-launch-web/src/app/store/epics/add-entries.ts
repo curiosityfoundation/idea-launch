@@ -8,6 +8,7 @@ import {
   FindProfile,
   ListResources,
   ListProjects,
+  CreateComment,
 } from '@idea-launch/api'
 
 import { DataAction } from '../../data'
@@ -141,6 +142,24 @@ const AddEntriesFromAPIEpic =
                     payload: {
                       table: 'projects',
                       entries: response.projects
+                    }
+                  }),
+                  AppAction.of.AddEntries({
+                    payload: {
+                      table: 'comments',
+                      entries: response.comments
+                    }
+                  })
+                ],
+              })(a.payload.response)
+            case 'CreateComment':
+              return CreateComment.Response.matchStrict({
+                Failure: () => [],
+                Success: (response) => [
+                  AppAction.of.AddEntries({
+                    payload: {
+                      table: 'comments',
+                      entries: [response.comment]
                     }
                   })
                 ],

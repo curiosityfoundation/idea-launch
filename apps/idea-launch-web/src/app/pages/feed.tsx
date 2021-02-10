@@ -7,9 +7,17 @@ import Typography from '@material-ui/core/Typography'
 import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Formik } from 'formik'
 import React, { FC } from 'react'
+import moment from 'moment'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { ProjectCard, PostProjectForm, postProjectValidationSchema, PostProjectValues } from '@idea-launch/projects/ui'
+import {
+  ProjectCard,
+  PostProjectForm,
+  postProjectValidationSchema,
+  PostProjectValues,
+  CommentInput,
+  CommentList
+} from '@idea-launch/projects/ui'
 
 import { Navbar } from '../components/navbar'
 import { RouteProps } from '../router'
@@ -85,6 +93,49 @@ export const FeedPage: FC<RouteProps<'Feed'>> = () => {
                   avatar={profile.avatar}
                   url={project.link}
                   favoriteCount={13}
+                />
+                <Formik
+                  onSubmit={async (values) => dispatch(
+                    AppAction.of.JWTRequested({
+                      payload: AppAction.as.APIRequested({
+                        payload: {
+                          endpoint: 'CreateComment',
+                          body: {
+                            ...values,
+                            projectId: project.id
+                          }
+                        }
+                      })
+                    })
+                  )}
+                  initialValues={{
+                    content: ''
+                  }}
+                >
+                  {(form) => (
+                    <CommentInput form={form} />
+                  )}
+                </Formik>
+                <CommentList
+                  comments={pipe(
+                    data.comments.entries,
+                    R.toArray,
+                    A.filter(([_, comment]) => comment.projectId === project.id),
+                    A.filterMap(([_, comment]) =>
+                      pipe(
+                        data.profiles.entries,
+                        R.lookup(comment.owner),
+                        O.map((profile) => [comment, profile] as const)
+                      )
+                    ),
+                    A.map(([comment, profile]) => ({
+                      id: comment.id,
+                      content: comment.content,
+                      created: moment(comment.created).fromNow(),
+                      username: `${profile.name.first} ${profile.name.last}`,
+                      avatar: profile.avatar,
+                    }))
+                  )}
                 />
               </div>
             ))

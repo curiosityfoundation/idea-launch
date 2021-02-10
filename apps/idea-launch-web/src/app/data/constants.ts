@@ -14,6 +14,10 @@ import {
   initProfileTableState,
 } from '@idea-launch/profiles/ui'
 import {
+  CommentTable,
+  CommentTableAction,
+  commentTableReducer,
+  initCommentTableState,
   ProjectTable,
   ProjectTableAction,
   projectTableReducer,
@@ -32,12 +36,12 @@ export const {
 export type UploadsTable = Table<Upload>
 export type UploadsTableAction = ADTType<typeof UploadTableAction>
 
-
 export interface DataState {
-  uploads: UploadsTable,
-  resources: ResourceTable,
-  profiles: ProfileTable,
-  projects: ProjectTable,
+  uploads: UploadsTable
+  resources: ResourceTable
+  profiles: ProfileTable
+  projects: ProjectTable
+  comments: CommentTable
 }
 
 export const dataReducer = combineReducers<DataState>({
@@ -45,6 +49,7 @@ export const dataReducer = combineReducers<DataState>({
   resources: resourceTableReducer,
   profiles: profileTableReducer,
   projects: projectTableReducer,
+  comments: commentTableReducer,
 })
 
 export const initDataState: DataState = {
@@ -52,12 +57,14 @@ export const initDataState: DataState = {
   resources: initResourceTableState,
   profiles: initProfileTableState,
   projects: initProjectTableState,
+  comments: initCommentTableState,
 }
 
 export const DataAction = unionADT([
   ProfileTableAction,
   ResourceTableAction,
   ProjectTableAction,
+  CommentTableAction,
   UploadTableAction,
 ])
 

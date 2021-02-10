@@ -107,7 +107,7 @@ export function makeRemoteAccess<E extends AnyEndpoint>(
   const reducer = pipe(
     Action.createReducer(initState)({
       // APIRequestStarted: () =>
-      APIRequested: () => 
+      APIRequested: () =>
         State.transform({
           Init: () =>
             State.of.Pending({}),

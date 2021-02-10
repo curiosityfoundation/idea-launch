@@ -33,7 +33,7 @@ interface CommentItemProp {
 }
 
 export interface CommentListProps {
-  comments: CommentItemProp[]
+  comments: ReadonlyArray<CommentItemProp>
 }
 
 export const CommentList: FC<CommentListProps> = (props) => {
