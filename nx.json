@@ -57,6 +57,8 @@
     "firebase-functions": { "tags": [] },
     "redux-table": { "tags": [] },
     "logger": { "tags": [] },
-    "uuid-gen": { "tags": [] }
+    "uuid-gen": { "tags": [] },
+    "classrooms-model": { "tags": [] },
+    "classrooms-persistence": { "tags": [] }
   }
 }

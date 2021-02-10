@@ -6,6 +6,7 @@ import { strictDecoder } from '@effect-ts/morphic/StrictDecoder'
 
 import { CreateProfile, handler } from '@idea-launch/api'
 import { accessFunctionsRequestContextM } from '@idea-launch/firebase-functions'
+import { findClassroom } from '@idea-launch/classrooms/persistence'
 import { createProfile, findByOwner } from '@idea-launch/profiles/persistence'
 
 import { authenticate, makeValidationFailureReason } from './util'
@@ -33,14 +34,28 @@ export const handleCreateProfile = handler(CreateProfile)(
         ),
         T.chain((body) =>
           pipe(
-            { ...body, owner: status.decodedId.uid },
-            createProfile,
-            T.mapError((e) => e.reason),
-            T.map((profile) =>
-              Response.of.Success({
-                profile,
-              }),
-            )
+            findClassroom(body.classCode),
+            T.chain(
+              O.fold(
+                () => T.succeed(
+                  Response.of.Failure({
+                    reason: 'Class code not valid'
+                  })
+                ),
+                () => pipe(
+                  createProfile({
+                    ...body,
+                    owner: status.decodedId.uid,
+                  }),
+                  T.map((profile) =>
+                    Response.of.Success({
+                      profile,
+                    }),
+                  )
+                )
+              )
+            ),
+            T.mapError((err) => err.reason),
           )
         ),
         T.catchAll((reason) =>

@@ -968,6 +968,56 @@
           }
         }
       }
+    },
+    "classrooms-model": {
+      "root": "libs/classrooms/model",
+      "sourceRoot": "libs/classrooms/model/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/classrooms/model/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/classrooms/model"
+          ],
+          "options": {
+            "jestConfig": "libs/classrooms/model/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "classrooms-persistence": {
+      "root": "libs/classrooms/persistence",
+      "sourceRoot": "libs/classrooms/persistence/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/classrooms/persistence/**/*.ts"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/classrooms/persistence"
+          ],
+          "options": {
+            "jestConfig": "libs/classrooms/persistence/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   },
   "cli": {
