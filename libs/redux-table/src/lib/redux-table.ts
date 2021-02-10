@@ -34,20 +34,23 @@ export function makeTable<A extends { id: string }>() {
       }
     }
 
+    interface ClearEntries {
+      type: 'ClearEntries',
+      payload: {
+        table: T
+      }
+    }
+
     const Action = makeADT('type')({
       AddEntries: ofType<AddEntries>(),
       RemoveEntries: ofType<RemoveEntries>(),
+      ClearEntries: ofType<ClearEntries>(),
     })
 
     type Action = ADTType<typeof Action>
 
-    const pred = Action.isAnyOf([
-      'AddEntries',
-      'RemoveEntries',
-    ])
-
     const filterReducer = (r: Reducer<Table<A>, Action>): Reducer<Table<A>, Action> =>
-      (s, a) => pred(a)
+      (s, a) => Action.verified(a)
         && a.payload.table === name
         ? r(s, a)
         : !!s
@@ -93,7 +96,8 @@ export function makeTable<A extends { id: string }>() {
               !a.payload.ids.includes(id)
             ),
           )
-        })
+        }),
+        ClearEntries: () => () => initState
       })
     )
 
