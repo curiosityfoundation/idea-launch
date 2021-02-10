@@ -7,47 +7,57 @@ import { CreateProject, handler } from '@idea-launch/api'
 import { accessFunctionsRequestContextM } from '@idea-launch/firebase-functions'
 import { createProject } from '@idea-launch/projects/persistence'
 
-import { authenticate } from './util'
+import { authenticateAndFindProfile, makeValidationFailureReason } from './util'
 
 export const handleCreateProject = handler(CreateProject)(
-  ({ Body, Response }) => authenticate({
-    Authenticated: (status) =>
-      pipe(
-        accessFunctionsRequestContextM(
-          (context) => pipe(
-            context.request.body,
-            strictDecoder(Body).decode,
-            T.mapError((e) => 'decode error')
+  ({ Body, Response }) => pipe(
+    authenticateAndFindProfile({
+      NoProfile: () => T.succeed(
+        Response.of.Failure({
+          reason: 'No profile created'
+        })
+      ),
+      Authenticated: (profile) =>
+        pipe(
+          accessFunctionsRequestContextM(
+            (context) => pipe(
+              context.request.body,
+              strictDecoder(Body).decode,
+              T.mapError(
+                makeValidationFailureReason,
+              )
+            ),
           ),
-        ),
-        T.chain((body) =>
-          pipe(
-            createProject(body, status.decodedId.uid),
-            T.mapError((e) => e.reason),
-            T.map((project) =>
-              Response.of.Success({
-                project,
+          T.chain((body) =>
+            pipe(
+              createProject(
+                body,
+                profile.classCode,
+                profile.id
+              ),
+              T.mapError((e) => e.reason),
+              T.map((project) =>
+                Response.of.Success({
+                  project,
+                }),
+              )
+            )
+          ),
+          T.catchAll((reason) =>
+            T.succeed(
+              Response.of.Failure({
+                reason,
               }),
             )
-          )
+          ),
         ),
-        T.catchAll((reason) =>
-          T.succeed(
-            Response.of.Failure({
-              reason,
-            }),
-          )
-        ),
-        T.chain(encode(Response)),
-      ),
-    NotAuthenticated: (status) =>
-      pipe(
+      NotAuthenticated: (status) =>
         T.succeed(
           Response.of.Failure({
             reason: status.reason,
           })
         ),
-        T.chain(encode(Response)),
-      )
-  })
+    }),
+    T.chain(encode(Response)),
+  )
 )

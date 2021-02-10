@@ -1,4 +1,3 @@
-import React, { FC } from 'react'
 import { pipe } from '@effect-ts/core/Function'
 import * as A from '@effect-ts/core/Array'
 import * as O from '@effect-ts/core/Option'
@@ -6,13 +5,15 @@ import * as R from '@effect-ts/core/Record'
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles, Theme } from '@material-ui/core/styles';
+import { Formik } from 'formik'
+import React, { FC } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
-import { mockProfileTable } from '@idea-launch/profiles/model'
-import { ProjectCard } from '@idea-launch/projects/ui'
-import { mockProjects } from '@idea-launch/projects/model'
+import { ProjectCard, PostProjectForm, postProjectValidationSchema, PostProjectValues } from '@idea-launch/projects/ui'
 
 import { Navbar } from '../components/navbar'
 import { RouteProps } from '../router'
+import { AppAction, AppState } from '../store'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -30,6 +31,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 export const FeedPage: FC<RouteProps<'Feed'>> = () => {
 
   const classes = useStyles()
+  const dispatch = useDispatch()
+  const data = useSelector((s: AppState) => s.data)
+
+  const initialValues: PostProjectValues = {
+    title: '',
+    description: '',
+    link: '',
+  }
 
   return (
     <div className={classes.root}>
@@ -42,11 +51,30 @@ export const FeedPage: FC<RouteProps<'Feed'>> = () => {
         >
           Ready to share an idea?
         </Typography>
+        <Formik
+          onSubmit={async (values) => dispatch(
+            AppAction.of.JWTRequested({
+              payload: AppAction.as.APIRequested({
+                payload: {
+                  endpoint: 'CreateProject',
+                  body: values
+                }
+              })
+            })
+          )}
+          initialValues={initialValues}
+          validationSchema={postProjectValidationSchema}
+        >
+          {(form) => (
+            <PostProjectForm form={form} />
+          )}
+        </Formik>
         {pipe(
-          mockProjects,
-          A.filterMap((project) => pipe(
-            mockProfileTable,
-            R.lookup(project.id),
+          data.projects.entries,
+          R.toArray,
+          A.filterMap(([id, project]) => pipe(
+            data.profiles.entries,
+            R.lookup(project.owner),
             O.map((profile) => (
               <div className={classes.row}>
                 <ProjectCard

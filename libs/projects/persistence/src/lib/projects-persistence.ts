@@ -20,10 +20,10 @@ export class ProjectPersistenceError {
 }
 
 export interface ProjectsPersistence {
-  createProject: (opts: CreateProject, owner: string) => T.IO<ProjectPersistenceError, Project>
+  createProject: (opts: CreateProject, classCode: string, owner: string) => T.IO<ProjectPersistenceError, Project>
   deleteProject: (opts: DeleteProject) => T.IO<ProjectPersistenceError, void>
   listProjectByOwner: (owner: UUID, page: number) => T.IO<ProjectPersistenceError, A.Array<Project>>
-  listProjects: (page: number) => T.IO<ProjectPersistenceError, A.Array<Project>>
+  listProjects: (classCode: string, page: number) => T.IO<ProjectPersistenceError, A.Array<Project>>
   createComment: (opts: CreateComment) => T.IO<ProjectPersistenceError, void>
   listCommentsByOwner: (owner: UUID) => T.IO<ProjectPersistenceError, A.Array<Comment>>
   listCommentsByProjectId: (projectId: UUID) => T.IO<ProjectPersistenceError, A.Array<Comment>>

@@ -2,17 +2,7 @@ import * as M from '@effect-ts/morphic'
 
 import { Project, Comment } from '@idea-launch/projects/model'
 
-import { endpoint } from './api'
-
-const Body_ = M.make((F) =>
-  F.interface({
-    page: F.number(),
-  }, { name: 'Args' })
-)
-
-export interface Body extends M.AType<typeof Body_> { }
-export interface BodyRaw extends M.EType<typeof Body_> { }
-export const Body = M.opaque<BodyRaw, Body>()(Body_)
+import { endpoint, Empty } from './api'
 
 const Failure_ = M.make((F) =>
   F.interface({
@@ -48,5 +38,5 @@ export const ListProjects = endpoint({
   name: 'ListProjects',
   method: 'GET',
   Response,
-  Body,
+  Body: Empty,
 })

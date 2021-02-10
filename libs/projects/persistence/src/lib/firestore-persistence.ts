@@ -8,7 +8,7 @@ import { strictDecoder } from '@effect-ts/morphic/StrictDecoder'
 import { formatValidationErrors } from '@effect-ts/morphic/Decoder/reporters'
 
 import { FirestoreClient } from '@idea-launch/firebase-functions'
-import { log, Logger } from '@idea-launch/logger'
+import { Logger } from '@idea-launch/logger'
 import { UUIDGen } from '@idea-launch/uuid-gen'
 
 import { Project } from '@idea-launch/projects/model'
@@ -21,7 +21,7 @@ export const makeProjectsPersistence = T.accessServices({
   uuid: UUIDGen,
 })(
   ({ firestore, logger, uuid }): ProjectsPersistence => ({
-    createProject: (opts, owner) =>
+    createProject: (opts, classCode, owner) =>
       pipe(
         uuid.generate,
         T.map((id) =>
@@ -41,6 +41,8 @@ export const makeProjectsPersistence = T.accessServices({
               T.fromPromiseWith(
                 (err: any) => new ProjectPersistenceError(err.code)
               )(() => firestore.client
+                .collection('classrooms')
+                .doc(classCode)
                 .collection('projects')
                 .doc(project.id)
                 .set(raw)
@@ -58,12 +60,14 @@ export const makeProjectsPersistence = T.accessServices({
     listProjectByOwner: (opts) => T.fail(
       new ProjectPersistenceError('not implemented')
     ),
-    listProjects: (page) =>
+    listProjects: (classCode, page) =>
       pipe(
         T.fromPromiseWith(
           (err: any) => new ProjectPersistenceError(err.code)
         )(() =>
           firestore.client
+            .collection('classrooms')
+            .doc(classCode)
             .collection('projects')
             .limit(10)
             .get()

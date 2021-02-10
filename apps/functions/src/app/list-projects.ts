@@ -7,52 +7,41 @@ import { listProjects } from '@idea-launch/projects/persistence'
 import { accessFunctionsRequestContextM } from '@idea-launch/firebase-functions'
 import { ListProjects, handler } from '@idea-launch/api'
 
-import { authenticate } from './util'
+import { authenticateAndFindProfile, makeValidationFailureReason } from './util'
 
 export const handleListProjects = handler(ListProjects)(
-  ({ Response, Body }) => authenticate({
-    NotAuthenticated: (status) =>
-      pipe(
+  ({ Response, Body }) => pipe(
+    authenticateAndFindProfile({
+      NoProfile: () =>
+        T.succeed(
+          Response.of.Failure({
+            reason: 'No profile created',
+          })
+        ),
+      NotAuthenticated: (status) =>
         T.succeed(
           Response.of.Failure({
             reason: status.reason,
           })
         ),
-        T.chain(encode(Response)),
-      ),
-    Authenticated: () =>
-      accessFunctionsRequestContextM(
-        (context) =>
-          pipe(
-            context.request.body,
-            strictDecoder(Body).decode,
-            T.chain((body) =>
-              pipe(
-                listProjects(body.page),
-                T.map((projects) =>
-                  Response.of.Success({
-                    page: body.page,
-                    projects,
-                  })
-                ),
-                T.catchAll((err) =>
-                  T.succeed(
-                    Response.of.Failure({
-                      reason: err.reason,
-                    })
-                  )
-                )
-              )
-            ),
-            T.catchAll(() =>
-              T.succeed(
-                Response.of.Failure({
-                  reason: 'validation error',
-                }),
-              )
-            ),
-            T.chain(encode(Response)),
-          )
-      ),
-  })
+      Authenticated: (profile) =>
+        pipe(
+          listProjects(profile.classCode, 1),
+          T.map((projects) =>
+            Response.of.Success({
+              page: 1,
+              projects,
+            })
+          ),
+          T.catchAll((err) =>
+            T.succeed(
+              Response.of.Failure({
+                reason: err.reason,
+              })
+            )
+          ),
+        )
+    }),
+    T.chain(encode(Response)),
+  )
 )

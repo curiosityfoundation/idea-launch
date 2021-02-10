@@ -19,6 +19,7 @@ import { handleFindProfile } from './app/find-profile'
 import { handleListProjects } from './app/list-projects'
 import { handleListResources } from './app/list-resources'
 import { handleCreateProfile } from './app/create-profile'
+import { handleCreateProject } from './app/create-project'
 import { logDefect } from './app/util'
 
 const withCors = cors({
@@ -36,6 +37,7 @@ export const ListProjects =
         handleListProjects,
         logDefect,
         T.provideSomeLayer(ProjectsPersistenceLive),
+        T.provideSomeLayer(ProfilesPersistenceLive),
         T.provideSomeLayer(FunctionsAuthStatusLive),
         provideFunctionsRequestContextLive(req, res),
         T.provideSomeLayer(FirestoreClientLive),
@@ -106,7 +108,7 @@ export const FindProfile =
       )
     })
   )
-  
+
 export const CreateProfile =
   functions.https.onRequest(
     checkOrigin((req, res) => {
@@ -114,6 +116,34 @@ export const CreateProfile =
         handleCreateProfile,
         logDefect,
         T.provideSomeLayer(ProfilesPersistenceLive),
+        T.provideSomeLayer(FunctionsAuthStatusLive),
+        provideFunctionsRequestContextLive(req, res),
+        T.provideSomeLayer(FirestoreClientLive),
+        T.provideSomeLayer(FirebaseAdminAppLive),
+        T.provideSomeLayer(FunctionsLogger),
+        T.provideSomeLayer(NanoidUUIDLive),
+        T.runPromise,
+      ).then(
+        (raw) => {
+          res.status(200)
+          res.json(raw)
+        },
+        () => {
+          res.status(500)
+          res.write('internal error')
+        },
+      )
+    })
+  )
+
+export const CreateProject =
+  functions.https.onRequest(
+    checkOrigin((req, res) => {
+      pipe(
+        handleCreateProject,
+        logDefect,
+        T.provideSomeLayer(ProfilesPersistenceLive),
+        T.provideSomeLayer(ProjectsPersistenceLive),
         T.provideSomeLayer(FunctionsAuthStatusLive),
         provideFunctionsRequestContextLive(req, res),
         T.provideSomeLayer(FirestoreClientLive),

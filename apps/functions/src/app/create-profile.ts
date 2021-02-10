@@ -8,7 +8,7 @@ import { CreateProfile, handler } from '@idea-launch/api'
 import { accessFunctionsRequestContextM } from '@idea-launch/firebase-functions'
 import { createProfile, findByOwner } from '@idea-launch/profiles/persistence'
 
-import { authenticate } from './util'
+import { authenticate, makeValidationFailureReason } from './util'
 
 export const handleCreateProfile = handler(CreateProfile)(
   ({ Body, Response }) => authenticate({
@@ -23,7 +23,9 @@ export const handleCreateProfile = handler(CreateProfile)(
                 (context) => pipe(
                   context.request.body,
                   strictDecoder(Body).decode,
-                  T.mapError((e) => 'decode error')
+                  T.mapError(
+                    makeValidationFailureReason
+                  ),
                 ),
               ),
             () => T.fail('profile already created'),

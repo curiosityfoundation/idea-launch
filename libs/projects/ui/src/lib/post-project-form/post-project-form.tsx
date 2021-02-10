@@ -16,10 +16,10 @@ export interface PostProjectFormProps {
   form: FormikProps<PostProjectValues>
 }
 
-export const validationSchema = Yup.object({
+export const postProjectValidationSchema = Yup.object({
   title: Yup.string().min(6).max(120).required(),
   description: Yup.string().min(60).max(360).required(),
-  link: Yup.string().min(4).max(360).required(),
+  link: Yup.string().url().required(),
 })
 
 export function PostProjectForm(props: PostProjectFormProps) {
@@ -74,7 +74,7 @@ export function PostProjectForm(props: PostProjectFormProps) {
         size='large'
         fullWidth
       >
-        Next
+        Post Project
       </Button>
     </Form>
   )

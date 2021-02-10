@@ -9,6 +9,7 @@ import { FindProfileOnLoginEpic } from './find-profile-on-login'
 import { FindResourcesOnLocationChange } from './find-resources-on-location-change'
 import { RedirectOnProfileCreatedEpic } from './redirect-on-profile-created'
 import { AddJWTEpic } from './add-jwt'
+import { FindProjectsOnEnterFeed } from './find-projects-on-enter-feed'
 
 export const AppEpic = combineEpics([
   APIEpic,
@@ -20,4 +21,5 @@ export const AppEpic = combineEpics([
   RedirectOnProfileCreatedEpic,
   StorageEpic,
   AddJWTEpic,
+  FindProjectsOnEnterFeed,
 ])

@@ -6,7 +6,7 @@ import { listResources } from '@idea-launch/resources/persistence'
 import { ListResources, handler } from '@idea-launch/api'
 
 export const handleListResources = handler(ListResources)(
-  ({ Response, Body }) => pipe(
+  ({ Response }) => pipe(
     listResources,
     T.map((resources) =>
       Response.of.Success({

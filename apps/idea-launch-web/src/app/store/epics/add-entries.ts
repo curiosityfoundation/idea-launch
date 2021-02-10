@@ -2,7 +2,13 @@ import { pipe } from '@effect-ts/core/Function'
 import * as S from '@effect-ts/core/Effect/Stream'
 
 import { combineEpics, reduxEpic } from '@idea-launch/redux-effect'
-import { CreateProfile, CreateProject, FindProfile, ListResources } from '@idea-launch/api'
+import {
+  CreateProfile,
+  CreateProject,
+  FindProfile,
+  ListResources,
+  ListProjects,
+} from '@idea-launch/api'
 
 import { DataAction } from '../../data'
 import { APIAction } from '../../api'
@@ -128,7 +134,17 @@ const AddEntriesFromAPIEpic =
                 ],
               })(a.payload.response)
             case 'ListProjects':
-              return []
+              return ListProjects.Response.matchStrict({
+                Failure: () => [],
+                Success: (response) => [
+                  AppAction.of.AddEntries({
+                    payload: {
+                      table: 'projects',
+                      entries: response.projects
+                    }
+                  })
+                ],
+              })(a.payload.response)
             default:
               return []
           }
