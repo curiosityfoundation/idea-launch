@@ -36,6 +36,8 @@ export const ContactPage: FC<RouteProps<'Contact'>> = () => {
         <div className={classes.row}>
           <div className={classes.textArea}>
             <Typography
+              component='a'
+              href='mailto:thecuriosityfoundation@gmail.com'
               variant='h4'
               color='textPrimary'
               align='center'

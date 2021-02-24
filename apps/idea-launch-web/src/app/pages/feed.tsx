@@ -41,6 +41,21 @@ export const FeedPage: FC<RouteProps<'Feed'>> = () => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const data = useSelector((s: AppState) => s.data)
+  const api = useSelector((s: AppState) => s.api)
+  const isSubmittingProject = AppState.api.createProject.matchStrict({
+    Init: () => false,
+    Pending: () => true,
+    Failure: (s) => s.refreshing,
+    Success: (s) => s.refreshing,
+    Both: (s) => s.refreshing,
+  })(api.createProject)
+  const isSubmittingComment = AppState.api.createComment.matchStrict({
+    Init: () => false,
+    Pending: () => true,
+    Failure: (s) => s.refreshing,
+    Success: (s) => s.refreshing,
+    Both: (s) => s.refreshing,
+  })(api.createComment)
 
   const initialValues: PostProjectValues = {
     title: '',
@@ -60,23 +75,41 @@ export const FeedPage: FC<RouteProps<'Feed'>> = () => {
           Ready to share an idea?
         </Typography>
         <Formik
-          onSubmit={async (values) => dispatch(
-            AppAction.of.JWTRequested({
-              payload: AppAction.as.APIRequested({
-                payload: {
-                  endpoint: 'CreateProject',
-                  body: values
-                }
+          onSubmit={async (values, form) => {
+            dispatch(
+              AppAction.of.JWTRequested({
+                payload: AppAction.as.APIRequested({
+                  payload: {
+                    endpoint: 'CreateProject',
+                    body: values
+                  }
+                })
               })
-            })
-          )}
+            )
+            form.resetForm()
+          }}
           initialValues={initialValues}
           validationSchema={postProjectValidationSchema}
         >
           {(form) => (
-            <PostProjectForm form={form} />
+            <PostProjectForm form={{
+              ...form,
+              isSubmitting: form.isSubmitting || isSubmittingProject
+            }} />
           )}
         </Formik>
+        {isSubmittingProject && (
+          <div className={classes.row}>
+            <ProjectCard
+              key=''
+              username={''}
+              title={''}
+              description={''}
+              avatar={''}
+              url={''}
+            />
+          </div>
+        )}
         {pipe(
           data.projects.entries,
           R.toArray,
@@ -92,7 +125,6 @@ export const FeedPage: FC<RouteProps<'Feed'>> = () => {
                   description={project.description}
                   avatar={profile.avatar}
                   url={project.link}
-                  favoriteCount={13}
                 />
                 <Formik
                   onSubmit={async (values) => dispatch(
@@ -113,7 +145,10 @@ export const FeedPage: FC<RouteProps<'Feed'>> = () => {
                   }}
                 >
                   {(form) => (
-                    <CommentInput form={form} />
+                    <CommentInput form={{
+                      ...form,
+                      isSubmitting: form.isSubmitting || isSubmittingComment
+                    }} />
                   )}
                 </Formik>
                 <CommentList
@@ -142,6 +177,6 @@ export const FeedPage: FC<RouteProps<'Feed'>> = () => {
           ))
         )}
       </Container>
-    </div>
+    </div >
   )
 }

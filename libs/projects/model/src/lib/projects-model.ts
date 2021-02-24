@@ -63,37 +63,3 @@ const CreateComment_ = M.make((F) =>
 export interface CreateComment extends M.AType<typeof CreateComment_> { }
 export interface CreateCommentRaw extends M.EType<typeof CreateComment_> { }
 export const CreateComment = M.opaque<CreateCommentRaw, CreateComment>()(CreateComment_)
-
-const Reaction_ = M.make((F) => 
-  F.interface({
-    projectId: F.uuid(),
-    owner: F.uuid(),
-    created: F.date(),
-  }, { name: 'Reaction' })
-)
-
-export interface Reaction extends M.AType<typeof Reaction_> { }
-export interface ReactionRaw extends M.EType<typeof Reaction_> { }
-export const Reaction = M.opaque<ReactionRaw, Reaction>()(Reaction_)
-
-const CreateReaction_ = M.make((F) => 
-  F.interface({
-    projectId: F.uuid(),
-    owner: F.uuid(),
-  }, { name: 'CreateReaction' })
-)
-
-export interface CreateReaction extends M.AType<typeof CreateReaction_> { }
-export interface CreateReactionRaw extends M.EType<typeof CreateReaction_> { }
-export const CreateReaction = M.opaque<CreateReactionRaw, CreateReaction>()(CreateReaction_)
-
-const DeleteReaction_ = M.make((F) => 
-  F.interface({
-    projectId: F.uuid(),
-    owner: F.uuid(),
-  }, { name: 'DeleteReaction' })
-)
-
-export interface DeleteReaction extends M.AType<typeof DeleteReaction_> { }
-export interface DeleteReactionRaw extends M.EType<typeof DeleteReaction_> { }
-export const DeleteReaction = M.opaque<DeleteReactionRaw, DeleteReaction>()(DeleteReaction_)

@@ -17,12 +17,6 @@ const useStyles = makeStyles({
   root: {
     minWidth: 375,
   },
-  favoriteCount: {
-    marginLeft: 'auto',
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
 });
 
 export interface ProjectCardProps {
@@ -31,7 +25,6 @@ export interface ProjectCardProps {
   username: string
   avatar: string
   url: string
-  favoriteCount: number
   key: string
 }
 
@@ -67,16 +60,6 @@ export const ProjectCard: FC<ProjectCardProps> = (props) => {
         <Button size='small' color='primary'>
           Write a Comment
         </Button>
-        <div className={classes.favoriteCount}>
-          <IconButton
-            aria-label='add to favorites'
-          >
-            <FavoriteIcon />
-          </IconButton>
-          <Typography color='textSecondary' component='p'>
-            {props.favoriteCount}&nbsp;
-          </Typography>
-        </div>
       </CardActions>
     </Card>
   );

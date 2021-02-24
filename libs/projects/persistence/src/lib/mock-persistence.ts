@@ -8,14 +8,11 @@ export const ProjectsPersistenceMock = L.pure(ProjectsPersistence)({
   listCommentsByOwner: () => T.succeed([]),
   listProjectByOwner: () => T.succeed([]),
   listCommentsByProjectId: () => T.succeed([]),
-  listReactionsByProjectId: () => T.succeed([]),
   createComment: () => T.fail(
     new ProjectPersistenceError('not implemented')
   ),
   createProject: () => T.fail(
     new ProjectPersistenceError('not implemented')
   ),
-  createReaction: () => T.unit,
   deleteProject: () => T.unit,
-  deleteReaction: () => T.unit,
 })

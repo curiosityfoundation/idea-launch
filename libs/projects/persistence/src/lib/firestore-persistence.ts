@@ -6,8 +6,9 @@ import * as O from '@effect-ts/core/Option'
 import { encoder } from '@effect-ts/morphic/Encoder'
 import { strictDecoder } from '@effect-ts/morphic/StrictDecoder'
 import { report, formatValidationErrors } from '@effect-ts/morphic/Decoder/reporters'
+import * as firebase from 'firebase'
 
-import { FirestoreClient } from '@idea-launch/firebase-functions'
+import { accessFirebaseAdminApp, FirebaseAdminApp, FirestoreClient } from '@idea-launch/firebase-functions'
 import { Logger, warn } from '@idea-launch/logger'
 import { UUIDGen } from '@idea-launch/uuid-gen'
 import { Comment, Project } from '@idea-launch/projects/model'
@@ -19,11 +20,12 @@ const fromFirestorePromise = T.fromPromiseWith(
 )
 
 export const makeProjectsPersistence = T.accessServices({
+  admin: FirebaseAdminApp,
   firestore: FirestoreClient,
   logger: Logger,
   uuid: UUIDGen,
 })(
-  ({ firestore, logger, uuid }): ProjectsPersistence => ({
+  ({ admin, firestore, logger, uuid }): ProjectsPersistence => ({
     createProject: (opts, classCode, owner) =>
       pipe(
         T.do,
@@ -34,6 +36,7 @@ export const makeProjectsPersistence = T.accessServices({
             id,
             created: new Date(),
             modified: O.none,
+            reactions: [],
             owner,
           })
         ),
@@ -166,15 +169,6 @@ export const makeProjectsPersistence = T.accessServices({
         ),
         T.map(({ comments }) => comments)
       ),
-    createReaction: (opts) => T.fail(
-      new ProjectPersistenceError('not implemented')
-    ),
-    deleteReaction: (opts) => T.fail(
-      new ProjectPersistenceError('not implemented')
-    ),
-    listReactionsByProjectId: (opts) => T.fail(
-      new ProjectPersistenceError('not implemented')
-    ),
   })
 )
 

@@ -34,6 +34,23 @@ export function Navbar() {
         <img src={logo} alt='logo' />
       </Link>
       <div>
+      {AppState.account.matchStrict({
+          LoggedIn: () => (
+            <Button
+              className={classes.menuButton}
+              color='primary'
+              variant='outlined'
+              size='large'
+              component={Link}
+              to={Route.of.Feed({})}
+            >
+              Feed
+            </Button>
+          ),
+          LoggingIn: () => <div></div>,
+          LoggedOut: () => <div></div>,
+          LoggingOut: () => <div></div>,
+        })(account)}
         <Button
           className={classes.menuButton}
           component={Link}
