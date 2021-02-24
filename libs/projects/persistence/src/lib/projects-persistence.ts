@@ -9,9 +9,6 @@ import {
   Project,
   CreateComment,
   Comment,
-  CreateReaction,
-  DeleteReaction,
-  Reaction,
 } from '@idea-launch/projects/model'
 
 export class ProjectPersistenceError {

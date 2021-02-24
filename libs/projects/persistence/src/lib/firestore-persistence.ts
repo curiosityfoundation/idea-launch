@@ -36,7 +36,6 @@ export const makeProjectsPersistence = T.accessServices({
             id,
             created: new Date(),
             modified: O.none,
-            reactions: [],
             owner,
           })
         ),
