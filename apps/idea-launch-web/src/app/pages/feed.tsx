@@ -16,7 +16,8 @@ import {
   postProjectValidationSchema,
   PostProjectValues,
   CommentInput,
-  CommentList
+  CommentList,
+  PlaceholderProjectCard,
 } from '@idea-launch/projects/ui'
 
 import { Navbar } from '../components/navbar'
@@ -67,47 +68,42 @@ export const FeedPage: FC<RouteProps<'Feed'>> = () => {
     <div className={classes.root}>
       <Container>
         <Navbar />
-        <Typography
-          variant='h4'
-          color='textPrimary'
-          align='center'
-        >
-          Ready to share an idea?
-        </Typography>
-        <Formik
-          onSubmit={async (values, form) => {
-            dispatch(
-              AppAction.of.JWTRequested({
-                payload: AppAction.as.APIRequested({
-                  payload: {
-                    endpoint: 'CreateProject',
-                    body: values
-                  }
+        <div className={classes.row}>
+          <Typography
+            variant='h4'
+            color='textPrimary'
+            align='center'
+          >
+            Ready to share an idea?
+          </Typography>
+          <Formik
+            onSubmit={async (values, form) => {
+              dispatch(
+                AppAction.of.JWTRequested({
+                  payload: AppAction.as.APIRequested({
+                    payload: {
+                      endpoint: 'CreateProject',
+                      body: values
+                    }
+                  })
                 })
-              })
-            )
-            form.resetForm()
-          }}
-          initialValues={initialValues}
-          validationSchema={postProjectValidationSchema}
-        >
-          {(form) => (
-            <PostProjectForm form={{
-              ...form,
-              isSubmitting: form.isSubmitting || isSubmittingProject
-            }} />
-          )}
-        </Formik>
+              )
+              form.resetForm()
+            }}
+            initialValues={initialValues}
+            validationSchema={postProjectValidationSchema}
+          >
+            {(form) => (
+              <PostProjectForm form={{
+                ...form,
+                isSubmitting: form.isSubmitting || isSubmittingProject
+              }} />
+            )}
+          </Formik>
+        </div>
         {isSubmittingProject && (
           <div className={classes.row}>
-            <ProjectCard
-              key=''
-              username={''}
-              title={''}
-              description={''}
-              avatar={''}
-              url={''}
-            />
+            <PlaceholderProjectCard />
           </div>
         )}
         {pipe(

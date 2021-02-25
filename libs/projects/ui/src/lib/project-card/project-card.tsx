@@ -10,6 +10,7 @@ import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton'
 import FavoriteIcon from '@material-ui/icons/Favorite'
 import { ReactTinyLink } from 'react-tiny-link'
+import Skeleton from '@material-ui/lab/Skeleton'
 
 import './project-card.module.css';
 
@@ -66,3 +67,34 @@ export const ProjectCard: FC<ProjectCardProps> = (props) => {
 }
 
 export default ProjectCard;
+
+export const PlaceholderProjectCard: FC = () => {
+
+  const classes = useStyles();
+
+  return (
+    <Card className={classes.root}>
+      <CardHeader
+        avatar={
+          <Skeleton variant='circle' width={40} height={40} />
+        }
+        title={<Skeleton variant='text' />}
+        subheader={<Skeleton variant='text' />}
+      />
+      <CardContent>
+        <Typography variant='body2' color='textSecondary' component='p'>
+          <Skeleton variant='text' />
+          <Skeleton variant='text' />
+          <Skeleton variant='text' />
+        </Typography>
+        <br />
+        <Skeleton variant='rect' height={100} />
+      </CardContent>
+      <CardActions disableSpacing>
+        <Button size='small' color='primary' disabled>
+          Write a Comment
+        </Button>
+      </CardActions>
+    </Card>
+  );
+}
